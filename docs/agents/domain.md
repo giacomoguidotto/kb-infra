@@ -1,6 +1,6 @@
 # Domain Docs
 
-Lore is a single-context infrastructure repo for a Notion-backed knowledge system.
+Knowledge Bank Infrastructure is a single-context infrastructure repo for a Notion-backed knowledge system.
 
 - Use root `CONTEXT.md` for vocabulary.
 - Use `docs/adr/` for policy decisions that touch the change.

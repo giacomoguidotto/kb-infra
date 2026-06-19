@@ -1,9 +1,12 @@
-# Lore
+# Knowledge Bank Infrastructure
 
 ## Glossary
 
-**Lore**: Giacomo's Notion Knowledge Gateway.
+**Knowledge Bank Infrastructure**: Giacomo's Notion Knowledge Gateway.
 _Avoid_: second brain, source of truth
+
+**kb-infra**: The repository and artifact slug for Knowledge Bank Infrastructure.
+_Use for_: GitHub URLs, CLI identifiers, generated artifact names, and other machine-facing handles
 
 **Notion Knowledge Gateway**: A local repo that makes Giacomo's canonical Notion workspace legible, auditable, and usable by agents.
 _Avoid_: personal knowledge base, memory store
@@ -17,12 +20,12 @@ _Avoid_: automation run, background job
 _Avoid_: automation run, source of truth
 
 **Automation Runtime**: The external system that executes an automation definition, such as Codex, a scheduled agent, or Notion automation.
-_Avoid_: Lore-owned background process
+_Avoid_: project-owned background process
 
 **Clarification Request**: A question created when Notion state is incomplete, ambiguous, or unsafe to sync without Giacomo's answer.
 _Avoid_: notification, reminder
 
-**Narrow Load**: Read only the Lore docs or generated artifacts relevant to the current task.
+**Narrow Load**: Read only the Knowledge Bank Infrastructure docs or generated artifacts relevant to the current task.
 
 **Notion Snapshot**: A generated capture of selected Notion state, used for auditability and downstream tooling.
 

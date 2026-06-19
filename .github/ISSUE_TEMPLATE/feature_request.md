@@ -18,7 +18,7 @@ labels: needs-triage
 
 ## Source of Truth
 
-<!-- What stays in Notion, and what belongs in Lore? -->
+<!-- What stays in Notion, and what belongs in Knowledge Bank Infrastructure? -->
 
 ## Alternatives Considered
 

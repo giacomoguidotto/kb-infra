@@ -12,7 +12,7 @@ If you believe you have found a security vulnerability or export-safety issue, p
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-Instead, report them via email to [lore@guidotto.dev](mailto:lore@guidotto.dev).
+Instead, report them via email to [kb-infra@guidotto.dev](mailto:kb-infra@guidotto.dev).
 
 Please include:
 

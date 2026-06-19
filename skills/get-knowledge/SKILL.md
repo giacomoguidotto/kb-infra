@@ -7,7 +7,7 @@ description: Refreshes an agent's working knowledge from Giacomo's canonical Not
 
 ## Quick Start
 
-When invoked, treat Notion as the source of truth. Search and read live Notion with the available connector, compare it to the current conversation, loaded memory, and Lore artifacts, then produce a tight "Internalized" summary before continuing.
+When invoked, treat Notion as the source of truth. Search and read live Notion with the available connector, compare it to the current conversation, loaded memory, and Knowledge Bank Infrastructure artifacts, then produce a tight "Internalized" summary before continuing.
 
 Normal Codex tasks should follow active agent instructions for narrow Notion lookup. Use this skill when Giacomo explicitly asks to refresh, sync, or internalize Notion knowledge before continuing, or when the ordinary lookup path is not enough.
 
@@ -73,10 +73,10 @@ Use only if Giacomo asks for a full Sync patch or the current runtime requires p
 
 ## Rules
 
-- Notion is canonical; Lore and memory only route agents back to it.
+- Notion is canonical; Knowledge Bank Infrastructure and memory only route agents back to it.
 - This skill pulls knowledge from Notion into the current agent context. Use `dump-knowledge` or `grill-knowledge` for Notion writes.
 - Do not update Codex memory, ChatGPT memory, repo docs, or Notion unless Giacomo explicitly asks for that write.
 - Codex memory may store routing policy and durable preferences, not copied Notion facts.
-- When Notion access is unavailable, say so and fall back to validated Lore context packs or `dist/` artifacts only as stale local context.
+- When Notion access is unavailable, say so and fall back to validated Knowledge Bank Infrastructure context packs or `dist/` artifacts only as stale local context.
 - Keep Notion task parent pages thin; if dense context is discovered on a parent, flag it as future cleanup instead of moving it without approval.
 - Respect export safety: summarize only what the current task needs and avoid public/private leakage.

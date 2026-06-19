@@ -1,6 +1,6 @@
 # Workflows
 
-Lore defines workflows; external runtimes execute them. Notion remains the source of truth.
+Knowledge Bank Infrastructure defines workflows; external runtimes execute them. Notion remains the source of truth.
 
 ## 1. Capture
 
@@ -13,6 +13,8 @@ Rule: do not write session knowledge to Notion without explicit confirmation.
 Rule: if the live Notion database cannot represent the update without ambiguity, ask before writing.
 
 Rule: task parent pages stay thin; dense knowledge goes into child pages under the relevant Notion parent.
+
+Rule: choose one canonical owner for each fact, chapter, or lesson; other pages should link to it instead of duplicating it.
 
 Interactive life-context capture uses `skills/grill-knowledge`: grill one question at a time, produce a Notion draft at the end, and write only after confirmation.
 
@@ -50,7 +52,7 @@ Trigger: manual or scheduled generation, after the portfolio architecture is des
 
 Flow: use Notion-backed profile, project, and career facts to generate portfolio data or UI.
 
-Rule: the portfolio must not invent claims. Whether the portfolio fetches from Lore, Notion, or a generated artifact is unresolved and needs a dedicated architecture pass.
+Rule: the portfolio must not invent claims. Whether the portfolio fetches from Knowledge Bank Infrastructure, Notion, or a generated artifact is unresolved and needs a dedicated architecture pass.
 
 ## 4. Govern
 
@@ -63,4 +65,4 @@ Rule: Govern is for holes and drift, not routine syncing.
 ## Non-Workflows
 
 - Runtime setup for Telegram, Slack, OpenClaw, browser automation, cron, or CI is implementation detail.
-- Lore should not run background processes by itself.
+- Knowledge Bank Infrastructure should not run background processes by itself.

@@ -1,8 +1,8 @@
 # Contributing
 
-Thanks for your interest in Lore! Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
+Thanks for your interest in Knowledge Bank Infrastructure! Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
 
-Lore is Giacomo's local infrastructure for a Notion-first knowledge system, so contributions are accepted on a limited basis.
+Knowledge Bank Infrastructure is Giacomo's local infrastructure for a Notion-first knowledge system, so contributions are accepted on a limited basis.
 
 ## What We Accept
 
@@ -15,7 +15,7 @@ Lore is Giacomo's local infrastructure for a Notion-first knowledge system, so c
 
 - Pull requests that include private Notion content, broad personal context, or generated private artifacts.
 - Unsolicited workflow rewrites without an issue and maintainer agreement.
-- Runtime infrastructure that turns Lore into the source of truth or a background process.
+- Runtime infrastructure that turns Knowledge Bank Infrastructure into the source of truth or a background process.
 - Refactoring for its own sake.
 
 ## Setup
@@ -46,7 +46,7 @@ Lore is Giacomo's local infrastructure for a Notion-first knowledge system, so c
 
 - Branch names: `feat/`, `fix/`, `docs/`, `refactor/`, `test/`, `chore/`.
 - Commits: [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) such as `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, and `chore:`.
-- Use Lore's domain terms from [CONTEXT.md](../CONTEXT.md).
+- Use Knowledge Bank Infrastructure's domain terms from [CONTEXT.md](../CONTEXT.md).
 - Keep public artifacts routing-safe. Do not include private Notion material unless Giacomo explicitly approves the exact export.
 
 ## License
