@@ -12,7 +12,7 @@ _Use for_: GitHub URLs, CLI identifiers, generated artifact names, and other mac
 
 **Knowledge Bank**: The Notion-backed personal knowledge system. It is not duplicated into this repo.
 
-**Manual Capture**: A user-invoked workflow that drafts durable session knowledge into Notion through `dump-knowledge`.
+**Manual Capture**: A user-invoked workflow that drafts durable session knowledge into Notion through `remember`.
 
 **Live Lookup**: A narrow, task-scoped read from Notion. This is the normal way agents refresh context.
 

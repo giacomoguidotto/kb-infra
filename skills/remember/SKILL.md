@@ -1,9 +1,9 @@
 ---
-name: dump-knowledge
-description: Draft and apply Notion Knowledge Bank updates from completed conversations or agent sessions. Use when the user says /dump-knowledge, /update-knowledge, asks to save/dump session knowledge to Notion, or wants a conversation recorded in the bank.
+name: remember
+description: Draft and apply Notion Knowledge Bank updates from completed conversations or agent sessions. Use when the user says /remember, /update-knowledge, asks to save or record session knowledge in Notion, or wants a conversation remembered in the bank.
 ---
 
-# Dump Knowledge
+# Remember
 
 ## Invariant
 

@@ -64,7 +64,7 @@ Next action:
 ## Rules
 
 - Notion is canonical; Knowledge Bank Infrastructure and memory route agents back to it.
-- This skill pulls knowledge from Notion into the current agent context. Use `dump-knowledge` or `grill-knowledge` for Notion writes.
+- This skill pulls knowledge from Notion into the current agent context. Use `remember` or `grill-knowledge` for Notion writes.
 - Do not update Codex memory, repo docs, or Notion unless Giacomo explicitly asks for that write.
 - Codex memory may store routing policy and durable preferences, not copied Notion facts.
 - When Notion access is unavailable, say so and continue only with clearly marked stale local context.

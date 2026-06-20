@@ -64,7 +64,7 @@ flowchart LR
 
 ## Active Workflows
 
-- **Manual capture**: `/dump-knowledge` turns a conversation or agent session into an approval draft for Notion.
+- **Manual capture**: `/remember` turns a conversation or agent session into an approval draft for Notion.
 - **Live lookup**: agents read only the Notion pages needed for the current task, then continue with that context.
 - **Drift audit**: a scheduled Codex automation checks naming, ownership, page roles, raw notes, and stale project pages, then proposes fixes for approval.
 

@@ -4,9 +4,9 @@ Knowledge Bank Infrastructure defines a small set of agent workflows around the 
 
 ## 1. Manual Capture
 
-Trigger: Giacomo manually invokes `/dump-knowledge` or asks to save a conversation/session into the Knowledge Bank.
+Trigger: Giacomo manually invokes `/remember` or asks to save a conversation/session into the Knowledge Bank.
 
-Flow: use `skills/dump-knowledge`; inspect live Notion structure; draft the smallest coherent Notion update; ask Giacomo to approve the exact draft; write only after approval.
+Flow: use `skills/remember`; inspect live Notion structure; draft the smallest coherent Notion update; ask Giacomo to approve the exact draft; write only after approval.
 
 Rules:
 
