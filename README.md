@@ -5,8 +5,8 @@
 <h1 align="center">Knowledge Bank Infrastructure</h1>
 
 <p align="center">
-  <strong>Agent infrastructure for a Notion-first knowledge bank.</strong><br>
-  <sub>Repo-owned conventions, skills, and reviewable artifacts for Giacomo's Notion workspace.</sub>
+  <strong>Operational rails for a Notion-first personal knowledge system.</strong><br>
+  <sub>Conventions, agent skills, and reviewable drafts for keeping human-owned knowledge usable by AI agents.</sub>
 </p>
 
 <p align="center">
@@ -16,62 +16,77 @@
 
 <br>
 
-Knowledge Bank Infrastructure keeps agents pointed at the right source of truth. Notion owns the actual personal knowledge, tasks, projects, and portfolio facts; this repo holds the conventions and skills that make that workspace usable by Codex and other agents.
+AI agents are useful only when they can find the right context without turning the context itself into another stale copy. Knowledge Bank Infrastructure is the repo that keeps that boundary sharp.
 
-Generated files under `dist/` are reviewable outputs, not canonical records.
+Notion owns the actual knowledge: tasks, projects, profile facts, finance notes, learning notes, and portfolio material. This repo owns the operating rules around that knowledge: how agents should read it, how they should draft updates, and how they should audit structural drift without writing over the source of truth.
 
-Use the full name, Knowledge Bank Infrastructure, in human-facing prose. Use the slug `kb-infra` for repository paths, URLs, generated artifact identifiers, and other machine-facing handles.
+## Core Idea
 
-## Workflow Map
+Keep the knowledge where the human works. Put the agent protocol in Git.
 
-Knowledge Bank Infrastructure sits beside the canonical Notion workspace. It does not mirror or replicate Notion; it tells agents how to read, draft, and audit it.
+That gives the system three useful properties:
+
+- **Live context**: agents read Notion directly when a task needs personal or project context.
+- **Reviewable writes**: agents draft Notion updates and wait for explicit approval before applying them.
+- **Auditable structure**: database conventions live in versioned Markdown, so drift can be detected and discussed like code.
+
+## Operating Loop
 
 ```mermaid
 flowchart LR
+    repo["kb-infra<br/>conventions + skills"]
     notion(("Notion<br/>source of truth"))
-    kbInfra["Knowledge Bank Infrastructure<br/>conventions, skills,<br/>reviewable artifacts"]
-    codex["Codex agents<br/>manual capture,<br/>live lookup,<br/>drift audit"]
+    agent["Agent<br/>live lookup + drafts"]
+    draft["HTML draft<br/>exact proposed writes"]
+    audit["Drift audit<br/>proposed fixes"]
     approval{"Giacomo<br/>approval"}
-    report["Drift report<br/>proposed fixes"]
 
-    kbInfra -- "formal rules" --> codex
-    codex -- "narrow live reads" --> notion
-    codex -- "approval drafts" --> approval
+    repo -- "protocol" --> agent
+    agent -- "narrow reads" --> notion
+    agent -- "manual capture" --> draft
+    agent -- "read-only review" --> audit
+    draft --> approval
+    audit --> approval
     approval -- "approved writes" --> notion
-    codex -- "read-only audit" --> report
-    report -- "human-reviewed changes" --> approval
 
     classDef source fill:#fff7cc,stroke:#d39e00,stroke-width:2px,color:#1f2937;
-    classDef gateway fill:#ddf7ef,stroke:#159570,stroke-width:2px,color:#12372f;
+    classDef protocol fill:#ddf7ef,stroke:#159570,stroke-width:2px,color:#12372f;
     classDef runtime fill:#e8edff,stroke:#5267d8,stroke-width:2px,color:#172554;
     classDef artifact fill:#f3e8ff,stroke:#8b5cf6,stroke-width:2px,color:#3b0764;
     classDef decision fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a;
 
     class notion source;
-    class kbInfra gateway;
-    class codex runtime;
-    class report artifact;
+    class repo protocol;
+    class agent runtime;
+    class draft,audit artifact;
     class approval decision;
 ```
 
-## What's Inside
+## Active Workflows
 
-- `AGENTS.md`: entry point for agents working in this repo.
+- **Manual capture**: `/dump-knowledge` turns a conversation or agent session into an approval draft for Notion.
+- **Live lookup**: agents read only the Notion pages needed for the current task, then continue with that context.
+- **Drift audit**: a scheduled Codex automation checks naming, ownership, page roles, raw notes, and stale project pages, then proposes fixes for approval.
+
+Portfolio generation is intentionally not part of the accepted workflow yet. It will get its own architecture when the shape is clearer.
+
+## Repository Map
+
+- `AGENTS.md`: local instructions for agents working in this repo.
 - `CONTEXT.md`: vocabulary for the current operating model.
-- `docs/workflows.md`: accepted live workflows.
-- `docs/knowledge-bank-conventions.md`: formal conventions for the Notion `life` database and drift audits.
-- `docs/agents/`: navigation and issue-tracker guidance for agents.
+- `docs/workflows.md`: accepted workflows and non-workflows.
+- `docs/knowledge-bank-conventions.md`: formal rules for the Notion `life` database.
 - `skills/`: repo-owned agent workflows.
-- `dist/`: generated review artifacts.
+- `dist/`: generated review artifacts, never canonical knowledge.
 
-## Principles
+## Guarantees
 
-- Notion is canonical.
-- This repo documents conventions; it does not duplicate the Knowledge Bank.
-- Agents should use narrow live Notion lookup when task context requires it.
-- Notion writes require explicit approval of the exact draft.
-- Drift audits are read-only and propose fixes for human approval.
-- Codex memory should keep routing facts and preferences, not Notion content.
+- Notion stays canonical.
+- This repo does not mirror the Knowledge Bank.
+- Agents use live Notion lookup instead of local replicas.
+- Notion writes require approval of the exact draft.
+- Drift audits are read-only.
+- Agent memory stores routing policy, not copied Notion facts.
 
 ## Contributing
 
