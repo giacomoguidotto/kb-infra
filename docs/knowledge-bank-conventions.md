@@ -16,6 +16,18 @@ Choose one canonical owner for each fact, chapter, or lesson. Other pages should
 
 Adapter pages, such as `profile`, present selected facts for a purpose. They should not become source-of-truth stores unless they explicitly say they own that fact.
 
+## Naming
+
+Use names that make retrieval unambiguous without making the workspace stiff.
+
+Project pages should usually use stable repo or product slugs, such as `kb-infra`, `anypinn`, `tempo`, or `scry`. Slugs map cleanly to GitHub, local repositories, paths, and agent lookup. Do not rename established project slug pages only to make them prettier; put the human-readable description inside the page body.
+
+Non-project knowledge pages should use human-readable names when they represent a life area, credential, milestone, lesson collection, strategy, or public concept.
+
+Generic names are allowed only when the parent path disambiguates them clearly. If search results become ambiguous, add context or role to the title, such as `Building Bets`, `Orray Ideas Archive`, `Application Answer Scratchpad`, or `Gym Lessons`.
+
+Raw, archive, adapter, and scratchpad pages should signal that role in the title or first paragraph when they could be mistaken for canonical knowledge.
+
 ## Role Property
 
 The `Role` property exists for ambiguous or high-risk pages only. Leave it empty when hierarchy is enough.
