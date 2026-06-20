@@ -1,89 +1,85 @@
 ---
 name: dump-knowledge
-description: Prepare and apply Notion knowledge updates from completed agent sessions by mapping live Notion structure, extracting durable source-free facts, and drafting exact target writes for user approval. Use when the user says /dump-knowledge, /update-knowledge, asks to dump/save session knowledge to Notion, or finishes an agent session.
+description: Draft and apply Notion Knowledge Bank updates from completed conversations or agent sessions. Use when the user says /dump-knowledge, /update-knowledge, asks to save/dump session knowledge to Notion, or wants a conversation recorded in the bank.
 ---
 
 # Dump Knowledge
 
-## Quick Start
+## Invariant
 
-After an agent session, inspect Notion live, extract durable knowledge from the session, show Giacomo exactly what would be written where in an HTML approval draft, and wait for explicit approval before writing.
+Every run produces an HTML approval draft before any Notion write. There is no inline-chat approval shortcut, even for tiny updates.
 
-## Workflow
+## Loop
 
-1. Inspect current context:
-   - Current repo, branch, changed files, commits, command outputs, and conversation decisions.
-   - Any user-provided notes or final summary.
-   - The reusable pattern behind the session, if any, not only the immediate repo/page name.
+### 1. Map Live Notion
 
-2. Map Notion live before choosing a target:
-   - Use the available Notion connector/tooling.
-   - Start broad: search for likely parent areas, databases, siblings, and conventions before narrowing to an exact page name.
-   - Then search exact entity terms, repo names, URLs, aliases, and likely existing page titles.
-   - Read the live database/page schemas and a few nearby examples before proposing fields or body shape.
-   - Do not rely on committed docs or stale local artifacts.
+Read live Notion before choosing a target.
 
-3. Decide placement:
-   - Prefer the live Notion structure over repo assumptions.
-   - Consider whether the knowledge belongs in an existing parent page, a new child page, an existing entity page, or more than one coordinated update.
-   - If the session reveals a convention that applies across projects, propose a higher-level update as well as any project-specific page.
-   - Keep Notion task parent pages short. Put dense backlog, reference notes, reflections, lessons, quotes, project evidence, and long decision context in child pages under the relevant parent.
+- Search broad parent areas, likely databases, sibling pages, repo/project aliases, and relevant conventions.
+- Search exact names, URLs, repository slugs, and likely page titles.
+- Fetch the likely target and nearby examples before proposing fields or body shape.
+- Prefer live Notion structure over repo assumptions or stale local artifacts.
 
-4. Extract only durable knowledge:
-   - Progress made.
-   - Decisions and rationale.
-   - Open tasks, blockers, and follow-ups.
-   - Links to repos, branches, commits, PRs, issues, or artifacts.
-   - User preferences or personal context only when explicitly stated.
-   - Keep provenance for the approval draft only. The final Notion body should read as knowledge, not as a transcript or session log.
+Completion criterion: the proposed target, parent/child placement, property schema, and nearby page pattern are all grounded in live Notion reads, or the draft clearly states that live verification was unavailable.
 
-5. Produce an HTML approval draft:
-   - Target Notion database/page.
-   - New page vs update existing page.
-   - Property/value mapping, using the live Notion fields.
-   - Page body draft written as the final Notion content, with no "Session Update" or source-process headings.
-   - Body structure and section names that follow the current live Notion page examples, especially any pattern Giacomo has already trimmed or standardized.
-   - Parent page vs child page placement.
-   - Relations or links to add.
-   - Higher-level updates or skipped parent updates, if applicable.
-   - Items intentionally skipped.
-   - Ambiguities/questions.
-   - Write the draft as a self-contained HTML file in the OS temp directory. See [HTML-DRAFT.md](HTML-DRAFT.md).
+### 2. Distill Durable Knowledge
 
-6. Ask for confirmation:
-   - Do not write anything to Notion until Giacomo explicitly approves the latest draft.
-   - Approval must come after all discussion, corrections, and follow-up changes. If the chat continues after a draft, treat prior approval as stale and ask again.
-   - Use a direct approval question such as "Should I apply these exact Notion writes now?"
-   - If the mapping is ambiguous, ask before writing.
+Extract only what belongs in the Knowledge Bank.
 
-7. Write and verify:
-   - Apply only the approved changes.
-   - Read back the updated Notion item.
-   - Report what changed and what remains unresolved.
+- Keep progress, decisions, rationale, open tasks, blockers, follow-ups, repo links, issue/PR links, commits, and durable user preferences.
+- Exclude transcript framing, agent provenance, temporary command noise, and facts that are not meant to survive the session.
+- If a convention applies beyond the immediate project, draft the higher-level update separately from the project-specific update.
+- Keep final Notion prose source-free unless provenance is itself useful knowledge.
 
-## Draft Format
+Completion criterion: every proposed Notion body reads as durable knowledge, not as a session log.
 
-Write a temp HTML file, open it for Giacomo, and include its absolute path in chat.
+### 3. Draft Exact Writes
 
-The HTML draft must show:
+Create a dark HTML approval draft using [HTML-DRAFT.md](HTML-DRAFT.md).
 
-- Workspace read: what was searched/read and what structure was inferred.
-- Proposed writes: each Notion target, action, fields, relations, and exact body.
-- Final body preview: only the source-free content that would land in Notion.
-- Skipped or deferred writes: especially parent pages or convention pages considered but not selected.
-- Questions: only blockers that must be answered before writing.
+The draft must include:
 
-Do not paste a long markdown draft in chat. The chat response should be a short pointer to the HTML file plus the approval question.
+- workspace read: searches, pages, databases, and examples inspected
+- proposed writes: target, action, properties, relations, placement, and why
+- body preview: exact source-free Notion body to write
+- skipped writes: considered targets or conventions not selected
+- questions: only blockers that prevent a correct write
 
-## Rules
+Write the draft to the OS temp directory, open it for Giacomo, and report the absolute path in chat.
+
+Completion criterion: Giacomo can approve or reject the exact Notion writes from the HTML file without needing hidden context from the conversation.
+
+### 4. Ask For Fresh Approval
+
+Ask: "Should I apply these exact Notion writes now?"
+
+Only explicit approval after the latest draft permits writing. "Looks good", clarifying answers, or placement discussion are not approval. If the conversation changes the draft, regenerate the HTML file and ask again.
+
+Completion criterion: approval is explicit, fresh, and applies to the latest exact draft.
+
+### 5. Apply And Verify
+
+Apply only the approved writes.
+
+- Use the live schema and exact properties from the approved draft.
+- Preserve child pages, databases, and unrelated content unless the draft explicitly says otherwise.
+- Read back every updated Notion item.
+- Report what changed and what remains unresolved.
+
+Completion criterion: every approved write has been read back from Notion, or any failed write is reported with the exact blocker.
+
+## Placement Rules
+
+- Keep parent pages short.
+- Put dense backlog, references, reflections, lessons, quotes, evidence, and long decision context in child pages under the relevant parent.
+- Prefer the smallest coherent set of writes over broad context dumps.
+- Choose one canonical owner for each fact, chapter, or lesson; other pages should link to that owner.
+- Never invent a page or database when an existing owner can be strengthened.
+
+## Safety Rules
 
 - Notion is the source of truth.
-- Never invent facts to fit a Notion field.
+- Never invent facts to fit a field.
 - Never write, edit, append, relate, archive, move, rename, or delete anything in Notion before explicit approval of the latest exact draft.
-- Treat Notion writes as highly destructive and hard to version. "Looks good", clarifying answers, or pointing out where something belongs are not approval unless Giacomo explicitly says to apply/write/create/update the exact draft.
-- Prefer the smallest coherent set of writes over broad context dumps.
-- Do not anchor on the current repo/page name too early; search for structure and patterns first.
-- Final Notion content must not mention that it came from an agent session unless that provenance is itself the knowledge being stored.
-- Follow the structure, length, heading style, and density already established in the target Notion page and nearby sibling pages. When live examples are shorter than your draft, trim to match them.
-- Keep Notion task parent pages short. Put dense backlog, reference notes, reflections, lessons, quotes, project evidence, and long decision context in child pages under the relevant parent.
-- If Notion access is unavailable, produce only a draft and say it was not verified against live Notion.
+- Treat Notion writes as hard to version and potentially destructive.
+- If Notion access is unavailable, produce only a draft and label it unverified.
