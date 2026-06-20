@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Agent infrastructure for a Notion-first knowledge bank.</strong><br>
-  <sub>Workflows, skills, policies, and reviewable artifacts for Giacomo's Notion workspace.</sub>
+  <sub>Repo-owned conventions, skills, and reviewable artifacts for Giacomo's Notion workspace.</sub>
 </p>
 
 <p align="center">
@@ -16,7 +16,7 @@
 
 <br>
 
-Knowledge Bank Infrastructure keeps agents pointed at the right source of truth. Notion owns the actual personal knowledge, tasks, projects, and portfolio facts; this repo keeps the supporting workflows and artifacts that make that workspace usable by Codex, ChatGPT, and other agents.
+Knowledge Bank Infrastructure keeps agents pointed at the right source of truth. Notion owns the actual personal knowledge, tasks, projects, and portfolio facts; this repo holds the conventions and skills that make that workspace usable by Codex and other agents.
 
 Generated files under `dist/` are reviewable outputs, not canonical records.
 
@@ -24,69 +24,54 @@ Use the full name, Knowledge Bank Infrastructure, in human-facing prose. Use the
 
 ## Workflow Map
 
-Knowledge Bank Infrastructure sits between the canonical Notion workspace and the agents that need safe, scoped context from it.
+Knowledge Bank Infrastructure sits beside the canonical Notion workspace. It does not mirror or replicate Notion; it tells agents how to read, draft, and audit it.
 
 ```mermaid
 flowchart LR
     notion(("Notion<br/>source of truth"))
-    kbInfra["Knowledge Bank Infrastructure<br/>workflows, skills,<br/>policies, artifacts"]
-    codex["Codex runs<br/>capture, sync,<br/>govern"]
-    codexMemory[("Codex Memory<br/>small routing facts")]
-    chatgpt["chatgpt.com<br/>ChatGPT Memory Digest"]
-    portfolio["Portfolio<br/>public Notion-backed facts"]
+    kbInfra["Knowledge Bank Infrastructure<br/>conventions, skills,<br/>reviewable artifacts"]
+    codex["Codex agents<br/>manual capture,<br/>live lookup,<br/>drift audit"]
     approval{"Giacomo<br/>approval"}
-    clarify{"Clarification<br/>request"}
+    report["Drift report<br/>proposed fixes"]
 
-    notion -- "live reads" --> codex
-    codex -- "draft updates" --> approval
+    kbInfra -- "formal rules" --> codex
+    codex -- "narrow live reads" --> notion
+    codex -- "approval drafts" --> approval
     approval -- "approved writes" --> notion
-
-    notion -- "diffs and selected facts" --> kbInfra
-    kbInfra -- "rules and safe exports" --> codex
-    codex -- "validated patches and PRs" --> kbInfra
-
-    kbInfra -- "routing-safe digest" --> codexMemory
-    codexMemory -- "pointers and preferences" --> codex
-
-    kbInfra -- "reviewable digest" --> chatgpt
-    chatgpt -. "keeps pointing back to canonical facts" .-> notion
-
-    notion -- "profile, project, career facts" --> portfolio
-    kbInfra -. "export-safe data or generated UI" .-> portfolio
-    portfolio -. "missing or stale claims" .-> clarify
-    kbInfra -. "ambiguous state" .-> clarify
-    clarify -- "answers land in Notion" --> notion
+    codex -- "read-only audit" --> report
+    report -- "human-reviewed changes" --> approval
 
     classDef source fill:#fff7cc,stroke:#d39e00,stroke-width:2px,color:#1f2937;
     classDef gateway fill:#ddf7ef,stroke:#159570,stroke-width:2px,color:#12372f;
     classDef runtime fill:#e8edff,stroke:#5267d8,stroke-width:2px,color:#172554;
-    classDef memory fill:#f3e8ff,stroke:#8b5cf6,stroke-width:2px,color:#3b0764;
-    classDef product fill:#ffe7e2,stroke:#e66b5b,stroke-width:2px,color:#431407;
+    classDef artifact fill:#f3e8ff,stroke:#8b5cf6,stroke-width:2px,color:#3b0764;
     classDef decision fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a;
 
     class notion source;
     class kbInfra gateway;
     class codex runtime;
-    class codexMemory,chatgpt memory;
-    class portfolio product;
-    class approval,clarify decision;
+    class report artifact;
+    class approval decision;
 ```
 
 ## What's Inside
 
-- `skills/`: repo-owned agent workflows.
-- `docs/workflows.md`: the accepted workflow map.
+- `AGENTS.md`: entry point for agents working in this repo.
+- `CONTEXT.md`: vocabulary for the current operating model.
+- `docs/workflows.md`: accepted live workflows.
+- `docs/knowledge-bank-conventions.md`: formal conventions for the Notion `life` database and drift audits.
 - `docs/agents/`: navigation and issue-tracker guidance for agents.
-- `docs/adr/`: durable policy decisions.
-- `dist/`: generated snapshots, reports, digests, and context packs.
+- `skills/`: repo-owned agent workflows.
+- `dist/`: generated review artifacts.
 
 ## Principles
 
 - Notion is canonical.
-- Knowledge Bank Infrastructure defines workflows; external runtimes execute them.
-- Agents narrow-load only the docs or artifacts needed for the task.
+- This repo documents conventions; it does not duplicate the Knowledge Bank.
+- Agents should use narrow live Notion lookup when task context requires it.
+- Notion writes require explicit approval of the exact draft.
+- Drift audits are read-only and propose fixes for human approval.
 - Codex memory should keep routing facts and preferences, not Notion content.
-- Public artifacts must not include private Notion material without explicit approval.
 
 ## Contributing
 

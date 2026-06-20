@@ -19,7 +19,7 @@ Interview Giacomo one question at a time, clarify the story or decision, then dr
 2. Inspect Notion only for context:
    - Search relevant existing Notion pages/databases when available.
    - Use Notion to avoid duplicates and understand where the update might belong.
-   - Do not rely on committed docs or old snapshots.
+   - Do not rely on committed docs or stale local artifacts.
 
 3. Grill one question at a time:
    - Ask the most important unresolved question.

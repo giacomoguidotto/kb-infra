@@ -21,7 +21,7 @@ After an agent session, inspect Notion live, extract durable knowledge from the 
    - Start broad: search for likely parent areas, databases, siblings, and conventions before narrowing to an exact page name.
    - Then search exact entity terms, repo names, URLs, aliases, and likely existing page titles.
    - Read the live database/page schemas and a few nearby examples before proposing fields or body shape.
-   - Do not rely on committed docs or old snapshots.
+   - Do not rely on committed docs or stale local artifacts.
 
 3. Decide placement:
    - Prefer the live Notion structure over repo assumptions.
