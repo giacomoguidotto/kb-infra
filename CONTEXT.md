@@ -12,6 +12,10 @@ _Use for_: GitHub URLs, CLI identifiers, generated artifact names, and other mac
 
 **Knowledge Bank**: The Notion-backed personal knowledge system. It is not duplicated into this repo.
 
+**KB**: Conversational shorthand for the Notion Knowledge Bank.
+_Use for_: agent conversations and user requests that refer to the Notion-backed knowledge system
+_Avoid_: using `KB` for this repository; use `kb-infra` when referring to Knowledge Bank Infrastructure
+
 **Manual Capture**: A user-invoked workflow that drafts durable session knowledge into Notion through `remember`.
 
 **Live Lookup**: A narrow, task-scoped read from Notion. This is the normal way agents refresh context.
