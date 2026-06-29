@@ -15,20 +15,17 @@ Rules:
 - Keep parent pages thin; put dense knowledge in the right child page.
 - Choose one canonical owner for each fact, chapter, or lesson; other pages should link to it instead of duplicating it.
 
-Interactive life-context capture uses `skills/grill-knowledge`: ask one question at a time, produce a Notion draft at the end, and write only after confirmation.
+## 2. Recall
 
-## 2. Live Lookup
+Trigger: a workflow or automation needs relevant Knowledge Bank context, or Giacomo asks what the Knowledge Bank is missing, stale, or ready to revisit.
 
-Trigger: an agent task may depend on Giacomo's personal, task, project, finance, profile, portfolio, or Knowledge Bank facts.
-
-Flow: perform a narrow live Notion lookup using the available connector, read only the pages or rows relevant to the task, internalize the task-relevant facts, and continue.
+Flow: use `skills/recall`; retrieve scoped live Notion context for the caller. If the caller explicitly needs hole-filling or stale-state resolution, use recall's clarification branch to build a complete question queue and ask Giacomo one question at a time.
 
 Rules:
 
-- There is no automatic repository mirroring step.
-- Do not maintain broad replicated knowledge stores.
-- Treat repo docs and memory as routing surfaces, not copies of Notion.
-- Use `skills/get-knowledge` only when Giacomo explicitly asks to refresh from Notion or when a normal lookup is not enough.
+- Recall reads broadly enough to satisfy the caller, but does not mirror the Knowledge Bank locally.
+- Treat the Knowledge Bank as the ledger for `already handled`: resolved questions should be reflected in canonical Notion pages, and deferred questions should be reflected as follow-up markers.
+- Do not write to Notion during recall.
 
 ## 3. Drift Audit
 
@@ -40,6 +37,7 @@ Rules:
 
 - The drift audit is about Knowledge Bank structure and ownership, not access-control or artifact-release reviews.
 - Do not write to Notion during the audit.
+- Treat due follow-up markers as questions for Giacomo, not as permission to update the Knowledge Bank.
 - Group findings by severity and include page links.
 - Propose exact drafts or property changes for Giacomo to approve.
 

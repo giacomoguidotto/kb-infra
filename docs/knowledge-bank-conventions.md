@@ -39,6 +39,41 @@ Allowed `Role` values:
 - `Raw`: captures notes that still need distillation or verification.
 - `Archive`: preserves history that is not the current source of truth.
 
+## Follow-up Markers
+
+Use a follow-up marker when a page contains a deferred, raw, provisional, or time-ambiguous fact that Giacomo should be asked about in a future recall. This is for life and project knowledge that should be revisited, but is not itself a time-bounded task.
+
+Format:
+
+```md
+Follow-up: ask again on YYYY-MM-DD: <short question or update prompt>.
+```
+
+Rules:
+
+- Put the marker near the start of the page body, after any structural block that must stay first.
+- Use an absolute ISO date in Giacomo's local calendar. Do not use relative phrases such as `next week`, `tomorrow`, or `soon`.
+- Keep the prompt short enough that a future agent can ask it directly.
+- Use page-body markers instead of `Scheduled` or `Deadline` when the update is a deferred knowledge question rather than a dated task.
+- Remove or replace the marker only through an approved `remember` write after the question has been answered or intentionally deferred again.
+
+## Final Form Markers
+
+Use a final form marker only when Giacomo explicitly says a topic should not be questioned again. This is stronger than discarding a recall question; a normal discard leaves no Notion trace.
+
+Format:
+
+```md
+Recall: this topic is in its final form; its content should not be questioned unless Giacomo explicitly reopens it.
+```
+
+Rules:
+
+- Put the marker near the specific page section or page opening it applies to.
+- Use it rarely. Prefer no marker when Giacomo only discards one recall question.
+- Recall should skip final form content entirely unless Giacomo explicitly reopens it.
+- Add, remove, or change the marker only through an approved `remember` write.
+
 ## Drift Audits
 
 Drift audits should find places where the Knowledge Bank no longer matches these conventions.
@@ -52,6 +87,7 @@ Look for:
 - pages with unclear parentage
 - sparse high-importance pages
 - stale project state
+- due follow-up markers and relative-time phrases that should become exact follow-up markers
 - contradictions with the one-owner/no-duplication rule
 
 Drift audits must propose exact drafts or property changes for Giacomo to approve. They must not write to Notion directly.

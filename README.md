@@ -36,7 +36,7 @@ That gives the system three useful properties:
 flowchart LR
     repo["kb-infra<br/>conventions + skills"]
     notion(("Notion<br/>source of truth"))
-    agent["Agent<br/>live lookup + drafts"]
+    agent["Agent<br/>recall + drafts"]
     draft["HTML draft<br/>exact proposed writes"]
     audit["Drift audit<br/>proposed fixes"]
     approval{"Giacomo<br/>approval"}
@@ -65,7 +65,7 @@ flowchart LR
 ## Active Workflows
 
 - **Manual capture**: `/remember` turns a conversation or agent session into an approval draft for Notion.
-- **Live lookup**: agents read only the Notion pages needed for the current task, then continue with that context.
+- **Recall**: `/recall` retrieves scoped KB context for workflows, with an optional one-question-at-a-time clarification branch for stale or missing knowledge.
 - **Drift audit**: a scheduled Codex automation checks naming, ownership, page roles, raw notes, and stale project pages, then proposes fixes for approval.
 
 Portfolio generation is intentionally not part of the accepted workflow yet. It will get its own architecture when the shape is clearer.
@@ -76,6 +76,7 @@ Portfolio generation is intentionally not part of the accepted workflow yet. It 
 - `CONTEXT.md`: vocabulary for the current operating model.
 - `docs/workflows.md`: accepted workflows and non-workflows.
 - `docs/knowledge-bank-conventions.md`: formal rules for the Notion `life` database.
+- `docs/automations/`: draft prompts for scheduled Codex automations.
 - `skills/`: repo-owned agent workflows.
 - `dist/`: generated review artifacts, never canonical knowledge.
 

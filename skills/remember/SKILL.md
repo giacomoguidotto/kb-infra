@@ -1,6 +1,6 @@
 ---
 name: remember
-description: Draft and apply Notion Knowledge Bank updates from completed conversations or agent sessions. Use when the user says /remember, /update-knowledge, asks to save or record session knowledge in Notion, or wants a conversation remembered in the bank.
+description: Remember completed conversations or agent sessions in the Notion Knowledge Bank. Use when the user invokes /remember or asks to save session knowledge to Notion.
 ---
 
 # Remember

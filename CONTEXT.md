@@ -18,9 +18,11 @@ _Avoid_: using `KB` for this repository; use `kb-infra` when referring to Knowle
 
 **Manual Capture**: A user-invoked workflow that drafts durable session knowledge into Notion through `remember`.
 
-**Live Lookup**: A narrow, task-scoped read from Notion. This is the normal way agents refresh context.
+**Recall**: A read-only retrieval workflow that fetches live Knowledge Bank context for other workflows, with an optional clarification branch for missing, stale, due, raw, or ambiguous facts.
 
 **Drift Audit**: A read-only check for Knowledge Bank structure, ownership, naming, role, and stale-state drift. The scheduled Codex automation uses this pattern.
+
+**Follow-up Marker**: A short page-body line that tells a future recall to ask Giacomo about a deferred or time-ambiguous update.
 
 **Approval Draft**: A reviewable proposal showing exact Notion writes before anything is applied.
 
