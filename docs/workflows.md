@@ -8,7 +8,7 @@ Knowledge Bank Infrastructure defines a small set of agent workflows around the 
 |------------|---------|-------|----------------------|
 | Job Hunt Eval Pulse | Mondays, Wednesdays, Fridays | 09:00 Europe/Rome | Autonomous evaluation output |
 | Job Hunt Advancement Pulse | Mondays, Wednesdays, Fridays | 13:00 Europe/Rome | Produces review-later draft packs |
-| Knowledge Bank Drift Realignment | Thursdays, Sundays | 13:00 Europe/Rome | Low-effort clarification loop; writes still require approval |
+| Knowledge Bank Drift Realignment | Mondays, Fridays | 13:00 Europe/Rome | Low-effort clarification loop; writes still require approval |
 | Social Draft Pulse | Mondays, Wednesdays, Fridays | 17:00 Europe/Rome | Approval-gated idea summary, then Typefully drafts |
 | Portfolio Surface Sweep | Every 2 weeks, alternating Wednesdays starting July 8, 2026 | 13:00 Europe/Rome | Approval-gated portfolio proposal |
 | Job Hunt Tuning Audit | Every 2 weeks, alternating Wednesdays starting July 15, 2026 | 13:00 Europe/Rome | Approval-gated career tuning proposal |
@@ -38,7 +38,7 @@ Rules:
 - Do not write to Notion during recall or before `/remember` approval.
 - Treat due follow-up markers as questions for Giacomo, not as permission to update the Knowledge Bank.
 - A normal discard leaves no KB trace; deferrals and final-form decisions become marker candidates only through approved `/remember` writes.
-- Runs on Thursdays and Sundays at 13:00 Europe/Rome.
+- Runs on Mondays and Fridays at 13:00 Europe/Rome.
 - Use ignored local scratch only for mechanical hints such as last run time or commit cursors. Never store copied KB facts, answered questions, suppressions, or durable reports in local state.
 - The scheduled prompt source lives in [Knowledge Bank Drift Realignment Automation](automations/kb-drift-realignment.md).
 
