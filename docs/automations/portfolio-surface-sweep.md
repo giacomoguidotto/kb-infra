@@ -8,8 +8,8 @@ updates.
 
 Portfolio Surface Sweep is a recall-to-portfolio-proposal workflow.
 
-- Default cadence: twice a month, on the first and third Monday at 14:00
-  Europe/Rome.
+- Default cadence: every 2 weeks on alternating Wednesdays at 13:00 Europe/Rome,
+  starting July 8, 2026, offset from Job Hunt Tuning Audit.
 - Manual trigger: after a meaningful milestone, launch, shipped demo, public
   artifact, or project status change.
 - Empty result: a run may validly find nothing worth changing.
@@ -55,7 +55,8 @@ Setup:
   If `WEBSITE_INFO_DUMP.md` exists in the checkout, read it too.
 
 Cadence:
-- Run twice a month, on the first and third Monday at 14:00 Europe/Rome.
+- Run every 2 weeks on alternating Wednesdays at 13:00 Europe/Rome, starting
+  July 8, 2026, offset from Job Hunt Tuning Audit.
 - A no-change result is acceptable. If the current portfolio surface is still
   strong, report that clearly and stop.
 

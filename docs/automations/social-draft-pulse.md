@@ -7,7 +7,7 @@ approval-gated Typefully drafts for X and LinkedIn.
 
 Social Draft Pulse is a recall-to-social-draft workflow.
 
-- Default cadence: Mondays, Wednesdays, and Fridays at 14:00 Europe/Rome.
+- Default cadence: Mondays, Wednesdays, and Fridays at 17:00 Europe/Rome.
 - Recall branch: use `/recall` in context mode once per run.
 - Recall surface: `profile`, `network`, `X`, `LinkedIn`, `build`, and recent
   project pages that the run's evidence makes relevant.
@@ -50,7 +50,7 @@ Setup:
   and `skills/recall/SKILL.md` in `kb-infra` before acting.
 
 Cadence:
-- Run on Mondays, Wednesdays, and Fridays at 14:00 Europe/Rome.
+- Run on Mondays, Wednesdays, and Fridays at 17:00 Europe/Rome.
 
 Goal:
 - Pull recent public-surface context from the KB once.

@@ -2,6 +2,17 @@
 
 Knowledge Bank Infrastructure defines a small set of agent workflows around the live Notion workspace. Notion remains the source of truth.
 
+## Automation Cadence
+
+| Automation | Cadence | Start | Intervention posture |
+|------------|---------|-------|----------------------|
+| Job Hunt Eval Pulse | Mondays, Wednesdays, Fridays | 09:00 Europe/Rome | Autonomous evaluation output |
+| Job Hunt Advancement Pulse | Mondays, Wednesdays, Fridays | 13:00 Europe/Rome | Produces review-later draft packs |
+| Knowledge Bank Drift Realignment | Thursdays, Sundays | 13:00 Europe/Rome | Low-effort clarification loop; writes still require approval |
+| Social Draft Pulse | Mondays, Wednesdays, Fridays | 17:00 Europe/Rome | Approval-gated idea summary, then Typefully drafts |
+| Portfolio Surface Sweep | Every 2 weeks, alternating Wednesdays starting July 8, 2026 | 13:00 Europe/Rome | Approval-gated portfolio proposal |
+| Job Hunt Tuning Audit | Every 2 weeks, alternating Wednesdays starting July 15, 2026 | 13:00 Europe/Rome | Approval-gated career tuning proposal |
+
 ## 1. Manual Capture
 
 Trigger: Giacomo manually invokes `/remember` or asks to save a conversation/session into the Knowledge Bank.
@@ -27,7 +38,7 @@ Rules:
 - Do not write to Notion during recall or before `/remember` approval.
 - Treat due follow-up markers as questions for Giacomo, not as permission to update the Knowledge Bank.
 - A normal discard leaves no KB trace; deferrals and final-form decisions become marker candidates only through approved `/remember` writes.
-- Runs on Thursdays and Sundays at 14:00 Europe/Rome.
+- Runs on Thursdays and Sundays at 13:00 Europe/Rome.
 - Use ignored local scratch only for mechanical hints such as last run time or commit cursors. Never store copied KB facts, answered questions, suppressions, or durable reports in local state.
 - The scheduled prompt source lives in [Knowledge Bank Drift Realignment Automation](automations/kb-drift-realignment.md).
 
@@ -43,7 +54,7 @@ Rules:
 - This is a social draft workflow, not a publishing workflow.
 - Do not post or schedule from Codex.
 - Do not write to Notion.
-- Runs on Mondays, Wednesdays, and Fridays at 14:00 Europe/Rome.
+- Runs on Mondays, Wednesdays, and Fridays at 17:00 Europe/Rome.
 - Use Typefully as the draft queue after approval.
 - Prefer platform-specific drafts over generic cross-posts.
 - Include media placeholders when a draft needs a screenshot, short video,
@@ -66,7 +77,8 @@ Rules:
 - Do not create Typefully drafts.
 - Do not merge, deploy, or publish from Codex without approval.
 - Do not write to Notion.
-- Runs twice a month, on the first and third Monday at 14:00 Europe/Rome.
+- Runs every 2 weeks on alternating Wednesdays at 13:00 Europe/Rome, starting
+  July 8, 2026, offset from Job Hunt Tuning Audit.
 - A no-change result is acceptable; if the portfolio is still current, report the
   evidence checked and stop.
 - Content updates are expected when KB context reveals a stronger public surface;
@@ -80,3 +92,50 @@ Rules:
 - Flag announcement candidates for Social Draft Pulse instead of drafting social
   posts in this workflow.
 - The scheduled prompt source lives in [Portfolio Surface Sweep Automation](automations/portfolio-surface-sweep.md).
+
+## 5. Job Hunt Tuning Audit
+
+Trigger: a scheduled Codex automation, or a manual request after a meaningful
+job-search strategy, proof, project, compensation, relocation, or target-role
+change.
+
+Flow: start from this repo's agent instructions, [Knowledge Bank
+Conventions](knowledge-bank-conventions.md), `/recall`, and the current
+`career-ops` repo docs. Use `/recall` in context mode once over job-search
+strategy pages and active proof/project pages. Inspect `career-ops` user-layer
+configuration before proposing changes. Return a tuning summary first. Apply
+repo changes only after Giacomo approves the proposed set.
+
+Rules:
+
+- This is a tuning proposal workflow, not a live application workflow.
+- Do not write to Notion.
+- Runs every 2 weeks on alternating Wednesdays at 13:00 Europe/Rome, starting
+  July 15, 2026, offset from Portfolio Surface Sweep.
+- Keep personalization in `career-ops` user-layer files.
+- Do not edit shared system defaults unless Giacomo explicitly asks.
+- A no-change result is acceptable.
+- The draft prompt source lives in [Job Hunt Tuning Audit Automation](automations/job-hunt-tuning-audit.md).
+
+## 6. Job Hunt Advancement Pulse
+
+Trigger: a scheduled Codex automation, or a manual request to advance existing
+`career-ops` opportunities after evaluation.
+
+Flow: inspect `career-ops` tracker, reports, follow-up history, and optional
+application action state. Use `/recall` in context mode only when fresh KB
+context could change the next pack. Select a small number of opportunities and
+produce draft-oriented next-step packs. Stop before submitting applications,
+sending messages, or recording real-world state changes.
+
+Rules:
+
+- This is an advancement workflow, not discovery or evaluation.
+- Runs on Mondays, Wednesdays, and Fridays at 13:00 Europe/Rome.
+- It consumes `Job Hunt Eval Pulse`; it should idle when evaluation or batch work
+  is still in progress.
+- Do not write to Notion.
+- Do not submit, send, or mark actions completed without Giacomo's confirmation.
+- Keep lifecycle status in `data/applications.md`; keep operational state in the
+  optional `data/application-actions.yml` sidecar.
+- The draft prompt source lives in [Job Hunt Advancement Pulse Automation](automations/job-hunt-advancement-pulse.md).
