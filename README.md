@@ -32,35 +32,7 @@ That gives the system three useful properties:
 
 ## Operating Loop
 
-```mermaid
-flowchart LR
-    repo["kb-infra<br/>conventions + skills"]
-    notion(("Notion<br/>source of truth"))
-    agent["Agent<br/>recall + drafts"]
-    draft["HTML draft<br/>exact proposed writes"]
-    realign["Drift realignment<br/>questions + candidates"]
-    approval{"Giacomo<br/>approval"}
-
-    repo -- "protocol" --> agent
-    agent -- "narrow reads" --> notion
-    agent -- "/remember skill" --> draft
-    agent -- "scheduled clarification" --> realign
-    realign -- "answered updates" --> draft
-    draft --> approval
-    approval -- "approved writes" --> notion
-
-    classDef source fill:#fff7cc,stroke:#d39e00,stroke-width:2px,color:#1f2937;
-    classDef protocol fill:#ddf7ef,stroke:#159570,stroke-width:2px,color:#12372f;
-    classDef runtime fill:#e8edff,stroke:#5267d8,stroke-width:2px,color:#172554;
-    classDef artifact fill:#f3e8ff,stroke:#8b5cf6,stroke-width:2px,color:#3b0764;
-    classDef decision fill:#f8fafc,stroke:#64748b,stroke-width:2px,color:#0f172a;
-
-    class notion source;
-    class repo protocol;
-    class agent runtime;
-    class draft,realign artifact;
-    class approval decision;
-```
+![Knowledge Bank Infrastructure workflow map](assets/diagram.png)
 
 ## Active Workflows
 
