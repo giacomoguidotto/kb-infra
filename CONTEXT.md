@@ -22,6 +22,10 @@ _Avoid_: using `KB` for this repository; use `kb-infra` when referring to Knowle
 
 **Knowledge Bank Drift Realignment**: A scheduled recall-to-remember workflow that finds stale, missing, due, raw, ambiguous, or project-drift knowledge; asks Giacomo one clarification question at a time; then drafts exact `/remember` writes for approval.
 
+**Social Draft Pulse**: A scheduled recall-to-social-draft workflow that turns recent public-safe KB context into approved Typefully drafts for work-facing X and LinkedIn posts. It drafts only; it does not post, schedule, branch, publish, or write to Notion.
+
+**Portfolio Surface Sweep**: A scheduled recall-to-portfolio-proposal workflow that compares public-safe KB context with the current `guidotto.dev` portfolio, then prepares approved branch/PR work for portfolio candidates. It does not create social drafts, merge, deploy, publish, or write to Notion.
+
 **Drift Audit**: A read-only convention check for Knowledge Bank structure, ownership, naming, role, and stale-state drift. It is a lower-level review pattern, not the scheduled automation's whole shape.
 
 **Follow-up Marker**: A short page-body line that tells a future recall to ask Giacomo about a deferred or time-ambiguous update.
