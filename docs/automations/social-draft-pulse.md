@@ -7,7 +7,7 @@ approval-gated Typefully drafts for X and LinkedIn.
 
 Social Draft Pulse is a recall-to-social-draft workflow.
 
-- Default cadence: Tuesday and Friday.
+- Default cadence: Mondays, Wednesdays, and Fridays at 14:00 Europe/Rome.
 - Recall branch: use `/recall` in context mode once per run.
 - Recall surface: `profile`, `network`, `X`, `LinkedIn`, `build`, and recent
   project pages that the run's evidence makes relevant.
@@ -22,6 +22,21 @@ Social Draft Pulse is a recall-to-social-draft workflow.
   requests unless the approved run explicitly asks Codex to generate an
   illustrative asset.
 
+## Public-Surface Rules
+
+- Notion remains the source of truth for profile, project, task, portfolio, and
+  personal knowledge.
+- Use `/recall` narrowly. Do not preload broad Notion content.
+- Do not write to Notion from this automation.
+- Do not publish, schedule, merge, deploy, or branch from this automation.
+- Start with an idea summary before creating Typefully drafts.
+- Keep public claims source-backed and public-safe.
+- Do not commit raw personal dumps or broad Notion exports.
+- Do not turn unsupported vibes into factual claims.
+- The KB is the knowledge ledger and Typefully is the social draft queue.
+- Social Draft Pulse may flag portfolio candidates, but should not do portfolio
+  branch/PR work.
+
 ## Prompt
 
 ```md
@@ -32,8 +47,10 @@ Setup:
 - `KB` means Giacomo's Notion Knowledge Bank.
 - Typefully is the draft sink for X and LinkedIn.
 - Read `AGENTS.md`, `docs/workflows.md`, `docs/knowledge-bank-conventions.md`,
-  `docs/automations/public-surface-update.md`, and `skills/recall/SKILL.md` in
-  `kb-infra` before acting.
+  and `skills/recall/SKILL.md` in `kb-infra` before acting.
+
+Cadence:
+- Run on Mondays, Wednesdays, and Fridays at 14:00 Europe/Rome.
 
 Goal:
 - Pull recent public-surface context from the KB once.

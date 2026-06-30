@@ -8,9 +8,11 @@ updates.
 
 Portfolio Surface Sweep is a recall-to-portfolio-proposal workflow.
 
-- Default cadence: monthly, preferably the first Friday of the month.
+- Default cadence: twice a month, on the first and third Monday at 14:00
+  Europe/Rome.
 - Manual trigger: after a meaningful milestone, launch, shipped demo, public
   artifact, or project status change.
+- Empty result: a run may validly find nothing worth changing.
 - Recall branch: use `/recall` in context mode once per run.
 - Recall surface: `profile`, `network`, `build`, `guidotto.dev`, and relevant
   project pages.
@@ -18,6 +20,23 @@ Portfolio Surface Sweep is a recall-to-portfolio-proposal workflow.
   proposing portfolio changes.
 - Approval gate: first return a surface summary. After Giacomo approves the
   content direction, prepare branch/PR work for the approved changes.
+
+## Public-Surface Rules
+
+- Notion remains the source of truth for profile, project, task, portfolio, and
+  personal knowledge.
+- Use `/recall` narrowly. Do not preload broad Notion content.
+- Do not write to Notion from this automation.
+- Do not publish, schedule, merge, deploy, create Typefully drafts, or branch
+  before approval.
+- Start with a surface summary before creating branches or editing files.
+- Keep public claims source-backed and public-safe.
+- Do not commit raw personal dumps or broad Notion exports.
+- Do not turn unsupported vibes into factual claims.
+- The KB is the knowledge ledger and GitHub PRs/issues are the portfolio work
+  queue.
+- Portfolio Surface Sweep may flag announcement candidates, but should not create
+  social drafts.
 
 ## Prompt
 
@@ -29,12 +48,16 @@ Setup:
 - Portfolio repository: `/Users/giacomo/dev/life/guidotto.dev`.
 - `KB` means Giacomo's Notion Knowledge Bank.
 - Read `AGENTS.md`, `docs/workflows.md`, `docs/knowledge-bank-conventions.md`,
-  `docs/automations/public-surface-update.md`, and `skills/recall/SKILL.md` in
-  `kb-infra` before acting.
+  and `skills/recall/SKILL.md` in `kb-infra` before acting.
 - Read `AGENTS.md`, `CONTEXT.md`, `docs/copy.md`, `docs/agents/domain.md`,
   `docs/agents/issue-tracker.md`, `src/content/index.ts`, and
   `src/content/index.test.ts` in `guidotto.dev` before proposing portfolio edits.
   If `WEBSITE_INFO_DUMP.md` exists in the checkout, read it too.
+
+Cadence:
+- Run twice a month, on the first and third Monday at 14:00 Europe/Rome.
+- A no-change result is acceptable. If the current portfolio surface is still
+  strong, report that clearly and stop.
 
 Goal:
 - Pull public-surface context from the KB once.

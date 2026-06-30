@@ -27,6 +27,7 @@ Rules:
 - Do not write to Notion during recall or before `/remember` approval.
 - Treat due follow-up markers as questions for Giacomo, not as permission to update the Knowledge Bank.
 - A normal discard leaves no KB trace; deferrals and final-form decisions become marker candidates only through approved `/remember` writes.
+- Runs on Thursdays and Sundays at 14:00 Europe/Rome.
 - Use ignored local scratch only for mechanical hints such as last run time or commit cursors. Never store copied KB facts, answered questions, suppressions, or durable reports in local state.
 - The scheduled prompt source lives in [Knowledge Bank Drift Realignment Automation](automations/kb-drift-realignment.md).
 
@@ -35,13 +36,14 @@ Rules:
 Trigger: the scheduled Codex automation `Social Draft Pulse`, or a manual request
 to mine recent KB context for work-facing social drafts.
 
-Flow: start from this repo's agent instructions, [Knowledge Bank Conventions](knowledge-bank-conventions.md), [Public Surface Workflows](automations/public-surface-update.md), `/recall`, and the Typefully integration. Use `/recall` in context mode once over `profile`, `network`, `X`, `LinkedIn`, `build`, and relevant project pages. Return an idea summary first. After Giacomo approves the content direction, create Typefully drafts for approved X and LinkedIn candidates.
+Flow: start from this repo's agent instructions, [Knowledge Bank Conventions](knowledge-bank-conventions.md), `/recall`, and the Typefully integration. Use `/recall` in context mode once over `profile`, `network`, `X`, `LinkedIn`, `build`, and relevant project pages. Return an idea summary first. After Giacomo approves the content direction, create Typefully drafts for approved X and LinkedIn candidates.
 
 Rules:
 
 - This is a social draft workflow, not a publishing workflow.
 - Do not post or schedule from Codex.
 - Do not write to Notion.
+- Runs on Mondays, Wednesdays, and Fridays at 14:00 Europe/Rome.
 - Use Typefully as the draft queue after approval.
 - Prefer platform-specific drafts over generic cross-posts.
 - Include media placeholders when a draft needs a screenshot, short video,
@@ -56,7 +58,7 @@ Trigger: the scheduled Codex automation `Portfolio Surface Sweep`, or a manual
 request after a meaningful milestone, launch, shipped demo, public artifact, or
 project status change.
 
-Flow: start from this repo's agent instructions, [Knowledge Bank Conventions](knowledge-bank-conventions.md), [Public Surface Workflows](automations/public-surface-update.md), `/recall`, and the current `guidotto.dev` repo docs. Use `/recall` in context mode once over `profile`, `network`, `build`, `guidotto.dev`, and relevant project pages. Inspect `guidotto.dev` before proposing changes. Return a surface summary first. After Giacomo approves the content direction, prepare branch/PR work for approved portfolio candidates.
+Flow: start from this repo's agent instructions, [Knowledge Bank Conventions](knowledge-bank-conventions.md), `/recall`, and the current `guidotto.dev` repo docs. Use `/recall` in context mode once over `profile`, `network`, `build`, `guidotto.dev`, and relevant project pages. Inspect `guidotto.dev` before proposing changes. Return a surface summary first. After Giacomo approves the content direction, prepare branch/PR work for approved portfolio candidates.
 
 Rules:
 
@@ -64,6 +66,9 @@ Rules:
 - Do not create Typefully drafts.
 - Do not merge, deploy, or publish from Codex without approval.
 - Do not write to Notion.
+- Runs twice a month, on the first and third Monday at 14:00 Europe/Rome.
+- A no-change result is acceptable; if the portfolio is still current, report the
+  evidence checked and stop.
 - Content updates are expected when KB context reveals a stronger public surface;
   the Notion boundary is a public-safety and audit rule, not a ban on changing
   copy.

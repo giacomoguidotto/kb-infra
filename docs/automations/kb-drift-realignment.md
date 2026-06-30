@@ -6,7 +6,7 @@ Draft prompt for the scheduled Codex automation that uses `/recall` in clarifica
 
 Knowledge Bank Drift Realignment replaces the older scheduled drift-audit shape. It is not a report-only audit; it is a scheduled recall-to-remember loop.
 
-- Run cadence: Tuesdays and Fridays at 14:00 Europe/Rome.
+- Run cadence: Thursdays and Sundays at 14:00 Europe/Rome.
 - Recall branch: use `/recall` in clarification mode to find stale, missing, due, raw, ambiguous, or project-drift candidates.
 - Project surface: start from the Notion `build` page `Subtasks`, then compare project pages against recent local git history or remote history when needed.
 - Question loop: ask Giacomo one question at a time, with a soft cap of 10 questions per sitting.
@@ -26,7 +26,7 @@ Setup:
 - Read `AGENTS.md`, `docs/workflows.md`, `docs/knowledge-bank-conventions.md`, `skills/recall/SKILL.md`, and `skills/remember/SKILL.md` before acting.
 
 Cadence:
-- Run on Tuesdays and Fridays at 14:00 Europe/Rome.
+- Run on Thursdays and Sundays at 14:00 Europe/Rome.
 - Treat this as the first operating cadence. After 3-4 weeks, tune frequency based on signal: reduce to weekly if runs are usually empty, keep or split scope if runs often hit the 10-question soft cap.
 
 Goal:
