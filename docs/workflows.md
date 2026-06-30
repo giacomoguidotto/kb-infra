@@ -30,6 +30,48 @@ Rules:
 - Use ignored local scratch only for mechanical hints such as last run time or commit cursors. Never store copied KB facts, answered questions, suppressions, or durable reports in local state.
 - The scheduled prompt source lives in [Knowledge Bank Drift Realignment Automation](automations/kb-drift-realignment.md).
 
-## 3. Portfolio Generation
+## 3. Social Draft Pulse
 
-Portfolio generation is not yet an accepted workflow in this repo. Treat portfolio-related work as project design until Giacomo defines the architecture.
+Trigger: the scheduled Codex automation `Social Draft Pulse`, or a manual request
+to mine recent KB context for work-facing social drafts.
+
+Flow: start from this repo's agent instructions, [Knowledge Bank Conventions](knowledge-bank-conventions.md), [Public Surface Workflows](automations/public-surface-update.md), `/recall`, and the Typefully integration. Use `/recall` in context mode once over `profile`, `network`, `X`, `LinkedIn`, `build`, and relevant project pages. Return an idea summary first. After Giacomo approves the content direction, create Typefully drafts for approved X and LinkedIn candidates.
+
+Rules:
+
+- This is a social draft workflow, not a publishing workflow.
+- Do not post or schedule from Codex.
+- Do not write to Notion.
+- Use Typefully as the draft queue after approval.
+- Prefer platform-specific drafts over generic cross-posts.
+- Include media placeholders when a draft needs a screenshot, short video,
+  diagram, generated-image idea, or asset from Giacomo.
+- Flag portfolio candidates for Portfolio Surface Sweep instead of auditing the
+  portfolio in this workflow.
+- The scheduled prompt source lives in [Social Draft Pulse Automation](automations/social-draft-pulse.md).
+
+## 4. Portfolio Surface Sweep
+
+Trigger: the scheduled Codex automation `Portfolio Surface Sweep`, or a manual
+request after a meaningful milestone, launch, shipped demo, public artifact, or
+project status change.
+
+Flow: start from this repo's agent instructions, [Knowledge Bank Conventions](knowledge-bank-conventions.md), [Public Surface Workflows](automations/public-surface-update.md), `/recall`, and the current `guidotto.dev` repo docs. Use `/recall` in context mode once over `profile`, `network`, `build`, `guidotto.dev`, and relevant project pages. Inspect `guidotto.dev` before proposing changes. Return a surface summary first. After Giacomo approves the content direction, prepare branch/PR work for approved portfolio candidates.
+
+Rules:
+
+- This is a portfolio proposal workflow, not a social drafting workflow.
+- Do not create Typefully drafts.
+- Do not merge, deploy, or publish from Codex without approval.
+- Do not write to Notion.
+- Content updates are expected when KB context reveals a stronger public surface;
+  the Notion boundary is a public-safety and audit rule, not a ban on changing
+  copy.
+- Keep factual claims, metrics, social proof, employment facts, project status,
+  and project capabilities source-backed and public-safe.
+- Respect the current portfolio structure unless the approved change explicitly
+  revises it: four project vessels, one centerpiece, mission/trajectory, human
+  anchor, and contact door.
+- Flag announcement candidates for Social Draft Pulse instead of drafting social
+  posts in this workflow.
+- The scheduled prompt source lives in [Portfolio Surface Sweep Automation](automations/portfolio-surface-sweep.md).
