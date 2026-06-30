@@ -18,9 +18,11 @@ _Avoid_: using `KB` for this repository; use `kb-infra` when referring to Knowle
 
 **Manual Capture**: A user-invoked workflow that drafts durable session knowledge into Notion through `remember`.
 
-**Recall**: A read-only retrieval workflow that fetches live Knowledge Bank context for other workflows, with an optional clarification branch for missing, stale, due, raw, or ambiguous facts.
+**Recall**: A read-only retrieval skill used by workflows to fetch live Knowledge Bank context, with an optional clarification branch for missing, stale, due, raw, or ambiguous facts.
 
-**Drift Audit**: A read-only check for Knowledge Bank structure, ownership, naming, role, and stale-state drift. The scheduled Codex automation uses this pattern.
+**Knowledge Bank Drift Realignment**: A scheduled recall-to-remember workflow that finds stale, missing, due, raw, ambiguous, or project-drift knowledge; asks Giacomo one clarification question at a time; then drafts exact `/remember` writes for approval.
+
+**Drift Audit**: A read-only convention check for Knowledge Bank structure, ownership, naming, role, and stale-state drift. It is a lower-level review pattern, not the scheduled automation's whole shape.
 
 **Follow-up Marker**: A short page-body line that tells a future recall to ask Giacomo about a deferred or time-ambiguous update.
 

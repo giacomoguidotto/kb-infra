@@ -18,7 +18,7 @@
 
 AI agents are useful only when they can find the right context without turning the context itself into another stale copy. Knowledge Bank Infrastructure is the repo that keeps that boundary sharp.
 
-Notion owns the actual knowledge: tasks, projects, profile facts, finance notes, learning notes, and portfolio material. This repo owns the operating rules around that knowledge: how agents should read it, how they should draft updates, and how they should audit structural drift without writing over the source of truth.
+Notion owns the actual knowledge: tasks, projects, profile facts, finance notes, learning notes, and portfolio material. This repo owns the operating rules around that knowledge: how agents should read it, how they should draft updates, and how they should realign stale or missing knowledge without writing over the source of truth.
 
 ## Core Idea
 
@@ -38,15 +38,15 @@ flowchart LR
     notion(("Notion<br/>source of truth"))
     agent["Agent<br/>recall + drafts"]
     draft["HTML draft<br/>exact proposed writes"]
-    audit["Drift audit<br/>proposed fixes"]
+    realign["Drift realignment<br/>questions + candidates"]
     approval{"Giacomo<br/>approval"}
 
     repo -- "protocol" --> agent
     agent -- "narrow reads" --> notion
     agent -- "manual capture" --> draft
-    agent -- "read-only review" --> audit
+    agent -- "scheduled clarification" --> realign
+    realign -- "answered updates" --> draft
     draft --> approval
-    audit --> approval
     approval -- "approved writes" --> notion
 
     classDef source fill:#fff7cc,stroke:#d39e00,stroke-width:2px,color:#1f2937;
@@ -58,15 +58,14 @@ flowchart LR
     class notion source;
     class repo protocol;
     class agent runtime;
-    class draft,audit artifact;
+    class draft,realign artifact;
     class approval decision;
 ```
 
 ## Active Workflows
 
 - **Manual capture**: `/remember` turns a conversation or agent session into an approval draft for Notion.
-- **Recall**: `/recall` retrieves scoped KB context for workflows, with an optional one-question-at-a-time clarification branch for stale or missing knowledge.
-- **Drift audit**: a scheduled Codex automation checks naming, ownership, page roles, raw notes, and stale project pages, then proposes fixes for approval.
+- **Knowledge Bank drift realignment**: a scheduled Codex automation uses `/recall` in clarification mode to find stale, missing, due, raw, ambiguous, or project-drift knowledge; asks one question at a time; then hands the result to `/remember` for approval-gated writes.
 
 Portfolio generation is intentionally not part of the accepted workflow yet. It will get its own architecture when the shape is clearer.
 
@@ -86,7 +85,7 @@ Portfolio generation is intentionally not part of the accepted workflow yet. It 
 - This repo does not mirror the Knowledge Bank.
 - Agents use live Notion lookup instead of local replicas.
 - Notion writes require approval of the exact draft.
-- Drift audits are read-only.
+- Recall and drift realignment discovery are read-only.
 - Agent memory stores routing policy, not copied Notion facts.
 
 ## Contributing

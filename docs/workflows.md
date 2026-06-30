@@ -15,32 +15,21 @@ Rules:
 - Keep parent pages thin; put dense knowledge in the right child page.
 - Choose one canonical owner for each fact, chapter, or lesson; other pages should link to it instead of duplicating it.
 
-## 2. Recall
+## 2. Knowledge Bank Drift Realignment
 
-Trigger: a workflow or automation needs relevant Knowledge Bank context, or Giacomo asks what the Knowledge Bank is missing, stale, or ready to revisit.
+Trigger: the scheduled Codex automation `Knowledge Bank Drift Realignment`, or a manual request to find and resolve stale, missing, due, raw, ambiguous, or project-drift knowledge.
 
-Flow: use `skills/recall`; retrieve scoped live Notion context for the caller. If the caller explicitly needs hole-filling or stale-state resolution, use recall's clarification branch to build a complete question queue and ask Giacomo one question at a time.
-
-Rules:
-
-- Recall reads broadly enough to satisfy the caller, but does not mirror the Knowledge Bank locally.
-- Treat the Knowledge Bank as the ledger for `already handled`: resolved questions should be reflected in canonical Notion pages, and deferred questions should be reflected as follow-up markers.
-- Do not write to Notion during recall.
-
-## 3. Drift Audit
-
-Trigger: the scheduled Codex automation `Knowledge Bank Drift Audit`, or a manual request to audit Knowledge Bank drift.
-
-Flow: start from this repo's agent instructions and [Knowledge Bank Conventions](knowledge-bank-conventions.md), inspect the live Notion `life` database and targeted pages, then produce a concise report with findings and exact proposed fixes.
+Flow: start from this repo's agent instructions, [Knowledge Bank Conventions](knowledge-bank-conventions.md), `/recall`, and `/remember`. Use `/recall` in clarification mode over live Notion and the `build` page `Subtasks`; compare build projects against recent local git history or remote history when useful. Ask Giacomo one question at a time, then hand answered updates, marker candidates, discarded findings, and unresolved questions to `/remember` for an exact approval draft.
 
 Rules:
 
-- The drift audit is about Knowledge Bank structure and ownership, not access-control or artifact-release reviews.
-- Do not write to Notion during the audit.
+- This is a scheduled clarification-to-remember loop, not a report-only audit.
+- Do not write to Notion during recall or before `/remember` approval.
 - Treat due follow-up markers as questions for Giacomo, not as permission to update the Knowledge Bank.
-- Group findings by severity and include page links.
-- Propose exact drafts or property changes for Giacomo to approve.
+- A normal discard leaves no KB trace; deferrals and final-form decisions become marker candidates only through approved `/remember` writes.
+- Use ignored local scratch only for mechanical hints such as last run time or commit cursors. Never store copied KB facts, answered questions, suppressions, or durable reports in local state.
+- The scheduled prompt source lives in [Knowledge Bank Drift Realignment Automation](automations/kb-drift-realignment.md).
 
-## 4. Portfolio Generation
+## 3. Portfolio Generation
 
 Portfolio generation is not yet an accepted workflow in this repo. Treat portfolio-related work as project design until Giacomo defines the architecture.
