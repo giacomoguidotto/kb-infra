@@ -13,20 +13,7 @@ Knowledge Bank Infrastructure defines a small set of agent workflows around the 
 | Portfolio Surface Sweep | Every 2 weeks, alternating Wednesdays starting July 8, 2026 | 13:00 Europe/Rome | Approval-gated portfolio proposal |
 | Job Hunt Tuning Audit | Every 2 weeks, alternating Wednesdays starting July 15, 2026 | 13:00 Europe/Rome | Approval-gated career tuning proposal |
 
-## 1. Manual Capture
-
-Trigger: Giacomo manually invokes `/remember` or asks to save a conversation/session into the Knowledge Bank.
-
-Flow: use `skills/remember`; inspect live Notion structure; draft the smallest coherent Notion update; ask Giacomo to approve the exact draft; write only after approval.
-
-Rules:
-
-- Do not write session knowledge to Notion without explicit confirmation.
-- Prefer the existing Notion structure over repo assumptions.
-- Keep parent pages thin; put dense knowledge in the right child page.
-- Choose one canonical owner for each fact, chapter, or lesson; other pages should link to it instead of duplicating it.
-
-## 2. Knowledge Bank Drift Realignment
+## 1. Knowledge Bank Drift Realignment
 
 Trigger: the scheduled Codex automation `Knowledge Bank Drift Realignment`, or a manual request to find and resolve stale, missing, due, raw, ambiguous, or project-drift knowledge.
 
@@ -42,7 +29,7 @@ Rules:
 - Use ignored local scratch only for mechanical hints such as last run time or commit cursors. Never store copied KB facts, answered questions, suppressions, or durable reports in local state.
 - The scheduled prompt source lives in [Knowledge Bank Drift Realignment Automation](automations/kb-drift-realignment.md).
 
-## 3. Social Draft Pulse
+## 2. Social Draft Pulse
 
 Trigger: the scheduled Codex automation `Social Draft Pulse`, or a manual request
 to mine recent KB context for work-facing social drafts.
@@ -63,7 +50,7 @@ Rules:
   portfolio in this workflow.
 - The scheduled prompt source lives in [Social Draft Pulse Automation](automations/social-draft-pulse.md).
 
-## 4. Portfolio Surface Sweep
+## 3. Portfolio Surface Sweep
 
 Trigger: the scheduled Codex automation `Portfolio Surface Sweep`, or a manual
 request after a meaningful milestone, launch, shipped demo, public artifact, or
@@ -92,6 +79,26 @@ Rules:
 - Flag announcement candidates for Social Draft Pulse instead of drafting social
   posts in this workflow.
 - The scheduled prompt source lives in [Portfolio Surface Sweep Automation](automations/portfolio-surface-sweep.md).
+
+## 4. Job Hunt Eval Pulse
+
+Trigger: the scheduled Codex automation `Job Hunt Eval Pulse`.
+
+Flow: run the existing `career-ops` discovery-to-evaluation loop. Start with
+`node doctor.mjs --json`; retry or process existing pending/failed work before
+scanning; scan a bounded batch only when the queue is drained; evaluate live
+jobs with Codex batch workers; generate the expected reports, PDFs, and tracker
+rows; then verify the pipeline.
+
+Rules:
+
+- This is discovery and evaluation only, not advancement or application work.
+- Runs on Mondays, Wednesdays, and Fridays at 09:00 Europe/Rome.
+- Do not submit applications, send messages, click final apply/submit buttons,
+  or prefill forms in a hidden or unattended browser.
+- Process existing queue work before adding new scan work.
+- The live automation id remains `career-ops-scan-and-evaluate`; it is named
+  `Job Hunt Eval Pulse` in Codex.
 
 ## 5. Job Hunt Tuning Audit
 

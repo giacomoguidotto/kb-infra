@@ -43,7 +43,7 @@ flowchart LR
 
     repo -- "protocol" --> agent
     agent -- "narrow reads" --> notion
-    agent -- "manual capture" --> draft
+    agent -- "/remember skill" --> draft
     agent -- "scheduled clarification" --> realign
     realign -- "answered updates" --> draft
     draft --> approval
@@ -64,10 +64,12 @@ flowchart LR
 
 ## Active Workflows
 
-- **Manual capture**: `/remember` turns a conversation or agent session into an approval draft for Notion.
 - **Knowledge Bank drift realignment**: a scheduled Codex automation uses `/recall` in clarification mode to find stale, missing, due, raw, ambiguous, or project-drift knowledge; asks one question at a time; then hands the result to `/remember` for approval-gated writes.
 - **Social Draft Pulse**: a scheduled Codex automation uses KB context to propose work-facing X and LinkedIn ideas, then creates approved Typefully drafts without posting or scheduling.
 - **Portfolio Surface Sweep**: a scheduled Codex automation compares KB context with `guidotto.dev`, then prepares approved branch/PR work for portfolio candidates without publishing, merging, or writing to Notion.
+- **Job Hunt Eval Pulse**: a scheduled Codex automation runs the `career-ops` discovery-to-evaluation loop and stops before application work.
+- **Job Hunt Tuning Audit**: a scheduled Codex automation compares KB strategy context with `career-ops` personalization and proposes approval-gated tuning changes.
+- **Job Hunt Advancement Pulse**: a scheduled Codex automation consumes evaluated opportunities and produces draft-oriented next packs without sending, submitting, or recording real-world completion.
 
 Generative UI, richer curriculum surfaces, and future YouTube lanes are intentionally deferred expansion surfaces.
 
