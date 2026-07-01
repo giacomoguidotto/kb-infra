@@ -1,18 +1,21 @@
 # Domain Docs
 
-Knowledge Bank Infrastructure is a single-context infrastructure repo for a Notion-backed knowledge system.
+Knowledge Bank Infrastructure is a single-context infrastructure repo for a
+provider-backed knowledge system.
 
 - Use root `CONTEXT.md` for vocabulary.
-- Use `docs/adr/` for policy decisions that touch the change.
+- Use `docs/adr/` for policy decisions (the source-of-record framing and the
+  binding model live there).
 - Use `docs/workflows.md` for accepted workflow boundaries.
-- Use `docs/knowledge-bank-conventions.md` for Notion `life` database conventions and lower-level drift-audit rules.
-- Use `docs/automations/kb-drift-realignment.md` for the accepted scheduled Knowledge Bank Drift Realignment prompt.
-- Use `docs/automations/social-draft-pulse.md` for the accepted scheduled social-draft prompt.
-- Use `docs/automations/portfolio-surface-sweep.md` for the accepted scheduled portfolio-sweep prompt.
-- Use `docs/workflows.md` for the accepted Job Hunt Eval Pulse boundary; its live automation id is `career-ops-scan-and-evaluate`.
-- Use `docs/automations/job-hunt-tuning-audit.md` for the accepted scheduled career tuning prompt.
-- Use `docs/automations/job-hunt-advancement-pulse.md` for the accepted scheduled advancement-pack prompt.
+- Use `docs/knowledge-bank-conventions.md` for KB conventions and lower-level
+  drift-audit rules.
+- Use `docs/automations/_preamble.md` for the shared automation preamble, endpoint
+  vocabulary, and sink vocabulary.
+- Use `docs/automations/*.md` for each accepted scheduled automation prompt:
+  `kb-drift-realignment`, `social-draft-pulse`, `portfolio-surface-sweep`,
+  `job-hunt-evaluate-audit`, `job-hunt-advance-audit`, `job-hunt-tune-audit`.
 
-When writing issue titles, test names, docs, or refactor proposals, prefer terms from `CONTEXT.md`.
+When writing issue titles, test names, docs, or refactor proposals, prefer terms
+from `CONTEXT.md`.
 
 If a change contradicts an accepted ADR, say so explicitly before proceeding.

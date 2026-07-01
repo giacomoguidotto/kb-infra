@@ -10,7 +10,7 @@ labels: needs-triage
 
 ## Motivation
 
-<!-- Why is this needed? What problem does it solve for agents or Notion-backed workflows? -->
+<!-- Why is this needed? What problem does it solve for agents or KB-backed workflows? -->
 
 ## Proposed Solution
 
@@ -18,7 +18,7 @@ labels: needs-triage
 
 ## Source of Truth
 
-<!-- What stays in Notion, and what belongs in Knowledge Bank Infrastructure? -->
+<!-- What stays in the KB, and what belongs in Knowledge Bank Infrastructure? -->
 
 ## Alternatives Considered
 

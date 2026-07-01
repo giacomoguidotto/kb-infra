@@ -2,7 +2,7 @@
 
 Thanks for your interest in Knowledge Bank Infrastructure! Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
 
-Knowledge Bank Infrastructure is Giacomo's local infrastructure for a Notion-first knowledge system, so contributions are accepted on a limited basis.
+Knowledge Bank Infrastructure is my source-of-record for a provider-backed knowledge system, so contributions are accepted on a limited basis.
 
 ## What We Accept
 
@@ -13,7 +13,7 @@ Knowledge Bank Infrastructure is Giacomo's local infrastructure for a Notion-fir
 
 ## What We Do Not Accept
 
-- Pull requests that include private Notion content, broad personal context, or generated private artifacts.
+- Pull requests that include private KB content, broad personal context, or generated private artifacts.
 - Unsolicited workflow rewrites without an issue and maintainer agreement.
 - Runtime infrastructure that turns Knowledge Bank Infrastructure into the source of truth or a background process.
 - Refactoring for its own sake.
@@ -21,11 +21,12 @@ Knowledge Bank Infrastructure is Giacomo's local infrastructure for a Notion-fir
 ## Setup
 
 1. Fork and clone the repo.
-2. Read [agent navigation](../docs/agents/navigation.md) for the Notion-first source-of-truth, loading, export-safety, and validation rules.
+2. Read [AGENTS.md](../AGENTS.md) for the source-of-record framing, the tool belt, and the export-safety rules, and [CONTEXT.md](../CONTEXT.md) for vocabulary.
 3. Make a focused change.
 4. Before pushing, run:
 
     ```sh
+    bash scripts/check.sh
     git diff --check
     ```
 
@@ -38,16 +39,18 @@ Knowledge Bank Infrastructure is Giacomo's local infrastructure for a Notion-fir
 
 ## Tooling
 
-- There is no app build step yet.
-- `git diff --check` is the current required validation.
-- Future generated artifact validators should be documented next to the artifact or workflow they validate.
+- Nothing in this repo runs; it is a spec. There is no app build step.
+- `scripts/check.sh` validates the spec: no personal coupling or absolute paths,
+  no retired terms, skill frontmatter present, every automation references the
+  preamble, and internal links resolve. CI runs it on every push and PR.
+- `git diff --check` guards patch whitespace.
 
 ## Conventions
 
 - Branch names: `feat/`, `fix/`, `docs/`, `refactor/`, `test/`, `chore/`.
 - Commits: [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) such as `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, and `chore:`.
 - Use Knowledge Bank Infrastructure's domain terms from [CONTEXT.md](../CONTEXT.md).
-- Keep public artifacts routing-safe. Do not include private Notion material unless Giacomo explicitly approves the exact export.
+- Keep public artifacts routing-safe. Do not include private KB material unless the maintainer explicitly approves the exact export.
 
 ## License
 

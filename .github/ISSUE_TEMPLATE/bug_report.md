@@ -30,4 +30,4 @@ labels: needs-triage
 
 - OS:
 - Commit:
-- Notion connector involved: yes/no
+- KB connector involved: yes/no

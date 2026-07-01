@@ -21,7 +21,7 @@ Please include:
 - Any relevant logs or screenshots
 - The potential impact of the vulnerability
 
-Do not include private Notion content, credentials, tokens, or other sensitive material in the report unless we explicitly ask for a safe way to receive it.
+Do not include private KB content, credentials, tokens, or other sensitive material in the report unless we explicitly ask for a safe way to receive it.
 
 ## Response Timeline
 

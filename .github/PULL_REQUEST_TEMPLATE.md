@@ -19,7 +19,7 @@
 ## Checklist
 
 - [ ] `git diff --check` passed
-- [ ] Public artifacts do not include private Notion material
-- [ ] Notion remains the source of truth
+- [ ] Public artifacts do not include private KB material
+- [ ] The KB remains the source of truth
 - [ ] Relevant workflow docs, ADRs, or agent docs were updated
 - [ ] Changes are small enough for focused review

@@ -1,6 +1,6 @@
 # Issue Tracker: GitHub
 
-Issues and PRDs live in GitHub Issues for `giacomoguidotto/kb-infra`. Use `gh` from this clone.
+Issues and PRDs live in this repository's GitHub Issues. Use `gh` from this clone.
 
 - Create: `gh issue create --title "..." --body "..."`
 - Read: `gh issue view <number> --comments`
