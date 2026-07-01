@@ -1,12 +1,12 @@
 <p align="center">
-  <!-- Logo slot: add assets/logo.png, assets/logo.svg, or light/dark logo variants here. -->
+  <img src="assets/logo.svg" alt="Knowledge Bank Infrastructure logo" width="160">
 </p>
 
 <h1 align="center">Knowledge Bank Infrastructure</h1>
 
 <p align="center">
-  <strong>Operational rails for a Notion-first personal knowledge system.</strong><br>
-  <sub>Conventions, agent skills, and reviewable drafts for keeping human-owned knowledge usable by AI agents.</sub>
+  <strong>Infrastructure-as-Code for a personal agent operating system.</strong><br>
+  <sub>The provider is the memory. The runtime runs the automations. This repo is the spec.</sub>
 </p>
 
 <p align="center">
@@ -16,56 +16,76 @@
 
 <br>
 
-AI agents are useful only when they can find the right context without turning the context itself into another stale copy. Knowledge Bank Infrastructure is the repo that keeps that boundary sharp.
-
-Notion owns the actual knowledge: tasks, projects, profile facts, finance notes, learning notes, and portfolio material. This repo owns the operating rules around that knowledge: how agents should read it, how they should draft updates, and how they should realign stale or missing knowledge without writing over the source of truth.
+AI agents are useful only when they can find the right context without turning that context into another stale copy. Knowledge Bank Infrastructure keeps that boundary sharp: your knowledge stays where you work, and only the agent protocol lives in Git.
 
 ## Core Idea
 
-Keep the knowledge where the human works. Put the agent protocol in Git.
+**Keep the knowledge where the human works. Put the agent protocol in Git.**
 
-That gives the system three useful properties:
+Nothing in this repo runs. It is the declarative source for an agent operating system whose parts live elsewhere — the same way Terraform files declare a cloud without being one:
 
-- **Live context**: agents read Notion directly when a task needs personal or project context.
-- **Reviewable writes**: agents draft Notion updates and wait for explicit approval before applying them.
-- **Auditable structure**: database conventions live in versioned Markdown, so drift can be detected and discussed like code.
+- The **Knowledge Bank** (a provider like Notion) is the memory.
+- The **harness runtime** (a scheduler like Codex) runs the automations.
+- **This repo** is the spec: the agent tool belt, the scheduled rituals, and the shape of the memory — authored, versioned, and reviewed here before they *materialize* into live systems.
 
-## Operating Loop
+Personal values never get committed. Which provider, which repos, which cadence — all of it is a **binding**, collected at setup into a gitignored file. The spec stays generic and forkable; your knowledge stays yours.
 
-![Knowledge Bank Infrastructure workflow map](assets/diagram.png)
+## What an Approval Looks Like
 
-## Active Workflows
+Every write to the Knowledge Bank goes through a reviewable draft first. The `capture` skill renders the exact proposed writes as a provider-style preview — property diffs, body diffs, and the evidence it read — and waits for explicit approval before touching anything.
 
-- **Knowledge Bank drift realignment**: a scheduled Codex automation uses `/recall` in clarification mode to find stale, missing, due, raw, ambiguous, or project-drift knowledge; asks one question at a time; then hands the result to `/remember` for approval-gated writes.
-- **Social Draft Pulse**: a scheduled Codex automation uses KB context to propose work-facing X and LinkedIn ideas, then creates approved Typefully drafts without posting or scheduling.
-- **Portfolio Surface Sweep**: a scheduled Codex automation compares KB context with `guidotto.dev`, then prepares approved branch/PR work for portfolio candidates without publishing, merging, or writing to Notion.
-- **Job Hunt Eval Pulse**: a scheduled Codex automation runs the `career-ops` discovery-to-evaluation loop and stops before application work.
-- **Job Hunt Tuning Audit**: a scheduled Codex automation compares KB strategy context with `career-ops` personalization and proposes approval-gated tuning changes.
-- **Job Hunt Advancement Pulse**: a scheduled Codex automation consumes evaluated opportunities and produces draft-oriented next packs without sending, submitting, or recording real-world completion.
+![Example approval draft](assets/example-draft.png)
 
-Generative UI, richer curriculum surfaces, and future YouTube lanes are intentionally deferred expansion surfaces.
+<sub>Mock data. Nothing is written until you approve the exact draft.</sub>
+
+## The Tool Belt
+
+Three skills install into any agent that follows the `SKILL.md` standard:
+
+- **`/lookup`** — read-only retrieval from the Knowledge Bank. Resolves context live; never writes.
+- **`/capture`** — approval-gated writes, always behind the draft above.
+- **`/setup`** — materializes the infra: connects the provider, collects bindings, installs the skills, and bootstraps the automations.
+
+## The Automations
+
+Scheduled rituals, all rooted in `/lookup` over the Knowledge Bank. Each is a generic prompt in [`docs/automations/`](docs/automations/); the concrete cadence and targets are bindings.
+
+- **Knowledge Bank Drift Realignment** — finds stale, missing, due, or ambiguous knowledge; asks one question at a time; hands the result to `/capture`.
+- **Social Draft Pulse** — turns public-safe KB context into approval-gated social drafts.
+- **Portfolio Surface Sweep** — compares public-safe KB context with a portfolio repo and proposes approved branch/PR work.
+- **Job Hunt Evaluate / Advance / Tune Audit** — drive an external career system through discovery, advancement packs, and strategy tuning.
+
+The external systems an automation drives are **sinks**, referenced by role. In my own setup those sinks are [career-ops](https://github.com/giacomoguidotto/career-ops) and [guidotto.dev](https://github.com/giacomoguidotto/guidotto.dev); yours would be your own.
+
+## Getting Started
+
+```sh
+# 1. Fork and clone.
+# 2. Open your favorite agent in the repo and run:
+/setup
+```
+
+`/setup` connects your Knowledge Bank provider, grills you for the bindings it needs (into gitignored `local/bindings.yml`), installs `/lookup` and `/capture`, and stands up the automations. Your knowledge never enters this repo — only the generic spec does. Agents should start at [AGENTS.md](AGENTS.md).
 
 ## Repository Map
 
-- `AGENTS.md`: local instructions for agents working in this repo.
-- `CONTEXT.md`: vocabulary for the current operating model.
-- `docs/workflows.md`: accepted workflows and non-workflows.
-- `docs/knowledge-bank-conventions.md`: formal rules for the Notion `life` database.
-- `docs/automations/`: draft prompts for scheduled Codex automations.
-- `skills/`: repo-owned agent workflows.
-- `dist/`: generated review artifacts, never canonical knowledge.
+- `AGENTS.md`: instructions for agents working in this repo (and the setup entry point).
+- `CONTEXT.md`: the vocabulary for the operating model.
+- `docs/adr/`: the decisions behind the design.
+- `docs/workflows.md`: accepted workflows and their boundaries.
+- `docs/knowledge-bank-conventions.md`: the reference shape a Knowledge Bank can take.
+- `docs/automations/`: the shared preamble and each scheduled automation prompt.
+- `skills/`: the `lookup`, `capture`, and `setup` skills.
+- `local/`: gitignored bindings; never canonical knowledge.
 
 ## Guarantees
 
-- Notion stays canonical.
-- This repo does not mirror the Knowledge Bank.
-- Agents use live Notion lookup instead of local replicas.
-- Notion writes require approval of the exact draft.
-- Recall and drift realignment discovery are read-only.
-- Agent memory stores routing policy, not copied Notion facts.
+- The Knowledge Bank stays canonical; this repo never mirrors it.
+- Agents read the KB live instead of from local replicas.
+- KB writes require approval of the exact draft.
+- Lookup and drift discovery are read-only.
+- No personal value is committed; specifics are bindings in gitignored `local/`.
 
 ## Contributing
 
 Free and open source under the [MIT License](LICENSE). See [CONTRIBUTING.md](.github/CONTRIBUTING.md) to get involved.
-
-Agents should start at [AGENTS.md](AGENTS.md).

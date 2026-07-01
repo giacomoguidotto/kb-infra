@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KB knowledge draft - orbit-cli v0.3</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --app-bg: #191919;
+        --page-bg: #202020;
+        --surface: #262626;
+        --surface-2: #2f2f2f;
+        --text: #f1f1ef;
+        --muted: #9b9a97;
+        --faint: #6f6e69;
+        --line: rgba(255, 255, 255, 0.10);
+        --line-strong: rgba(255, 255, 255, 0.18);
+        --blue: #5b8def;
+        --green: #4f9768;
+        --red: #d44c47;
+        --yellow-bg: rgba(255, 212, 0, 0.10);
+        --green-bg: rgba(79, 151, 104, 0.16);
+        --red-bg: rgba(212, 76, 71, 0.16);
+        --blue-bg: rgba(91, 141, 239, 0.16);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--app-bg);
+        color: var(--text);
+        font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .app { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 100vh; }
+      .sidebar { border-right: 1px solid var(--line); background: #171717; padding: 18px 14px; color: var(--muted); font-size: 14px; }
+      .sidebar-title { color: var(--text); font-weight: 600; margin-bottom: 14px; }
+      .sidebar-item { border-radius: 6px; padding: 6px 8px; }
+      .sidebar-item.active { background: var(--surface); color: var(--text); }
+      main { max-width: 900px; width: 100%; margin: 0 auto; padding: 40px 44px 60px; }
+      .breadcrumb { color: var(--faint); font-size: 13px; margin-bottom: 26px; }
+      .page-icon { width: 68px; height: 68px; border-radius: 14px; display: grid; place-items: center; background: var(--surface); font-size: 30px; margin-bottom: 14px; }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { font-size: 36px; line-height: 1.15; font-weight: 700; margin-bottom: 20px; }
+      .muted { color: var(--muted); }
+      .property-table { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 16px 0 26px; padding: 8px 0; }
+      .property-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 18px; min-height: 32px; align-items: center; color: var(--muted); }
+      .property-row strong { color: var(--faint); font-weight: 500; }
+      .pill { display: inline-flex; align-items: center; border-radius: 999px; padding: 2px 9px; background: var(--surface-2); color: var(--text); font-size: 12px; margin-right: 4px; }
+      .pill.create { background: var(--blue-bg); color: #9cc2ff; }
+      .pill.update { background: var(--yellow-bg); color: #f2c96d; }
+      .pill.ok { background: var(--green-bg); color: #93d5a6; }
+      .notion-page { background: var(--page-bg); border: 1px solid var(--line); border-radius: 8px; padding: 30px 36px 34px; margin: 16px 0 24px; box-shadow: 0 24px 80px rgba(0, 0, 0, 0.20); }
+      .preview-label { color: var(--muted); font-size: 12px; font-weight: 650; margin-bottom: 12px; }
+      .np-title { font-size: 26px; font-weight: 700; margin: 6px 0 14px; }
+      .block { margin: 7px 0; }
+      table { width: 100%; border-collapse: collapse; margin: 10px 0 4px; font-size: 14px; }
+      th, td { border: 1px solid var(--line); padding: 7px 10px; vertical-align: top; text-align: left; }
+      th { color: var(--muted); font-weight: 600; background: var(--surface); }
+      .property-diff td:nth-child(2) { color: #ffb2ac; text-decoration: line-through; }
+      .property-diff td:nth-child(3) { color: #93d5a6; }
+      code { border-radius: 4px; background: var(--surface); color: #d4d4d4; padding: 1px 5px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9em; }
+      .diff-line, .block.diff-add, .block.diff-del, .block.diff-context { border-left: 3px solid transparent; padding: 4px 10px; margin: 3px 0; border-radius: 2px; }
+      .diff-add { background: var(--green-bg); border-left-color: var(--green); }
+      .diff-del { background: var(--red-bg); border-left-color: var(--red); color: #ffb2ac; text-decoration: line-through; }
+      .diff-context { color: var(--muted); }
+      .callout { display: grid; grid-template-columns: 22px minmax(0,1fr); gap: 10px; border-radius: 6px; background: var(--surface); padding: 11px 13px; margin: 12px 0; font-size: 14px; }
+      details { border-top: 1px solid var(--line); padding: 12px 0; margin-top: 8px; }
+      summary { cursor: pointer; color: var(--muted); font-weight: 600; }
+      .details-body { color: var(--muted); font-size: 14px; margin-top: 10px; }
+      .details-body li { margin: 3px 0; }
+      .approval-question { border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); padding: 16px 18px; margin-top: 26px; }
+      .approval-question h3 { margin: 0 0 6px; font-size: 16px; }
+      .section-label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--faint); margin: 30px 0 6px; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-title">Knowledge draft</div>
+        <div class="sidebar-item active">Approval needed</div>
+        <div class="sidebar-item">2 proposed writes</div>
+        <div class="sidebar-item" style="margin-top:14px;color:var(--faint)">Build</div>
+        <div class="sidebar-item" style="padding-left:18px">orbit-cli</div>
+        <div class="sidebar-item" style="padding-left:18px">tide</div>
+        <div class="sidebar-item" style="padding-left:18px">atlas</div>
+      </aside>
+      <main>
+        <div class="breadcrumb">Knowledge Bank / Drafts / orbit-cli v0.3</div>
+        <div class="page-icon">🛰️</div>
+        <h1>Session capture &mdash; orbit-cli v0.3</h1>
+        <div class="property-table">
+          <div class="property-row"><strong>Status</strong><span><span class="pill update">Not written to KB</span></span></div>
+          <div class="property-row"><strong>Drafted</strong><span>2026-02-18 &middot; awaiting approval</span></div>
+          <div class="property-row"><strong>Requires</strong><span>Fresh explicit approval of the exact writes</span></div>
+        </div>
+
+        <div class="section-label">Proposed results</div>
+
+        <article class="notion-page">
+          <div class="preview-label"><span class="pill update">Update</span> Updated page preview with diff</div>
+          <div class="breadcrumb">Build / orbit-cli</div>
+          <div class="np-title">orbit-cli</div>
+          <table class="property-diff">
+            <thead><tr><th>Property</th><th>Current</th><th>Proposed</th></tr></thead>
+            <tbody>
+              <tr><td>Status</td><td>Building</td><td>Shipped</td></tr>
+              <tr><td>Updated</td><td>2026-01-04</td><td>2026-02-18</td></tr>
+              <tr><td>Latest</td><td>v0.2 &mdash; config loader</td><td>v0.3 &mdash; parallel task runner</td></tr>
+            </tbody>
+          </table>
+          <div class="block diff-context">## Current state</div>
+          <div class="block diff-del">v0.2 shipped the config loader. Parallel execution is next.</div>
+          <div class="block diff-add">v0.3 ships the parallel task runner (4x on the sample suite). Public docs updated.</div>
+          <div class="block diff-add">Follow-up: ask again on 2026-03-15: did the plugin API land, or defer to v0.5?</div>
+          <div class="block diff-context">Owner: canonical project page. Links: repo, changelog.</div>
+        </article>
+
+        <article class="notion-page">
+          <div class="preview-label"><span class="pill create">Create</span> New page preview</div>
+          <div class="breadcrumb">Build / orbit-cli / decisions</div>
+          <div class="np-title">v0.3 decisions</div>
+          <div class="callout">📌<div>Child page under <code>orbit-cli</code>. Keeps the parent page short; holds the dense decision log.</div></div>
+          <div class="block">### Decisions</div>
+          <div class="block">&bull; Chose a work-stealing scheduler over a fixed pool &mdash; simpler backpressure.</div>
+          <div class="block">&bull; Deferred the plugin API to v0.5; not enough real use cases yet.</div>
+          <div class="block">### Open</div>
+          <div class="block">&bull; Windows path handling still unverified on CI.</div>
+        </article>
+
+        <details>
+          <summary>Workspace read &middot; 6 pages inspected</summary>
+          <div class="details-body">
+            <ul>
+              <li>Searched: <code>orbit-cli</code>, "parallel runner", "task scheduler"</li>
+              <li>Fetched: Build / orbit-cli (canonical owner), orbit-cli / v0.2 notes</li>
+              <li>Compared: project page vs. recent git history (12 commits since v0.2)</li>
+              <li>Placement: strengthen the existing owner; put the decision log in a child page</li>
+            </ul>
+          </div>
+        </details>
+
+        <details>
+          <summary>Skipped or deferred writes &middot; 1</summary>
+          <div class="details-body">
+            <ul>
+              <li>New "Benchmarks" page &mdash; skipped; the 4x figure belongs in the changelog, not a new owner.</li>
+            </ul>
+          </div>
+        </details>
+
+        <section class="approval-question">
+          <h3>Should I apply these exact KB writes now?</h3>
+          <p class="muted" style="margin:0">2 writes: update <code>orbit-cli</code> (status, body, follow-up marker) and create <code>v0.3 decisions</code>. Nothing is written until you approve this exact draft.</p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

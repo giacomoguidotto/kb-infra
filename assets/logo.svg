@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Knowledge Bank Infrastructure logo</title>
+  <desc id="desc">An architectural topology diagram with a teal Knowledge Bank node materializing into black system nodes.</desc>
+  <defs>
+    <style>
+      .edge { fill: none; stroke: #8f969c; stroke-width: 5; stroke-linecap: square; stroke-linejoin: miter; opacity: 0.7; }
+      .rail { fill: none; stroke: #8f969c; stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; opacity: 0.28; }
+      .node { fill: #0d0f10; stroke: #ffffff; stroke-width: 5; }
+      .node-ring { fill: none; stroke: #1b1f23; stroke-width: 2; opacity: 0.22; }
+      .kb { fill: #079b93; stroke: #022f2d; stroke-width: 5; }
+      .kb-core { fill: #ffffff; opacity: 0.16; }
+    </style>
+  </defs>
+
+  <g>
+    <path class="edge" d="M250 250 H166 V148"/>
+    <path class="edge" d="M250 250 V132 H330"/>
+    <path class="edge" d="M250 250 H374"/>
+    <path class="edge" d="M250 250 V372 H304"/>
+    <path class="edge" d="M250 250 H136 V338"/>
+
+    <path class="rail" d="M166 148 H330 V132"/>
+    <path class="rail" d="M330 132 V250 H374"/>
+    <path class="rail" d="M374 250 V372 H304"/>
+    <path class="rail" d="M136 338 H304 V372"/>
+  </g>
+
+  <g>
+    <circle class="node" cx="166" cy="148" r="31"/>
+    <circle class="node" cx="330" cy="132" r="23"/>
+    <circle class="node" cx="374" cy="250" r="35"/>
+    <circle class="node" cx="304" cy="372" r="27"/>
+    <circle class="node" cx="136" cy="338" r="21"/>
+  </g>
+
+  <g>
+    <circle class="node-ring" cx="166" cy="148" r="39"/>
+    <circle class="node-ring" cx="330" cy="132" r="31"/>
+    <circle class="node-ring" cx="374" cy="250" r="43"/>
+    <circle class="node-ring" cx="304" cy="372" r="35"/>
+    <circle class="node-ring" cx="136" cy="338" r="29"/>
+  </g>
+
+  <g>
+    <rect class="kb" x="208" y="208" width="84" height="84" transform="rotate(45 250 250)"/>
+    <rect x="228" y="228" width="44" height="44" transform="rotate(45 250 250)" fill="none" stroke="#ffffff" stroke-opacity="0.26" stroke-width="4"/>
+    <circle class="kb-core" cx="250" cy="250" r="11"/>
+  </g>
+</svg>
