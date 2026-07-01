@@ -37,3 +37,52 @@ jobs:
           else
             git diff --check --root HEAD
           fi
+
+  version:
+    name: Tag Version
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [check]
+
+    outputs:
+      tag: ${{ steps.bump.outputs.tag }}
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Bump version
+        id: bump
+        run: bash scripts/bump-version.sh
+
+      - name: Push tag
+        if: steps.bump.outputs.tag
+        run: git push origin "${{ steps.bump.outputs.tag }}"
+
+  release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: needs.version.outputs.tag
+    needs: [version]
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${{ needs.version.outputs.tag }}"
+          --title "${{ needs.version.outputs.tag }}"
+          --generate-notes

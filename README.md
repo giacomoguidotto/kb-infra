@@ -11,6 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/giacomoguidotto/kb-infra/actions"><img src="https://github.com/giacomoguidotto/kb-infra/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/giacomoguidotto/kb-infra/releases"><img src="https://img.shields.io/github/v/release/giacomoguidotto/kb-infra" alt="Release"></a>
   <a href="https://github.com/giacomoguidotto/kb-infra/blob/main/LICENSE"><img src="https://img.shields.io/github/license/giacomoguidotto/kb-infra" alt="License"></a>
 </p>
 
