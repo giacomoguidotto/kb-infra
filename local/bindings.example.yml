@@ -1,0 +1,49 @@
+# Copy to local/bindings.yml (gitignored) and fill in.
+# `setup` writes and rebuilds this file; treat it as replaceable.
+
+provider:
+  name: notion # your KB provider
+  connector: notion-mcp # how the harness reaches it
+  hint: "" # optional root page/db to start exploration from
+
+# Where each endpoint lives in YOUR KB.
+# Leave blank to let lookup resolve it by meaning at run time.
+endpoints:
+  selected-projects: ""
+  public-safe-claim-source: ""
+  proof-points: ""
+  network: ""
+  identity: ""
+  portfolio-change-rules: ""
+  social-rules-of-engagement: ""
+  job-search-strategy: ""
+  personal-constraints: ""
+
+# External systems automations materialize into.
+sinks:
+  career-system:
+    repo: ""
+    clone: ""
+    enabled: false
+  portfolio:
+    repo: ""
+    clone: ""
+    enabled: false
+  social-draft-queue:
+    tool: "" # e.g. typefully
+    enabled: false
+
+# Automation cadences (local timezone).
+cadences:
+  timezone: ""
+  knowledge-bank-drift-realignment: ""
+  social-draft-pulse: ""
+  portfolio-surface-sweep: ""
+  job-hunt-evaluate-audit: ""
+  job-hunt-advance-audit: ""
+  job-hunt-tune-audit: ""
+
+# Overrides for repo defaults (optional; blank = use repo default).
+overrides:
+  follow-up-marker-policy: ""
+  draft-style: "" # blank = shipped Notion-style palette; else describe your restyle

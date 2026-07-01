@@ -1,15 +1,6 @@
-# Local-only and generated private artifacts
+# Local-only bindings
 local/*
-!local/.gitkeep
-dist/private/*
-!dist/private/.gitkeep
-dist/tmp/*
-!dist/tmp/.gitkeep
-
-# Ephemeral bundles and reports
-dist/*.zip
-*.tmp
-target/
+!local/bindings.example.yml
 
 # OS/editor noise
 .DS_Store
