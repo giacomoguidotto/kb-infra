@@ -35,6 +35,18 @@ committed.
 - Workflows and automations: `docs/workflows.md`, `docs/automations/`.
 - KB conventions: `docs/knowledge-bank-conventions.md`.
 
+## Commits and Versioning
+
+The spec is versioned by git tags (`vX.Y.Z`). Pushing to `main` runs
+`scripts/bump-version.sh`, which derives the next version from the conventional-commit
+types since the last tag: `fix:` → patch, `feat:` → minor, a `!` marker or
+`BREAKING CHANGE` → major. Every commit therefore chooses a release.
+
+Before committing, if I have not stated the intended release type, ask for explicit
+approval of which one the commit should trigger — patch, minor, major, or none (a
+non-releasing type such as `docs`, `chore`, `refactor`, `ci`, or `test`) — and use
+the matching commit type. Do not assume the release type.
+
 ## Agent Skills
 
 - Issues and PRDs: this repository's GitHub Issues; see
