@@ -43,19 +43,27 @@ report before changing anything:
   [_preamble.md](../../docs/automations/_preamble.md), the endpoints and sinks each
   **enabled** automation declares, the skills under `skills/`, the automations under
   `docs/automations/`, and one cadence per enabled automation.
-- Actual: `local/bindings.yml`, `local/installed.yml`, the snapshotted prompts under
+- Actual: `local/bindings.yml` (a key present with a blank or placeholder value is
+  **not** a binding), `local/installed.yml`, the snapshotted prompts under
   `local/automations/`, and the installed skill copies.
+- Drive the endpoint and sink checks from the **desired** set — the endpoints and
+  sinks each enabled automation declares — not from whatever keys happen to be in
+  `bindings.yml`. For each declared endpoint, probe that it resolves to a concrete KB
+  owner; a present key is not proof of a binding.
 - Drift to surface, by category:
   - the spec version has advanced past the installed version;
-  - endpoints an enabled automation needs but `bindings.yml` leaves unbound (new or
-    never-bound);
+  - an endpoint an enabled automation declares does not resolve to a concrete KB
+    owner: its `bindings.yml` entry is absent, blank, or still a placeholder (for
+    example a `TODO`/`FIXME` hint), or its hint points at a page that no longer
+    resolves live. Verify by resolution, not by key presence;
+  - a sink an enabled automation targets is unbound, disabled-yet-needed, or
+    unreachable;
   - bindings whose endpoint or sink is no longer in the spec (retired);
-  - existing bindings that no longer resolve live in the KB (stale);
   - skills whose source differs from the installed copy (stale install) or is not
     installed;
   - automations new to the spec, or whose fresh compose differs from the snapshot in
     `local/automations/`, or removed from the spec;
-  - cadences or sinks missing for an enabled automation.
+  - cadences missing for an enabled automation.
 
 In `check` mode, report this plan and stop.
 
@@ -75,13 +83,15 @@ connector blocker is reported.
 
 Read the endpoint vocabulary from
 [_preamble.md](../../docs/automations/_preamble.md). Bind only the endpoints the
-plan flagged as unbound, ambiguous, or stale. Explore the KB to locate a canonical
-owner for each; where an owner is missing or ambiguous, grill the user one question
-at a time, like `grill-me`, rather than guessing — including for brand-new pages the
-user must create (for example a persona or published-context surface). Record each
-binding as a hint in `local/bindings.yml`; `lookup` resolves the rest live. Leave
-already-valid bindings untouched. Propose removing bindings for retired endpoints;
-do not delete a personal value without confirmation.
+plan flagged as unbound, ambiguous, or stale — including endpoints whose
+`bindings.yml` key exists but is blank, a placeholder, or does not resolve to a real
+page. Explore the KB to locate a canonical owner for each; where an owner is missing
+or ambiguous, grill the user one question at a time, like `grill-me`, rather than
+guessing — including for brand-new pages the user must create (for example a persona
+or published-context surface). Record each binding as a hint in `local/bindings.yml`;
+`lookup` resolves the rest live. Leave already-valid bindings untouched. Propose
+removing bindings for retired endpoints; do not delete a personal value without
+confirmation.
 
 Completion criterion: every endpoint an enabled automation needs is bound to a KB
 location or explicitly marked unbound with a reason, and retired bindings are
@@ -157,6 +167,9 @@ reconcile changed, and the exact next manual action, if any.
 - Be idempotent: a re-run with no spec change and healthy state makes no changes and
   grills nothing.
 - Do not re-grill bindings that are already recorded and still resolve.
+- A present binding key is not proof of a binding: treat a blank, placeholder, or
+  non-resolving value as unbound, and drive the check from the endpoints and sinks
+  the enabled automations declare.
 - `check` mode is read-only: it plans and reports, and writes nothing.
 - Retire, don't orphan: when an endpoint, sink, or automation leaves the spec,
   propose removing its materialized counterpart, but delete a personal value only
