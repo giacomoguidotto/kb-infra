@@ -14,6 +14,8 @@ endpoints:
   proof-points: ""
   network: ""
   identity: ""
+  point-of-view: ""
+  published-social-context: ""
   portfolio-change-rules: ""
   social-rules-of-engagement: ""
   job-search-strategy: ""

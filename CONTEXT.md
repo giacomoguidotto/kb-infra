@@ -11,6 +11,10 @@ _Avoid_: second brain, source of truth, runtime, knowledge store
 
 **Endpoint**: A named context surface or rule-set an automation reads from the KB, such as selected projects, public-safe claim source, portfolio change rules, or social rules of engagement. Automations reference endpoints by role; setup binds each to a concrete KB location.
 
+**Point-of-View Surface**: An incrementally-built KB endpoint holding the user's public persona — recorded stances, opinions, and recurring themes that topical social drafts draw from. It grows over time only through approved `/capture` writes; automations read it and never fabricate a stance.
+
+**Published Social Context**: A per-platform KB endpoint recording what has already been published and which concepts and projects have been publicly introduced on each channel. Automations read it to keep continuity and avoid assuming audience knowledge; it is maintained through approved `/capture` writes, not written by draft automations.
+
 **Sink**: An external system an automation materializes into, such as a career system, a portfolio repo, or a social draft queue. Referenced by role, never by repo name or path.
 
 **Binding**: A concrete personal value for a sink or endpoint, supplied at setup and stored in gitignored `local/`. Never committed.
@@ -32,7 +36,7 @@ _Avoid_: using `KB` for this repository; use `kb-infra` when referring to Knowle
 
 **Knowledge Bank Drift Realignment**: A scheduled lookup-to-capture workflow that finds stale, missing, due, raw, ambiguous, or project-drift knowledge; asks the user one clarification question at a time; then drafts exact `/capture` writes for approval.
 
-**Social Draft Pulse**: A scheduled lookup-to-social-draft workflow that turns recent public-safe KB context into approved drafts in the social draft queue sink. It drafts only; it does not post, schedule, branch, publish, or write to the KB.
+**Social Draft Pulse**: A scheduled lookup-to-social-draft workflow that turns recent public-safe KB context into approved drafts in the social draft queue sink. It drafts a content mix of project/proof and topical posts, keeps per-platform continuity through the published social context surface, and grounds topical angles in the point-of-view surface. It drafts only; it does not post, schedule, branch, publish, or write to the KB.
 
 **Portfolio Surface Sweep**: A scheduled lookup-to-portfolio-proposal workflow that compares public-safe KB context with the current portfolio sink, then prepares approved branch/PR work for portfolio candidates. It does not create social drafts, merge, deploy, publish, or write to the KB.
 

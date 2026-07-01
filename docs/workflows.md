@@ -44,16 +44,25 @@ Trigger: the scheduled automation, or a manual request to mine recent KB context
 for work-facing social drafts.
 
 Flow: use `/lookup` in context mode once over the `public-safe-claim-source`,
-`network`, `social-rules-of-engagement`, `selected-projects`, and `identity`
-endpoints. Return an idea summary first. After approval, create drafts in the
-`social-draft-queue` sink.
+`network`, `social-rules-of-engagement`, `selected-projects`, `identity`,
+`point-of-view`, and `published-social-context` endpoints. Draft a candidate set
+that honors the volume and project/topical mix in `social-rules-of-engagement` and
+keeps per-platform continuity. Return an idea summary first. After approval, create
+drafts in the `social-draft-queue` sink.
 
 Rules:
 
 - This is a social draft workflow, not a publishing workflow. Draft only; do not
   post or schedule.
-- Apply the `social-rules-of-engagement` endpoint; do not hardcode platform
-  strategy here.
+- Apply the `social-rules-of-engagement` endpoint for platform strategy, volume,
+  and content mix; do not hardcode them here.
+- Keep continuity: use `published-social-context` to avoid assuming knowledge the
+  platform's audience does not have, and introduce concepts on first public use.
+- Topical candidates draw their angle from `point-of-view` or `identity`; when no
+  stance is recorded, surface the hook at the gate for the user's take rather than
+  inventing one.
+- New takes become `point-of-view` capture candidates for `/capture`; this
+  automation never writes to the KB itself.
 - Flag portfolio candidates for Portfolio Surface Sweep instead of auditing the
   portfolio here.
 - Prompt source: [social-draft-pulse.md](automations/social-draft-pulse.md).

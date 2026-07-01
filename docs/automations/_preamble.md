@@ -23,11 +23,22 @@ Data surfaces the automations read:
 - `proof-points`: compact, reusable evidence and metrics for generated artifacts.
 - `network`: contacts and relationships.
 - `identity`: how the user frames themselves; archetypes and narrative.
+- `point-of-view`: the user's incrementally-built public persona — recorded
+  stances, opinions, and recurring themes that topical drafts draw from. It grows
+  over time only through approved `/capture` writes; automations read it and never
+  fabricate a stance.
+- `published-social-context`: a per-platform ledger of what has already been
+  published and which concepts and projects have been publicly introduced on each
+  channel. Automations read it to keep continuity and avoid assuming audience
+  knowledge; it is maintained through approved `/capture` writes, not written by
+  draft automations.
 
 Rule-sets the automations obey (owned by the KB, not the spec):
 
 - `portfolio-change-rules`: the portfolio model and structural constraints.
-- `social-rules-of-engagement`: per-platform drafting strategy and guardrails.
+- `social-rules-of-engagement`: per-platform drafting strategy and guardrails,
+  including the per-run volume target, the project/topical content mix, and the
+  self-contained / introduce-on-first-use rule.
 - `job-search-strategy`: target roles, compensation baseline, scoring preferences.
 - `personal-constraints`: relocation, compensation, work authorization,
   references, availability, and side-project/IP freedom.
