@@ -12,7 +12,7 @@ surfaces and rule-sets an automation reads from the Knowledge Bank — selected
 projects, public-safe claim source, portfolio change rules, social rules of
 engagement, job-search strategy, personal constraints, and so on).
 
-The `setup` skill collects sink bindings and, after connecting to the KB
+The `setup-kb-infra` skill collects sink bindings and, after connecting to the KB
 provider, explores the KB to bind each endpoint to wherever it actually lives.
 Automations reference sinks and endpoints **by role**, never by a concrete page,
 path, or repo name.

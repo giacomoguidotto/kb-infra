@@ -18,6 +18,17 @@
 
 AI agents are useful only when they can find the right context without turning that context into another stale copy. Knowledge Bank Infrastructure keeps that boundary sharp: your knowledge stays where you work, and only the agent protocol lives in Git.
 
+## Install
+
+1. Fork and clone this repo.
+2. Open your favorite agent in the repo and run:
+
+```sh
+/setup-kb-infra
+```
+
+`/setup-kb-infra` connects your Knowledge Bank provider, grills you for the bindings it needs (into gitignored `local/bindings.yml`), installs `/lookup` and `/capture`, and stands up the automations. Your knowledge never enters this repo — only the generic spec does. Agents should start at [AGENTS.md](AGENTS.md).
+
 ## Core Idea
 
 **Keep the knowledge where the human works. Put the agent protocol in Git.**
@@ -44,7 +55,7 @@ Three skills install into any agent that follows the `SKILL.md` standard:
 
 - **`/lookup`** — read-only retrieval from the Knowledge Bank. Resolves context live; never writes.
 - **`/capture`** — approval-gated writes, always behind the draft above.
-- **`/setup`** — materializes the infra: connects the provider, collects bindings, installs the skills, and bootstraps the automations.
+- **`/setup-kb-infra`** — materializes the infra: connects the provider, collects bindings, installs the skills, and bootstraps the automations.
 
 ## The Automations
 
@@ -57,16 +68,6 @@ Scheduled rituals, all rooted in `/lookup` over the Knowledge Bank. Each is a ge
 
 The external systems an automation drives are **sinks**, referenced by role. In my own setup those sinks are [career-ops](https://github.com/giacomoguidotto/career-ops) and [guidotto.dev](https://github.com/giacomoguidotto/guidotto.dev); yours would be your own.
 
-## Getting Started
-
-```sh
-# 1. Fork and clone.
-# 2. Open your favorite agent in the repo and run:
-/setup
-```
-
-`/setup` connects your Knowledge Bank provider, grills you for the bindings it needs (into gitignored `local/bindings.yml`), installs `/lookup` and `/capture`, and stands up the automations. Your knowledge never enters this repo — only the generic spec does. Agents should start at [AGENTS.md](AGENTS.md).
-
 ## Repository Map
 
 - `AGENTS.md`: instructions for agents working in this repo (and the setup entry point).
@@ -75,7 +76,7 @@ The external systems an automation drives are **sinks**, referenced by role. In 
 - `docs/workflows.md`: accepted workflows and their boundaries.
 - `docs/knowledge-bank-conventions.md`: the reference shape a Knowledge Bank can take.
 - `docs/automations/`: the shared preamble and each scheduled automation prompt.
-- `skills/`: the `lookup`, `capture`, and `setup` skills.
+- `skills/`: the `lookup`, `capture`, and `setup-kb-infra` skills.
 - `local/`: gitignored bindings; never canonical knowledge.
 
 ## Guarantees

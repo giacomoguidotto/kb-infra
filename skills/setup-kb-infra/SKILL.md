@@ -1,6 +1,6 @@
 ---
-name: setup
-description: Materialize Knowledge Bank Infrastructure on this machine. Connect the KB provider, collect bindings, install the lookup and capture skills, and bootstrap the automations. Use when the user runs /setup, says bootstrap this infra, or asks to install or wire up kb-infra.
+name: setup-kb-infra
+description: Materialize Knowledge Bank Infrastructure on this machine. Connect the KB provider, collect bindings, install the lookup and capture skills, and bootstrap the automations. Use when the user runs /setup-kb-infra, says bootstrap this infra, or asks to install or wire up kb-infra.
 ---
 
 # Setup
@@ -54,7 +54,7 @@ marked disabled.
 
 ### 4. Install the Skills
 
-Copy `lookup`, `capture`, and `setup` into the harness skill directory. Prefer
+Copy `lookup`, `capture`, and `setup-kb-infra` into the harness skill directory. Prefer
 `~/.agents/skills/<name>/` and `~/.claude/skills/<name>/`, which together cover
 current harnesses. Use materialized copies, not symlinks or hard links. Re-run
 this step after any skill edit.

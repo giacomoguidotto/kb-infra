@@ -1,6 +1,6 @@
 # Automation Preamble
 
-Every automation shares this preamble. When `setup` materializes an automation,
+Every automation shares this preamble. When `setup-kb-infra` materializes an automation,
 it prepends this preamble to the automation body and resolves the placeholders
 from `local/bindings.yml`. Keep the shared rules here in one place; do not restate
 them inside individual automation prompts.
@@ -8,7 +8,7 @@ them inside individual automation prompts.
 ## KB Interface
 
 The spec does not prescribe a KB structure. Each automation declares the
-**endpoints** it reads; `setup` discovers where each lives in your KB and binds
+**endpoints** it reads; `setup-kb-infra` discovers where each lives in your KB and binds
 it. Reference endpoints and sinks **by role**, never by a concrete page, repo, or
 path. `lookup` resolves endpoint context live by meaning, so a binding is a hint,
 not a hard dependency.
@@ -63,4 +63,4 @@ External systems an automation materializes into. Each resolves from a binding:
 
 Automations that revisit deferred knowledge use the follow-up and final-form
 marker formats in [knowledge-bank-conventions.md](../knowledge-bank-conventions.md).
-This ships as the repo default; `setup` offers to override it as a binding.
+This ships as the repo default; `setup-kb-infra` offers to override it as a binding.

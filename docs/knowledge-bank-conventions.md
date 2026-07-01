@@ -2,7 +2,7 @@
 
 These conventions describe how agents should work with the Knowledge Bank. The KB
 remains the source of truth; this repo holds the formal operating rules. They are
-the reference shape a KB can take; `setup` discovers how your KB actually maps to
+the reference shape a KB can take; `setup-kb-infra` discovers how your KB actually maps to
 them.
 
 ## Database Shape

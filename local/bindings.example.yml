@@ -1,5 +1,5 @@
 # Copy to local/bindings.yml (gitignored) and fill in.
-# `setup` writes and rebuilds this file; treat it as replaceable.
+# `setup-kb-infra` writes and rebuilds this file; treat it as replaceable.
 
 provider:
   name: notion # your KB provider
