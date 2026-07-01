@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Knowledge Bank Infrastructure &mdash; architecture</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #191919;
+        --surface: #242424;
+        --text: #f1f1ef;
+        --muted: #9b9a97;
+        --faint: #6f6e69;
+        --line: rgba(255, 255, 255, 0.10);
+        --blue: #5b8def;
+        --amber: #f2c96d;
+        --chip: #2f2f2f;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); }
+      .stage {
+        position: relative;
+        width: 1000px;
+        height: 560px;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        overflow: hidden;
+      }
+      .hdr {
+        position: absolute;
+        top: 40px;
+        font-size: 11px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--faint);
+        text-align: center;
+        font-weight: 600;
+      }
+      .card {
+        position: absolute;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 15px 17px;
+      }
+      .card .title { font-size: 17px; font-weight: 650; letter-spacing: -0.01em; }
+      .card .sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
+      .card .meta { font-size: 11.5px; color: var(--faint); margin-top: 11px; }
+      .chips { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+      .chip {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 6px;
+        background: var(--chip);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        color: #d4d4d2;
+        font-size: 11.5px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      .pill {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: rgba(91, 141, 239, 0.16);
+        color: #9cc2ff;
+        font-size: 11.5px;
+        font-weight: 600;
+      }
+      .kb { border-color: rgba(91, 141, 239, 0.45); }
+      .kb .title { color: #bcd3ff; }
+      .legend {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 500px;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .legend span { display: inline-flex; align-items: center; gap: 8px; }
+      .swatch { display: inline-block; width: 20px; height: 0; }
+      .swatch.read { border-top: 2px solid var(--blue); }
+      .swatch.write { border-top: 2px solid var(--amber); }
+      .swatch.mat { border-top: 2px dashed var(--faint); }
+      svg { position: absolute; inset: 0; pointer-events: none; }
+      .lbl { font: 11px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <!-- header bands -->
+      <div class="hdr" style="left:58px; width:244px;">Authored &amp; versioned in Git</div>
+      <div class="hdr" style="left:398px; width:586px;">Materializes into live systems</div>
+
+      <!-- left column: the spec + bindings -->
+      <div class="card" style="left:58px; top:90px; width:244px; height:126px;">
+        <div class="title">kb&#8209;infra</div>
+        <div class="sub">the spec &mdash; nothing runs here</div>
+        <div class="meta">tool belt &middot; automations &middot; conventions</div>
+      </div>
+      <div class="card" style="left:58px; top:300px; width:244px; height:96px;">
+        <div class="title">local/ bindings</div>
+        <div class="sub">your values &middot; gitignored</div>
+      </div>
+
+      <!-- middle column: agents + automations -->
+      <div class="card" style="left:398px; top:90px; width:244px; height:126px;">
+        <div class="title">Agents</div>
+        <div class="sub">any SKILL.md harness</div>
+        <div class="chips">
+          <span class="chip">/lookup</span>
+          <span class="chip">/capture</span>
+        </div>
+      </div>
+      <div class="card" style="left:398px; top:300px; width:244px; height:126px;">
+        <div class="title">Automations</div>
+        <div class="sub">scheduled &middot; rooted in /lookup</div>
+        <div class="meta">drift &middot; social &middot; portfolio &middot; job&#8209;hunt</div>
+      </div>
+
+      <!-- right column: knowledge bank + sinks -->
+      <div class="card kb" style="left:740px; top:90px; width:244px; height:126px;">
+        <div class="title">Knowledge Bank</div>
+        <div class="sub">provider &middot; e.g. Notion</div>
+        <span class="pill">the memory</span>
+      </div>
+      <div class="card" style="left:740px; top:300px; width:244px; height:126px;">
+        <div class="title">Sinks</div>
+        <div class="sub">external systems, by role</div>
+        <div class="meta">portfolio &middot; career &middot; social queue</div>
+      </div>
+
+      <!-- arrows -->
+      <svg viewBox="0 0 1000 560" width="1000" height="560">
+        <defs>
+          <marker id="ah-blue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#5b8def" />
+          </marker>
+          <marker id="ah-amber" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#f2c96d" />
+          </marker>
+          <marker id="ah-gray" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#6f6e69" />
+          </marker>
+        </defs>
+
+        <!-- divider between Git world and live systems -->
+        <line x1="350" y1="72" x2="350" y2="444" stroke="#3a3a3a" stroke-width="1.4" stroke-dasharray="4 6" />
+
+        <!-- materialize: spec -> agents / automations -->
+        <line x1="302" y1="140" x2="392" y2="140" stroke="#6f6e69" stroke-width="1.5" stroke-dasharray="5 5" marker-end="url(#ah-gray)" />
+        <text class="lbl" x="347" y="132" text-anchor="middle" fill="#6f6e69">installs skills</text>
+        <line x1="302" y1="188" x2="392" y2="344" stroke="#6f6e69" stroke-width="1.5" stroke-dasharray="5 5" marker-end="url(#ah-gray)" />
+        <text class="lbl" x="360" y="243" text-anchor="start" fill="#6f6e69">schedules</text>
+
+        <!-- bindings -> spec -->
+        <line x1="180" y1="300" x2="180" y2="222" stroke="#7a7975" stroke-width="1.4" marker-end="url(#ah-gray)" />
+        <text class="lbl" x="189" y="264" text-anchor="start" fill="#9b9a97">+ your values</text>
+
+        <!-- agents -> KB -->
+        <line x1="642" y1="140" x2="734" y2="140" stroke="#5b8def" stroke-width="1.6" marker-end="url(#ah-blue)" />
+        <text class="lbl" x="688" y="132" text-anchor="middle" fill="#7ea6f2">/lookup &middot; read</text>
+        <line x1="642" y1="180" x2="734" y2="180" stroke="#f2c96d" stroke-width="1.6" marker-end="url(#ah-amber)" />
+        <text class="lbl" x="688" y="197" text-anchor="middle" fill="#e6bf63">/capture &middot; write</text>
+
+        <!-- automations -> KB (read) -->
+        <line x1="642" y1="332" x2="734" y2="216" stroke="#5b8def" stroke-width="1.4" marker-end="url(#ah-blue)" />
+        <text class="lbl" x="700" y="266" text-anchor="middle" fill="#7ea6f2">reads context</text>
+
+        <!-- automations -> sinks -->
+        <line x1="642" y1="365" x2="734" y2="365" stroke="#f2c96d" stroke-width="1.6" marker-end="url(#ah-amber)" />
+        <text class="lbl" x="688" y="357" text-anchor="middle" fill="#e6bf63">proposes work</text>
+      </svg>
+
+      <!-- legend -->
+      <div class="legend">
+        <span><span class="swatch read"></span> read &middot; /lookup</span>
+        <span><span class="swatch write"></span> write &middot; approval&#8209;gated</span>
+        <span><span class="swatch mat"></span> materializes</span>
+      </div>
+    </div>
+  </body>
+</html>
