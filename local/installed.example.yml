@@ -1,0 +1,16 @@
+# Copy to local/installed.yml (gitignored). `setup-kb-infra` writes and rebuilds
+# this file; treat it as replaceable. It records what this machine has materialized
+# so a later reconcile can diff the installed state against the spec.
+
+# Spec version this materialization was built from (git describe --tags).
+version: "" # e.g. v0.1.0, or v0.1.0-3-gabcdef when ahead of the last tag
+materialized_at: "" # ISO timestamp of the last apply
+
+# One entry per installed automation. The composed prompt for each (preamble +
+# body + resolved bindings) is snapshotted under local/automations/<name>.md, so a
+# reconcile can diff a fresh compose against what is actually installed.
+automations:
+  social-draft-pulse:
+    cadence: "" # the RRULE this automation was scheduled with
+    body_sha: "" # sha256 of the composed prompt
+    prompt: "" # snapshot path, e.g. local/automations/social-draft-pulse.md

@@ -36,20 +36,25 @@ correct state alone.
 Compare the spec (desired) with the materialized state (actual) and produce a drift
 report before changing anything:
 
+- Version: read the current spec version from the git tags (`git describe --tags`);
+  `vX.Y.Z` tags are the source of truth. Compare it against the `version` recorded
+  in `local/installed.yml` to see how far the installed setup has fallen behind.
 - Desired: the endpoint and sink vocabulary in
   [_preamble.md](../../docs/automations/_preamble.md), the endpoints and sinks each
   **enabled** automation declares, the skills under `skills/`, the automations under
   `docs/automations/`, and one cadence per enabled automation.
-- Actual: `local/bindings.yml`, the installed skill copies, and any automations a
-  prior run recorded as materialized.
+- Actual: `local/bindings.yml`, `local/installed.yml`, the snapshotted prompts under
+  `local/automations/`, and the installed skill copies.
 - Drift to surface, by category:
+  - the spec version has advanced past the installed version;
   - endpoints an enabled automation needs but `bindings.yml` leaves unbound (new or
     never-bound);
   - bindings whose endpoint or sink is no longer in the spec (retired);
   - existing bindings that no longer resolve live in the KB (stale);
   - skills whose source differs from the installed copy (stale install) or is not
     installed;
-  - automations new to the spec, changed since last materialize, or removed from it;
+  - automations new to the spec, or whose fresh compose differs from the snapshot in
+    `local/automations/`, or removed from the spec;
   - cadences or sinks missing for an enabled automation.
 
 In `check` mode, report this plan and stop.
@@ -114,12 +119,14 @@ preamble, the automation body, and the resolved bindings. Confirm the cadence
 binding. Detect the harness: if it can create a scheduled automation from an agent,
 create or update it; otherwise output the paste-ready prompt and name where it goes.
 Recreate only automations the plan flagged as new, changed, or cadence-drifted, and
-offer to retire automations removed from the spec. Record what was materialized as a
-mechanical cursor in `local/` so the next run can compute automation drift.
+offer to retire automations removed from the spec. After applying, snapshot each
+installed automation's composed prompt to `local/automations/<name>.md` and update
+`local/installed.yml` with the current spec version, timestamp, and per-automation
+cadence and hash, so the next run can compute drift.
 
 Completion criterion: every enabled automation is created, updated, or handed over
-as a paste-ready prompt with its target and cadence, and the materialization record
-is current.
+as a paste-ready prompt with its target and cadence, and `local/installed.yml` plus
+the `local/automations/` snapshots are current.
 
 ### 7. Report
 
@@ -132,10 +139,14 @@ reconcile changed, and the exact next manual action, if any.
 
 ## State
 
-- Keep a lightweight materialization record in gitignored `local/` (for example a
-  spec commit plus per-artifact content hashes) as a mechanical cursor, per the
-  preamble State Model. Use it only to compute drift; never store copied KB facts,
-  answered grill questions, or anything beyond the bindings and cursors themselves.
+- The spec version lives in the git `vX.Y.Z` tags, not in a committed file; read it
+  with `git describe --tags`. `scripts/bump-version.sh` advances it from conventional
+  commits.
+- Record the installed state in gitignored `local/installed.yml` (spec version,
+  timestamp, and per-automation cadence and content hash) with the composed prompts
+  snapshotted under `local/automations/`, per the preamble State Model. Use it only
+  to compute drift; never store copied KB facts, answered grill questions, or
+  anything beyond the version, cursors, and installed prompts themselves.
 - Deleting the record must not make the next run less correct — only slower, by
   forcing a full re-materialize.
 
@@ -151,7 +162,9 @@ reconcile changed, and the exact next manual action, if any.
   propose removing its materialized counterpart, but delete a personal value only
   with confirmation.
 - Use [bindings.example.yml](../../local/bindings.example.yml) as the shape for
-  `local/bindings.yml`.
+  `local/bindings.yml`, and
+  [installed.example.yml](../../local/installed.example.yml) as the shape for
+  `local/installed.yml`.
 - The follow-up marker policy ships as a repo default; offer to override it into a
   binding, do not assume.
 - Treat `local/bindings.yml` as replaceable: re-running setup rebuilds it from the
