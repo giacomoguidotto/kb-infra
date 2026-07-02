@@ -82,20 +82,30 @@ connector blocker is reported.
 ### 3. Reconcile the Endpoint Bindings
 
 Read the endpoint vocabulary from
-[_preamble.md](../../docs/automations/_preamble.md). Bind only the endpoints the
-plan flagged as unbound, ambiguous, or stale — including endpoints whose
-`bindings.yml` key exists but is blank, a placeholder, or does not resolve to a real
-page. Explore the KB to locate a canonical owner for each; where an owner is missing
-or ambiguous, grill the user one question at a time, like `grill-me`, rather than
-guessing — including for brand-new pages the user must create (for example a persona
-or published-context surface). Record each binding as a hint in `local/bindings.yml`;
-`lookup` resolves the rest live. Leave already-valid bindings untouched. Propose
-removing bindings for retired endpoints; do not delete a personal value without
-confirmation.
+[_preamble.md](../../docs/automations/_preamble.md). Resolve every endpoint the plan
+flagged as unbound, ambiguous, or stale — including endpoints whose `bindings.yml`
+key exists but is blank, a placeholder, or does not resolve to a real page.
 
-Completion criterion: every endpoint an enabled automation needs is bound to a KB
-location or explicitly marked unbound with a reason, and retired bindings are
-resolved.
+A binding value is a resolution hint — a KB location — or blank; never write status
+prose (for example `UNBOUND: ...`) into it, and never treat "resolve by meaning" as a
+resolution for an endpoint that currently resolves to no owner.
+
+Blank is acceptable only when the endpoint genuinely resolves to a real owner by
+meaning. When it does not — a missing, ambiguous, or brand-new endpoint (for example
+a persona or published-context surface the user must create) — that is a hard gap,
+not an auto-resolvable one. Grill the user one question at a time, like `grill-me`,
+to close it: point it at an existing page, or decide together to create a new page
+and record where it lives. Do not move on by self-marking it unbound.
+
+Only the user may leave a needed endpoint unresolved, as an explicit deferral; record
+that as their decision, not as a binding hint. If the run cannot grill because it is
+non-interactive, stop and report the unresolved endpoints as a blocker rather than
+fabricating a resolution. Leave already-valid bindings untouched. Propose removing
+bindings for retired endpoints; do not delete a personal value without confirmation.
+
+Completion criterion: every endpoint an enabled automation needs resolves to a KB
+owner, or the user has explicitly deferred it; no needed endpoint is left as a
+self-authored "unbound" note, and retired bindings are resolved.
 
 ### 4. Reconcile the Sink Bindings
 
@@ -170,6 +180,9 @@ reconcile changed, and the exact next manual action, if any.
 - A present binding key is not proof of a binding: treat a blank, placeholder, or
   non-resolving value as unbound, and drive the check from the endpoints and sinks
   the enabled automations declare.
+- A binding value is a resolution hint or blank — never status prose. Never
+  self-mark a needed endpoint unbound: resolving it by grilling, or an explicit user
+  deferral, are the only outcomes.
 - `check` mode is read-only: it plans and reports, and writes nothing.
 - Retire, don't orphan: when an endpoint, sink, or automation leaves the spec,
   propose removing its materialized counterpart, but delete a personal value only
