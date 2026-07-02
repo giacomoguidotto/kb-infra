@@ -135,14 +135,22 @@ draft-style choice is recorded.
 ### 6. Reconcile the Automations
 
 For each enabled automation, compose the paste-ready prompt from three parts: the
-preamble, the automation body, and the resolved bindings. Confirm the cadence
-binding. Detect the harness: if it can create a scheduled automation from an agent,
-create or update it; otherwise output the paste-ready prompt and name where it goes.
-Recreate only automations the plan flagged as new, changed, or cadence-drifted, and
-offer to retire automations removed from the spec. After applying, snapshot each
-installed automation's composed prompt to `local/automations/<name>.md` and update
-`local/installed.yml` with the current spec version, timestamp, and per-automation
-cadence and hash, so the next run can compute drift.
+preamble, the automation body, and the resolved bindings. **Compose into a new
+artifact; never edit the source automation file or the preamble under `docs/` —
+those are read-only, reference endpoints by role, and must stay free of resolved
+bindings or any personal value.** The composed prompt is the only place resolved
+bindings appear; write it only to `local/automations/<name>.md` and/or the harness,
+and start it with a generated-file banner that names its source
+(`docs/automations/<name>.md`) and marks it do-not-edit.
+
+Confirm the cadence binding. Detect the harness: if it can create a scheduled
+automation from an agent, create or update it; otherwise output the paste-ready
+prompt and name where it goes. Recreate only automations the plan flagged as new,
+changed, or cadence-drifted, and offer to retire automations removed from the spec.
+After applying, snapshot each installed automation's composed prompt to
+`local/automations/<name>.md` and update `local/installed.yml` with the current spec
+version, timestamp, and per-automation cadence and hash, so the next run can compute
+drift.
 
 Completion criterion: every enabled automation is created, updated, or handed over
 as a paste-ready prompt with its target and cadence, and `local/installed.yml` plus
@@ -174,6 +182,9 @@ reconcile changed, and the exact next manual action, if any.
 
 - Write bindings only to gitignored `local/`. Never commit a personal value.
 - Never write a personal value into a committed spec file.
+- The spec source is read-only. Setup reads `docs/` and `skills/` to compose prompts
+  and never edits them; resolved bindings and other personal values live only in the
+  materialized prompt (`local/automations/` and the harness), never in the source.
 - Be idempotent: a re-run with no spec change and healthy state makes no changes and
   grills nothing.
 - Do not re-grill bindings that are already recorded and still resolve.
