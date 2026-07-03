@@ -102,14 +102,17 @@ Rules:
 Trigger: the scheduled automation, or a manual request to discover and evaluate
 opportunities.
 
-Flow: run the `career-system` discovery-to-evaluation loop. Process existing
-pending/failed work before scanning; scan a bounded batch only when the queue is
-drained; evaluate live postings; generate the expected reports and tracker rows;
-then verify the pipeline.
+Flow: run the `career-system` discovery-to-evaluation loop. Update the
+`career-system` clone to its remote first; then process existing pending/failed
+work before scanning; scan a bounded batch only when the queue is drained;
+evaluate live postings; generate the expected reports and tracker rows; then
+verify the pipeline.
 
 Rules:
 
 - This is discovery and evaluation only, not advancement or application work.
+- Update the `career-system` clone to its remote before starting; if it cannot
+  fast-forward cleanly, stop and report rather than running on stale state.
 - Do not submit applications, send messages, or prefill forms in a hidden browser.
 - Process existing queue work before adding new scan work.
 - Prompt source: [job-hunt-evaluate-audit.md](automations/job-hunt-evaluate-audit.md).

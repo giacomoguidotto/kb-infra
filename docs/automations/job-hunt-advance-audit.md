@@ -15,6 +15,8 @@ Job Hunt Advance Audit is a tracker-to-next-pack workflow.
   next pack.
 - Endpoints: `public-safe-claim-source`, `proof-points`, `personal-constraints`
   (on demand).
+- State routing: owned by the sink. This automation reads the career-system's
+  canonical state model and never defines its own.
 - Sink: `<career-system>`.
 - Approval gate: produce drafts and recommendations only. Do not submit, send, or
   update real-world statuses without confirmation.
@@ -48,7 +50,10 @@ Idle rule:
 
 Goal:
 - Advance the most promising existing opportunities after evaluation.
-- Use the career-system's next-action routing.
+- Source all lifecycle and next-action routing from the career-system's own
+  canonical state model. Do not invent, restate, or override that routing here;
+  if the sink's model is missing or ambiguous, stop and report it rather than
+  substituting your own.
 - Produce draft-oriented packs only.
 - Do not submit applications, send messages, click final submit buttons, update
   outward-facing systems, or record a status/follow-up as completed without the

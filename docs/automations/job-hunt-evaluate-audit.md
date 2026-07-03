@@ -12,6 +12,9 @@ Job Hunt Evaluate Audit is a discovery-to-evaluation workflow that runs inside t
 - KB lookup: not required. This automation runs the career-system's own loop; KB
   context enters later, in Advance and Tune Audits.
 - Sink: `<career-system>`.
+- Startup sync: update the `<career-system>` clone to its remote and confirm a
+  clean working tree before the loop runs; stop on a non-fast-forward rather than
+  running on stale state.
 - Upstream of: Job Hunt Advance Audit.
 - Posture: autonomous evaluation output; no application or outreach work.
 
@@ -26,6 +29,14 @@ Setup:
 - Read this repo's docs/workflows.md and docs/automations/_preamble.md for the
   boundary.
 - Read the career-system sink's own AGENTS.md and data contract before acting.
+
+Startup:
+- Before starting the loop, update the career-system clone to its remote: fetch
+  and fast-forward to the latest committed state, then confirm the working tree
+  is clean.
+- If the clone cannot fast-forward cleanly — diverged, dirty, or the remote is
+  unreachable — stop and report the concrete blocker rather than running on stale
+  state.
 
 Goal:
 - Run the career-system discovery-to-evaluation loop:
