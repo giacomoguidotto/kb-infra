@@ -12,7 +12,7 @@ automation. Cadences are bindings, collected at setup, not fixed here.
 | Job Hunt Evaluate Audit | new + queued postings | career-system | Autonomous evaluation output |
 | Job Hunt Advance Audit | Evaluate Audit output | career-system | Review-later draft packs |
 | Job Hunt Tune Audit | job-search-strategy endpoint | career-system | Approval-gated tuning proposal |
-| Knowledge Bank Drift Realignment | whole KB | KB (via `/capture`) | Clarify, then approval-gated writes |
+| Knowledge Harvest | activity across sources | KB (via `/capture`) | Clarify, then approval-gated writes |
 | Social Draft Pulse | public-safe endpoints | social-draft-queue | Approval-gated drafts |
 | Portfolio Surface Sweep | public-safe endpoints | portfolio | Approval-gated branch/PR work |
 
@@ -20,23 +20,31 @@ Job Hunt Advance Audit consumes Job Hunt Evaluate Audit; schedule it after, and
 let it idle while evaluation work is still in progress. Portfolio Surface Sweep
 and Job Hunt Tune Audit are lower-frequency; offset them from each other.
 
-## 1. Knowledge Bank Drift Realignment
+## 1. Knowledge Harvest
 
-Trigger: the scheduled automation, or a manual request to find and resolve stale,
-missing, due, raw, ambiguous, or project-drift knowledge.
+Trigger: the scheduled automation, or a manual request to harvest signals from
+recent activity — stale, missing, due, raw, ambiguous, or project-drift KB
+knowledge, plus decisions, opinions, themes, and working-style patterns from git
+history and agent transcripts.
 
-Flow: use `/lookup` in clarification mode over the KB; compare projects against
-recent local git history, or remote history, when useful. Ask the user one
-question at a time, then hand answered updates, marker candidates, discarded
-findings, and unresolved questions to `/capture` for an exact approval draft.
+Flow: fan out one subagent per source (KB-internal staleness, git history, each
+bound transcript source); each returns ranked candidate signals. Merge and
+convergence-rank them, then ask the user one question at a time and hand answered
+updates, marker candidates, discarded findings, and unresolved questions to
+`/capture` for an exact approval draft.
 
 Rules:
 
-- This is a clarification-to-capture loop, not a report-only audit.
+- This is an observe-to-capture loop, not a report-only audit.
+- Subagents self-clarify against their source; only the orchestrator asks the user.
 - Treat due follow-up markers as questions, not as permission to write.
+- Read `signal-preferences` to rank candidates; propose rubric updates as a distinct
+  block in the `/capture` draft.
+- Transcript-derived signals are private by default; never route them to public-safe
+  or social surfaces.
 - A normal discard leaves no KB trace; deferrals and final-form decisions become
   marker candidates only through approved `/capture` writes.
-- Prompt source: [kb-drift-realignment.md](automations/kb-drift-realignment.md).
+- Prompt source: [knowledge-harvest.md](automations/knowledge-harvest.md).
 
 ## 2. Social Draft Pulse
 

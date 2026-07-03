@@ -42,6 +42,9 @@ Rule-sets the automations obey (owned by the KB, not the spec):
 - `job-search-strategy`: target roles, compensation baseline, scoring preferences.
 - `personal-constraints`: relocation, compensation, work authorization,
   references, availability, and side-project/IP freedom.
+- `signal-preferences`: the user's criteria for what is worth remembering — the
+  emergent rubric Knowledge Harvest reads to rank candidate signals. It grows only
+  through approved rubric updates; a harvest run never rewrites it without approval.
 
 ## Sinks
 
@@ -50,6 +53,16 @@ External systems an automation materializes into. Each resolves from a binding:
 - `<career-system>`: the external job-search system repository.
 - `<portfolio>`: the public portfolio repository.
 - `<social-draft-queue>`: the social draft tool.
+
+## Sources
+
+External systems an automation observes (reads, never writes). Each resolves from a
+binding, referenced by role:
+
+- `<transcript-source>`: agent conversation transcripts on the local machine that
+  Knowledge Harvest mines for signals. Bound at setup to concrete locations; the
+  spec never names a specific agent. Read-only, forward-only by cursor, and private
+  by default — derived signals never auto-flow to public-safe or social surfaces.
 
 ## Shared Rules
 

@@ -20,6 +20,12 @@ endpoints:
   social-rules-of-engagement: ""
   job-search-strategy: ""
   personal-constraints: ""
+  signal-preferences: ""
+
+# External read sources automations observe (never write).
+# Knowledge Harvest mines these for signals; blank/empty = none.
+sources:
+  transcript-source: [] # list of agent transcript locations on this machine
 
 # External systems automations materialize into.
 sinks:
@@ -38,7 +44,7 @@ sinks:
 # Automation cadences (local timezone).
 cadences:
   timezone: ""
-  knowledge-bank-drift-realignment: ""
+  knowledge-harvest: ""
   social-draft-pulse: ""
   portfolio-surface-sweep: ""
   job-hunt-evaluate-audit: ""
