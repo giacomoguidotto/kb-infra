@@ -31,6 +31,12 @@ over many sources.
 - Write path: hand the clarified result to `/capture`; KB writes happen only after
   approval of the latest exact draft. Rubric updates for `signal-preferences` are
   proposed as a **distinct block** in the capture draft, separate from the signals.
+  The rubric stays **taste-only and evergreen** — criteria and registers for what is
+  worth remembering, never concrete facts, current-state, schema, or enum values. A
+  candidate rubric line that names a specific fact (a project's status, a status
+  vocabulary, "project X is Next") is split: the evergreen criterion stays in the
+  rubric, the fact routes to its canonical owner as an ordinary signal. A line that
+  would go stale when a fact changes belongs on the owner, not in the rubric.
 - State: forward-only per-source cursor (mechanical `local/` hint), bounded backfill
   on first run. No local rejection log — dedup comes from the cursor, learned taste
   from `signal-preferences`.
@@ -105,6 +111,16 @@ Capture:
 - When a discard or a pattern implies a change to what counts as a signal, propose
   a signal-preferences rubric update as a distinct block in the capture draft,
   clearly separated from the signal writes, so the user approves it deliberately.
+- Keep the signal-preferences rubric taste-only and evergreen: it records which
+  kinds of signal are worth remembering and how to rank them, never concrete KB
+  facts, current-state, schema, or enum values. If a candidate rubric line names a
+  specific project state, status vocabulary, or fact (for example "project X is
+  Next" or "valid statuses are A/B/C"), split it: keep the evergreen criterion in
+  the rubric and route the fact itself to its canonical owner as an ordinary signal
+  write in the same draft. A line that would go stale when a fact changes belongs on
+  the owner, not in the rubric.
+- Preserve the rubric's open "surprising/uncategorised" register so novel signal
+  types keep surfacing; a rubric update never closes that bucket.
 - Apply KB writes only after the user approves the latest exact /capture draft.
 
 End state:
