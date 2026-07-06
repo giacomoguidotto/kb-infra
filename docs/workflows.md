@@ -10,7 +10,7 @@ automation. Cadences are bindings, collected at setup, not fixed here.
 | Automation | Consumes | Materializes into | Intervention posture |
 |------------|----------|-------------------|----------------------|
 | Job Hunt Evaluate Audit | new + queued postings | career-system | Autonomous evaluation output |
-| Job Hunt Advance Audit | Evaluate Audit output | career-system | Approval-gated draft packs |
+| Job Hunt Advance Audit | Evaluate Audit output | career-system | Direct draft packs; real-world actions gated |
 | Job Hunt Tune Audit | job-search-strategy endpoint | career-system | Approval-gated tuning proposal |
 | Knowledge Harvest | activity across sources | KB (via `/capture`) | Clarify, then approval-gated writes |
 | Social Draft Pulse | public-safe endpoints | social-draft-queue | Approval-gated drafts |
@@ -143,16 +143,18 @@ Trigger: the scheduled automation, or a manual request to advance existing
 
 Flow: inspect the `career-system` tracker, reports, and follow-up history. Use
 `/lookup` in context mode only when fresh KB context could change the next pack.
-Select a small number of opportunities, return a selection summary, and produce the
-draft next packs only after the user approves. Stop before submitting, sending, or
-recording real-world state changes.
+Select a small number of opportunities and produce the draft next packs directly,
+then present them for review — no pre-approval gate. Stop before submitting, sending,
+or recording real-world state changes without the user's confirmation.
 
 Rules:
 
 - This is an advancement workflow, not discovery or evaluation.
 - It consumes Job Hunt Evaluate Audit; idle when evaluation or batch work is still
   in progress.
-- Ask before generating: return a selection summary and get approval before writing
-  pack files or any other sink state.
-- Do not submit, send, or mark actions completed without the user's confirmation.
+- Generate draft packs directly; they are the automation's reviewable output, not a
+  gated sink write. The shared "approve before writing to a sink" rule applies here
+  only to canonical career-system state and real-world actions.
+- Do not edit the tracker, record follow-ups, submit, send, or mark actions completed
+  without the user's confirmation.
 - Prompt source: [job-hunt-advance-audit.md](automations/job-hunt-advance-audit.md).

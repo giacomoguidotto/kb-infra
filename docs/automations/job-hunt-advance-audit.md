@@ -18,9 +18,11 @@ Job Hunt Advance Audit is a tracker-to-next-pack workflow.
 - State routing: owned by the sink. This automation reads the career-system's
   canonical state model and never defines its own.
 - Sink: `<career-system>`.
-- Approval gate: return a selection summary and get the user's approval **before
-  generating packs**; never submit, send, or record real-world state without
-  confirmation.
+- Approval gate: draft packs are this automation's reviewable output, not a gated
+  sink write — generate them directly, **without pre-approval**, then present them.
+  The shared "approve before writing to a sink" rule applies here only to canonical
+  career-system state and real-world actions; never submit, send, record, or mark
+  real-world state complete without the user's confirmation.
 
 ## Prompt
 
@@ -55,24 +57,25 @@ KB lookup:
   public-safe claim calibration. Skip for routine follow-ups or drafts fully covered
   by the current report/profile, and say why in one line.
 
-Selection gate — ask before generating:
+Selection:
 - Select a small number of opportunities (up to three).
-- Return a selection summary first: which opportunities, the pack each would get and
-  why, and lookup used or skipped. Wait for the user's approval before generating any
-  pack.
-- Do not write pack files, edit the tracker, record follow-ups, or create or edit
-  action state until approved. Do not submit applications, send messages, click final
+- Generate the packs directly — there is no pre-approval gate. Draft packs are this
+  automation's reviewable output; the shared "approve before materializing a write
+  into a sink" rule applies here only to canonical career-system state and real-world
+  actions, not to producing review drafts.
+- Do not edit the tracker, record follow-ups, or create or edit action state without
+  the user's confirmation. Do not submit applications, send messages, click final
   submit buttons, or mark a status or follow-up complete without explicit
   confirmation.
 
-After approval:
-- Produce the approved packs only, reusing the career-system's existing mode rules
+Producing packs:
+- Produce the selected packs, reusing the career-system's existing mode rules
   rather than restating them. Packs are drafts for review.
 - If a better durable state model is needed, propose it in the summary rather than
   silently changing schema or files.
 
 End state:
-- Report selected opportunities and why, packs produced or awaiting approval, lookup
-  used or skipped, blocked actions, and recommended next human approvals.
+- Report selected opportunities and why, packs produced, lookup used or skipped,
+  blocked actions, and recommended next human approvals for real-world state.
 - If no useful advancement exists, say so and include the evidence checked.
 ```
