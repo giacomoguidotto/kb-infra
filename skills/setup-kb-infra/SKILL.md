@@ -134,14 +134,34 @@ draft-style choice is recorded.
 
 ### 6. Reconcile the Automations
 
-For each enabled automation, compose the paste-ready prompt from three parts: the
-preamble, the automation body, and the resolved bindings. **Compose into a new
-artifact; never edit the source automation file or the preamble under `docs/` —
-those are read-only, reference endpoints by role, and must stay free of resolved
-bindings or any personal value.** The composed prompt is the only place resolved
-bindings appear; write it only to `local/automations/<name>.md` and/or the harness,
-and start it with a generated-file banner that names its source
+For each enabled automation, compose a lean, **self-contained** paste-ready prompt —
+it is the running agent's entire world, since the run executes in the sink checkout
+with the spec not present (see
+[ADR 0005](../../docs/adr/0005-materialized-automation-is-self-contained.md)).
+**Compose into a new artifact; never edit the source automation file or the preamble
+under `docs/` — those are read-only, reference surfaces by role, and must stay free of
+resolved bindings or any personal value.** The composed prompt is the only place
+resolved bindings appear; write it only to `local/automations/<name>.md` and/or the
+harness, and start it with a generated-file banner that names its source
 (`docs/automations/<name>.md`) and marks it do-not-edit.
+
+Compose these parts in order, and **only** these — never the full endpoint/sink
+catalog, the provider block, the cadence, or blank overrides:
+
+1. The banner, then `# <Name>` and a one-line intro. When the automation's primary
+   sink resolves to a repo clone, name that clone as the working directory and state
+   the spec is not checked out there; when the sink is a tool or the KB (no clone),
+   state only that the spec is not checked out and everything needed is in the prompt.
+2. `## Operating rules` — the preamble's Operating Rules, verbatim.
+3. `## Context surfaces` — one line per endpoint the automation **declares**, joining
+   its role description from the preamble vocabulary with its resolved hint from
+   `local/bindings.yml`. Omit the section when the automation declares no endpoints.
+4. `## Sink` / `## Sources` — one resolved line per declared sink and source: the role
+   description plus the clone path and repo, or the tool handle. Omit when none.
+5. Any convention the automation declares (for example Knowledge Harvest's follow-up
+   marker policy) inlined as its own section, resolved from
+   `docs/knowledge-bank-conventions.md` — never left as a path for the run to open.
+6. The automation body from the source's `## Prompt` block, appended verbatim.
 
 Confirm the cadence binding. Detect the harness: if it can create a scheduled
 automation from an agent, create or update it; otherwise output the paste-ready

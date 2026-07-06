@@ -23,12 +23,8 @@ Job Hunt Evaluate Audit is a discovery-to-evaluation workflow that runs inside t
 ```md
 You are running Job Hunt Evaluate Audit.
 
-The preamble is prepended to this prompt at materialize time.
-
-Setup:
-- Read this repo's docs/workflows.md and docs/automations/_preamble.md for the
-  boundary.
-- Read the career-system sink's own AGENTS.md and data contract before acting.
+Read first:
+- The career-system sink's own AGENTS.md and data contract.
 
 Startup:
 - Before starting the loop, update the career-system clone to its remote: fetch

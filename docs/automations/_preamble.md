@@ -1,90 +1,90 @@
 # Automation Preamble
 
-Every automation shares this preamble. When `setup-kb-infra` materializes an automation,
-it prepends this preamble to the automation body and resolves the placeholders
-from `local/bindings.yml`. Keep the shared rules here in one place; do not restate
-them inside individual automation prompts.
+This file is the composer's reference material, **not** a block that is pasted
+verbatim into a prompt. When `setup-kb-infra` materializes an automation it composes a
+lean, self-contained prompt: it injects the [Operating Rules](#operating-rules), and
+for each surface the automation **declares** it emits a single resolved line —
+the role description from the [vocabulary](#vocabulary) joined with the binding hint
+from `local/bindings.yml`. The full catalog, the provider block, cadence, and blank
+overrides never reach the prompt. See
+[ADR 0005](../adr/0005-materialized-automation-is-self-contained.md).
 
-## KB Interface
+Reference surfaces and sinks **by role**, never by a concrete page, repo, or path.
+`/lookup` resolves an endpoint live by meaning, so a binding is a location hint, not a
+hard dependency. Keep the shared rules here in one place; do not restate them inside
+individual automation prompts.
 
-The spec does not prescribe a KB structure. Each automation declares the
-**endpoints** it reads; `setup-kb-infra` discovers where each lives in your KB and binds
-it. Reference endpoints and sinks **by role**, never by a concrete page, repo, or
-path. `lookup` resolves endpoint context live by meaning, so a binding is a hint,
-not a hard dependency.
+## Operating Rules
 
-## Endpoints
+Injected into every composed prompt:
 
-Data surfaces the automations read:
+- The KB is canonical; never write to it except through `/capture` approval.
+- Return a run summary and wait for approval before materializing any write into a
+  sink.
+- Use `/lookup` narrowly; do not preload broad KB content.
+- Keep public claims source-backed and public-safe; do not turn vibes into facts.
+- Do not duplicate KB knowledge into repo files or local state; the KB is the
+  knowledge ledger and each sink is its own work queue.
+- Local state is disposable: use gitignored `local/` only for mechanical hints (last
+  run time, refresh dates, commit cursors), never copied KB facts, answered
+  questions, or approved/rejected/suppression decisions. Deleting it may make the
+  next run slower, never less correct.
+
+## Vocabulary
+
+The composer emits one resolved line per **declared** surface, drawn from the
+descriptions below. It does not inject surfaces an automation does not declare.
+
+### Endpoints
+
+Data surfaces and rule-sets automations read from the KB:
 
 - `selected-projects`: the active/selected projects to consider this run.
-- `public-safe-claim-source`: the adapter that presents recruiter/public-facing
-  facts. It also owns the **public-safety boundary** — what must not be published.
+- `public-safe-claim-source`: the adapter presenting recruiter/public-facing facts;
+  also owns the public-safety boundary — what must not be published.
 - `proof-points`: compact, reusable evidence and metrics for generated artifacts.
 - `network`: contacts and relationships.
 - `identity`: how the user frames themselves; archetypes and narrative.
-- `point-of-view`: the user's incrementally-built public persona — recorded
-  stances, opinions, and recurring themes that topical drafts draw from. It grows
-  over time only through approved `/capture` writes; automations read it and never
+- `point-of-view`: the user's recorded public stances, opinions, and recurring themes;
+  grows only through approved `/capture` writes — automations read it and never
   fabricate a stance.
-- `published-social-context`: a per-platform ledger of what has already been
-  published and which concepts and projects have been publicly introduced on each
-  channel. Automations read it to keep continuity and avoid assuming audience
-  knowledge; it is maintained through approved `/capture` writes, not written by
-  draft automations.
-
-Rule-sets the automations obey (owned by the KB, not the spec):
-
+- `published-social-context`: the per-platform ledger of what has been published and
+  which concepts and projects were publicly introduced on each channel; maintained
+  through approved `/capture` writes, read for continuity.
 - `portfolio-change-rules`: the portfolio model and structural constraints.
-- `social-rules-of-engagement`: per-platform drafting strategy and guardrails,
-  including the per-run volume target, the project/topical content mix, and the
-  self-contained / introduce-on-first-use rule.
+- `social-rules-of-engagement`: per-platform drafting strategy and guardrails — the
+  per-run volume target, the project/topical content mix, and the self-contained /
+  introduce-on-first-use rule.
 - `job-search-strategy`: target roles, compensation baseline, scoring preferences.
-- `personal-constraints`: relocation, compensation, work authorization,
-  references, availability, and side-project/IP freedom.
+- `personal-constraints`: relocation, compensation, work authorization, references,
+  availability, and side-project/IP freedom.
 - `signal-preferences`: the user's criteria for what is worth remembering — the
-  emergent rubric Knowledge Harvest reads to rank candidate signals. It grows only
-  through approved rubric updates; a harvest run never rewrites it without approval.
+  emergent rubric Knowledge Harvest ranks candidates against; grows only through
+  approved rubric updates.
 
-## Sinks
+### Sinks
 
-External systems an automation materializes into. Each resolves from a binding:
+External systems an automation materializes into; each resolves from a binding to a
+clone path (or tool handle). The primary sink clone is the run's working directory.
 
 - `<career-system>`: the external job-search system repository.
 - `<portfolio>`: the public portfolio repository.
 - `<social-draft-queue>`: the social draft tool.
 
-## Sources
+### Sources
 
-External systems an automation observes (reads, never writes). Each resolves from a
+External systems an automation observes (reads, never writes); each resolves from a
 binding, referenced by role:
 
 - `<transcript-source>`: agent conversation transcripts on the local machine that
-  Knowledge Harvest mines for signals. Bound at setup to concrete locations; the
-  spec never names a specific agent. Read-only, forward-only by cursor, and private
+  Knowledge Harvest mines for signals. Read-only, forward-only by cursor, and private
   by default — derived signals never auto-flow to public-safe or social surfaces.
 
-## Shared Rules
+## Follow-up Marker Policy
 
-- The KB is canonical. Never write to it except through `/capture` approval.
-- Use `/lookup` narrowly; do not preload broad KB content.
-- Keep public claims source-backed and public-safe. Do not turn vibes into facts.
-- Do not duplicate KB knowledge into repo files or local state.
-- The KB is the knowledge ledger; each sink is its own work queue.
-- Return a summary first and wait for approval before materializing any write into
-  a sink.
-
-## State Model
-
-- If state is useful, use ignored `local/` scratch only for mechanical hints such
-  as last run time, refresh dates, or commit cursors.
-- Never store copied KB facts, answered questions, approved/rejected ideas, or
-  suppression decisions in local state.
-- Deleting local state may make the next run slower; it must not make it less
-  correct.
-
-## Follow-up Marker Policy (default)
-
-Automations that revisit deferred knowledge use the follow-up and final-form
-marker formats in [knowledge-bank-conventions.md](../knowledge-bank-conventions.md).
-This ships as the repo default; `setup-kb-infra` offers to override it as a binding.
+Automations that declare a dependency on deferred-knowledge markers (Knowledge
+Harvest) use the follow-up and final-form marker formats in
+[knowledge-bank-conventions.md](../knowledge-bank-conventions.md). Those formats are
+**inlined** into the composed prompt at materialize time, not left as a file path for
+the run to open. This ships as the repo default; `setup-kb-infra` offers to override it
+as a binding.

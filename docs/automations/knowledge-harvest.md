@@ -42,18 +42,14 @@ over many sources.
   from `signal-preferences`.
 - Privacy: transcript-derived signals are private by default and never auto-flow to
   public-safe or social surfaces.
+- Markers: declares the follow-up marker policy; the follow-up and final-form marker
+  formats are inlined into the composed prompt at materialize time, not read from a
+  spec path at runtime.
 
 ## Prompt
 
 ```md
 You are running Knowledge Harvest.
-
-The preamble is prepended to this prompt at materialize time.
-
-Setup:
-- Read this repo's AGENTS.md, docs/workflows.md,
-  docs/knowledge-bank-conventions.md, docs/automations/_preamble.md,
-  skills/lookup/SKILL.md, and skills/capture/SKILL.md before acting.
 
 Goal:
 - Observe the user's recent activity across sources, surface candidate signals,
@@ -102,8 +98,8 @@ Question style:
 - Keep the sitting from running forever: when it has gone long, say how many
   candidates remain and ask whether to continue or defer. This is a soft ceiling,
   not a hard cap.
-- A normal discard leaves no KB trace. Use the marker formats from
-  docs/knowledge-bank-conventions.md.
+- A normal discard leaves no KB trace. Use the follow-up and final-form marker
+  formats given under "Marker formats" in this prompt.
 
 Capture:
 - Feed answered updates, marker candidates, discarded findings, and unresolved

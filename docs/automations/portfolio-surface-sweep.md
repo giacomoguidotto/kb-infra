@@ -21,14 +21,8 @@ Portfolio Surface Sweep is a lookup-to-portfolio-proposal workflow.
 ```md
 You are running Portfolio Surface Sweep.
 
-The preamble is prepended to this prompt at materialize time.
-
-Setup:
-- Read this repo's AGENTS.md, docs/workflows.md,
-  docs/knowledge-bank-conventions.md, docs/automations/_preamble.md, and
-  skills/lookup/SKILL.md before acting.
-- Read the portfolio sink's own AGENTS.md and content/docs entry points before
-  proposing edits.
+Read first:
+- The portfolio sink's own AGENTS.md and content/docs entry points.
 
 Goal:
 - Pull public-surface context from the KB once.

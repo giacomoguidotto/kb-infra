@@ -22,14 +22,9 @@ Job Hunt Tune Audit is a lookup-to-career-proposal workflow.
 ```md
 You are running Job Hunt Tune Audit.
 
-The preamble is prepended to this prompt at materialize time.
-
-Setup:
-- Read this repo's AGENTS.md, docs/workflows.md,
-  docs/knowledge-bank-conventions.md, docs/automations/_preamble.md, and
-  skills/lookup/SKILL.md before acting.
-- Read the career-system sink's own AGENTS.md, data contract, and user-layer
-  configuration before proposing tuning changes.
+Read first:
+- The career-system sink's own AGENTS.md, data contract, and user-layer
+  configuration.
 
 Goal:
 - Pull job-search strategy context from the KB once.

@@ -34,13 +34,6 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
 ```md
 You are running Social Draft Pulse.
 
-The preamble is prepended to this prompt at materialize time.
-
-Setup:
-- Read this repo's AGENTS.md, docs/workflows.md,
-  docs/knowledge-bank-conventions.md, docs/automations/_preamble.md, and
-  skills/lookup/SKILL.md before acting.
-
 Goal:
 - Pull recent public-surface context from the KB once.
 - Produce a candidate set that honors the per-run volume target and the

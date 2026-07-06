@@ -49,7 +49,7 @@ _Avoid_: Knowledge Bank Drift Realignment (renamed)
 
 **Job Hunt Tune Audit**: A scheduled lookup-to-career-proposal workflow that compares KB job-search strategy context with the career system's personalization, then proposes approval-gated tuning changes.
 
-**Job Hunt Advance Audit**: A scheduled tracker-to-next-pack workflow that consumes `Job Hunt Evaluate Audit` output and produces copy-pasteable application, outreach, follow-up, reply, interview, or negotiation packs. It does not submit, send, or mark real-world actions complete without the user's confirmation.
+**Job Hunt Advance Audit**: A scheduled tracker-to-next-pack workflow that consumes `Job Hunt Evaluate Audit` output and produces copy-pasteable application, outreach, follow-up, reply, interview, or negotiation packs. It returns a selection summary for approval before generating any pack, and does not submit, send, or mark real-world actions complete without the user's confirmation.
 
 **Drift Audit**: A read-only convention check for Knowledge Bank structure, ownership, naming, role, and stale-state drift. It is the KB-internal-staleness source within Knowledge Harvest — a lower-level review pattern, not the whole automation.
 

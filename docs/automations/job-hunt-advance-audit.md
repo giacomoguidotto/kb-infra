@@ -18,22 +18,17 @@ Job Hunt Advance Audit is a tracker-to-next-pack workflow.
 - State routing: owned by the sink. This automation reads the career-system's
   canonical state model and never defines its own.
 - Sink: `<career-system>`.
-- Approval gate: produce drafts and recommendations only. Do not submit, send, or
-  update real-world statuses without confirmation.
+- Approval gate: return a selection summary and get the user's approval **before
+  generating packs**; never submit, send, or record real-world state without
+  confirmation.
 
 ## Prompt
 
 ```md
 You are running Job Hunt Advance Audit.
 
-The preamble is prepended to this prompt at materialize time.
-
-Setup:
-- Read this repo's AGENTS.md, docs/workflows.md,
-  docs/knowledge-bank-conventions.md, docs/automations/_preamble.md, and
-  skills/lookup/SKILL.md before acting.
-- Read the career-system sink's own AGENTS.md, data contract, mode files, and
-  templates before producing packs.
+Read first:
+- The career-system sink's own AGENTS.md, data contract, mode files, and templates.
 - The upstream producer is Job Hunt Evaluate Audit.
 
 Startup:
@@ -45,42 +40,39 @@ Startup:
 Idle rule:
 - If the pipeline has unchecked pending work, the batch has failed/pending/
   processing rows, or a batch runner is still active, assume Evaluate Audit has
-  unfinished work. Do not advance in that run; report the concrete blocker and
-  stop.
+  unfinished work. Do not advance this run; report the concrete blocker and stop.
 
 Goal:
 - Advance the most promising existing opportunities after evaluation.
 - Source all lifecycle and next-action routing from the career-system's own
-  canonical state model. Do not invent, restate, or override that routing here;
-  if the sink's model is missing or ambiguous, stop and report it rather than
-  substituting your own.
-- Produce draft-oriented packs only.
-- Do not submit applications, send messages, click final submit buttons, update
-  outward-facing systems, or record a status/follow-up as completed without the
-  user's explicit confirmation.
+  canonical state model; do not invent, restate, or override it. If that model is
+  missing or ambiguous, stop and report it rather than substituting your own.
 
 KB lookup:
-- Optional. Start from career-system state.
-- Use /lookup in context mode only when fresh KB context could change the pack:
-  high-priority opportunity, a role touching recent projects or public proof, or a
-  role that depends on personal-constraints or public-safe claim calibration.
-- Skip lookup for routine follow-ups or drafts fully covered by the current
-  report/profile. When skipping, say why briefly.
+- Optional; start from career-system state. Use /lookup in context mode only when
+  fresh KB context could change a pack: a high-priority opportunity, a role touching
+  recent projects or public proof, or one depending on personal-constraints or
+  public-safe claim calibration. Skip for routine follow-ups or drafts fully covered
+  by the current report/profile, and say why in one line.
 
-Output pack:
+Selection gate — ask before generating:
 - Select a small number of opportunities (up to three).
-- For each, produce the appropriate next pack for its lifecycle stage, reusing the
-  career-system's existing mode rules rather than restating them.
+- Return a selection summary first: which opportunities, the pack each would get and
+  why, and lookup used or skipped. Wait for the user's approval before generating any
+  pack.
+- Do not write pack files, edit the tracker, record follow-ups, or create or edit
+  action state until approved. Do not submit applications, send messages, click final
+  submit buttons, or mark a status or follow-up complete without explicit
+  confirmation.
 
-Writes:
-- Do not edit the tracker unless the user confirms a real-world status change.
-- Do not record follow-ups unless the user confirms they were sent.
-- Do not create or edit action state unless the user approves.
-- If a better durable state model is needed, propose it in the run summary rather
-  than silently changing schema or files.
+After approval:
+- Produce the approved packs only, reusing the career-system's existing mode rules
+  rather than restating them. Packs are drafts for review.
+- If a better durable state model is needed, propose it in the summary rather than
+  silently changing schema or files.
 
 End state:
-- Report selected opportunities, why, packs produced, lookup used/skipped, blocked
-  actions, and recommended next human approvals.
+- Report selected opportunities and why, packs produced or awaiting approval, lookup
+  used or skipped, blocked actions, and recommended next human approvals.
 - If no useful advancement exists, say so and include the evidence checked.
 ```
