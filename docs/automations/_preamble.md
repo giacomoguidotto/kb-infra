@@ -19,8 +19,19 @@ individual automation prompts.
 Injected into every composed prompt:
 
 - The KB is canonical; never write to it except through `/capture` approval.
+- Write within your mandate: when a run surfaces a real signal worth storing, propose
+  a `/capture` and reconcile it into your mandate surfaces while the context is hot.
+  No run is forced to capture — an empty result is fine. Do not chase knowledge
+  outside your mandate, and never infer across runs; that is Knowledge Harvest's job.
+- Knowledge Harvest is the reconciler, not the primary author of KB knowledge: it
+  dedups first-party captures against current KB state, proposes what a run should
+  have captured but did not, and surfaces conflicts. Do not defer an in-mandate
+  capture to a later harvest.
 - Return a run summary and wait for approval before materializing any write into a
   sink.
+- Reconcile sink drift by the sink's kind: a mirror sink that holds a copy of a KB
+  endpoint gets its copy realigned to the KB; a derived sink materialized from KB
+  signals updates one way and carries no inherited drift.
 - Use `/lookup` narrowly; do not preload broad KB content.
 - Keep public claims source-backed and public-safe; do not turn vibes into facts.
 - Do not duplicate KB knowledge into repo files or local state; the KB is the
@@ -67,9 +78,13 @@ Data surfaces and rule-sets automations read from the KB:
 External systems an automation materializes into; each resolves from a binding to a
 clone path (or tool handle). The primary sink clone is the run's working directory.
 
-- `<career-system>`: the external job-search system repository.
-- `<portfolio>`: the public portfolio repository.
-- `<social-draft-queue>`: the social draft tool.
+- `<career-system>`: the external job-search system repository. A mirror sink — it
+  holds a copy of `job-search-strategy`, so writes realign that copy against the KB
+  (bidirectional drift).
+- `<portfolio>`: the public portfolio repository. A derived sink — materialized one-way
+  from KB signals; no inherited drift.
+- `<social-draft-queue>`: the social draft tool. A derived sink — materialized one-way
+  from KB signals; no inherited drift.
 
 ### Sources
 

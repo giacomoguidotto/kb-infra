@@ -17,6 +17,10 @@ _Avoid_: second brain, source of truth, runtime, knowledge store
 
 **Sink**: An external system an automation materializes into, such as a career system, a portfolio repo, or a social draft queue. Referenced by role, never by repo name or path.
 
+**Mirror Sink**: A sink that stores its own copy of a KB endpoint, such as `career-system` holding a copy of `job-search-strategy`. A first-party capture that changes the mirrored endpoint realigns the sink's copy; drift is bidirectional.
+
+**Derived Sink**: A sink materialized one-way from KB signals, such as `portfolio` or `social-draft-queue`. The KB is the single source; the sink carries no inherited drift.
+
 **Binding**: A concrete personal value for a sink or endpoint, supplied at setup and stored in gitignored `local/`. Never committed.
 
 **Setup**: A user-invoked skill that materializes the infrastructure: it connects the KB provider, collects bindings through a grill, installs the lookup and capture skills, and bootstraps the automations.
@@ -32,9 +36,13 @@ _Avoid_: using `KB` for this repository; use `kb-infra` when referring to Knowle
 
 **Capture**: A user-invoked skill that drafts durable session knowledge into the KB through `/capture`, behind an HTML approval gate. It is not an accepted workflow.
 
+**Mandate**: The set of KB endpoints and the sink an automation is authorized to write within. Write-authority is mandate-scoped: an automation captures only in-context knowledge that falls inside its mandate, and leaves everything else to Knowledge Harvest.
+
+**First-Party Capture**: An automation writing knowledge from its own run into its mandate surfaces — the KB through `/capture` approval and/or its sink — while the context is hot, instead of deferring to Knowledge Harvest.
+
 **Lookup**: A read-only retrieval skill used by workflows to fetch live KB context, with an optional clarification branch for missing, stale, due, or ambiguous facts.
 
-**Knowledge Harvest**: A scheduled observe-to-capture workflow that harvests signals from the user's activity and populates the KB. It runs one pattern — `observe(source) → generate candidates → rank/dedup → clarify → capture` — over many sources (KB-internal staleness, git history, agent transcripts), fanning out one subagent per source, then asks the user one clarification question at a time before drafting exact `/capture` writes for approval.
+**Knowledge Harvest**: A scheduled observe-to-capture workflow that harvests signals from the user's activity and populates the KB. It runs one pattern — `observe(source) → generate candidates → rank/dedup → clarify → capture` — over many sources (KB-internal staleness, git history, agent transcripts), fanning out one subagent per source, then asks the user one clarification question at a time before drafting exact `/capture` writes for approval. As the reconciler of first-party captures, it dedups candidates against current KB state, proposes what an automation's run should have captured but did not, and surfaces conflicts.
 _Avoid_: Knowledge Bank Drift Realignment (renamed)
 
 **Signal**: A candidate piece of durable knowledge worth remembering that Knowledge Harvest surfaces from a source — a fact, decision, stated opinion, recurring theme, project-state change, or working-style pattern. A signal is a candidate for approval, never an automatic KB write.
