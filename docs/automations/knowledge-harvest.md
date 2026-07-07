@@ -7,8 +7,9 @@ is copied into the harness automation settings.
 
 ## Design
 
-Knowledge Harvest is an observe-to-capture loop, not a report-only audit. It runs one
-pattern — `observe(source) → generate candidates → rank/dedup → clarify → capture` —
+Knowledge Harvest is an observe-to-capture loop and the **reconciler** of first-party
+captures, not a report-only audit. It runs one pattern —
+`observe(source) → generate candidates → rank/dedup → reconcile → clarify → capture` —
 over many sources.
 
 - Orchestrator + workers: the orchestrator fans out **one subagent per source**; each
@@ -19,8 +20,17 @@ over many sources.
   evidence, provenance (source, session/commit, timestamp), a confidence, and a
   one-line "why this might be a signal." Subagents self-clarify against their own
   source; they never ask the user.
-- Merge in the orchestrator: dedup and **convergence-rank** — a candidate seen in more
-  than one source outranks a one-off — then run a single interactive clarify loop.
+- Merge in the orchestrator: dedup across sources and **convergence-rank** — a
+  candidate seen in more than one source outranks a one-off.
+- Reconcile against KB state (reconciler role): before clarifying, the orchestrator
+  checks each merged candidate against its canonical KB owner, since an automation may
+  have first-party-captured it in-run already. Three outcomes — **present**: the owner
+  already records it, so drop it or downgrade to a confirmation, never a duplicate
+  write; **miss**: a run implied it but the KB does not reflect it, kept as an ordinary
+  signal to propose; **conflict**: it walks back or contradicts what the KB records,
+  surfaced as drift for the user to adjudicate, never a silent overwrite. When a
+  conflicting or updated endpoint has a mirror sink, note that its owning automation
+  must realign the mirror — Harvest flags mirror drift but never writes a sink.
 - Ranking rubric: read `signal-preferences` to rank candidates. It is an emergent
   rubric — a seed of registers plus a permanent open "surprising/uncategorised"
   bucket — so novel signal types can still surface.
@@ -88,10 +98,26 @@ Merge and rank:
 - Read signal-preferences and rank candidates by it. Keep an open bucket for
   surprising candidates that fit no recorded register.
 
+Reconcile against KB state (you are the reconciler, not the primary author):
+- Before clarifying, check each merged candidate against its canonical KB owner. An
+  automation may have first-party-captured it in its own run already, so the KB may
+  already reflect it.
+- Present: if the owner already records it, drop the candidate or downgrade it to a
+  confirmation. Never propose a duplicate write.
+- Miss: if a run implied it but the KB does not reflect it, keep it as an ordinary
+  signal to propose — this is the run's backstop.
+- Conflict: if the candidate walks back or contradicts what the KB records — a reversed
+  stance, a superseded decision, a changed fact — surface it as drift in its own group.
+  Never silently overwrite; let the user adjudicate which is right.
+- If a conflicting or newly-updated endpoint has a mirror sink (for example
+  job-search-strategy mirrored in career-system), note that its owning automation must
+  realign the mirror. Flag mirror drift; never write a sink from here.
+
 Question style:
 - Before the first question, say how many candidates were found, per source, and
   which group comes first.
-- Group by register: due follow-ups, project drift, dated task signals, life or
+- Group by register: due follow-ups, reconciliation conflicts (walk-backs and
+  contradictions with current KB state), project drift, dated task signals, life or
   identity updates, decisions/opinions/themes from activity, other stale, missing,
   or ambiguous findings, then low-confidence findings.
 - Include the page or source, the evidence, and why the question matters.
@@ -104,6 +130,10 @@ Question style:
 Capture:
 - Feed answered updates, marker candidates, discarded findings, and unresolved
   questions into /capture.
+- Reconciliation outcomes route through the same draft: a candidate already present in
+  the KB produces no write; a miss becomes an ordinary signal write; a confirmed
+  conflict becomes a write or marker only after the user adjudicates the walk-back, and
+  a mirror-drift note names the owning automation without writing a sink.
 - When a discard or a pattern implies a change to what counts as a signal, propose
   a signal-preferences rubric update as a distinct block in the capture draft,
   clearly separated from the signal writes, so the user approves it deliberately.
