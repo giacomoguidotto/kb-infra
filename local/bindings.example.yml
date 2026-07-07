@@ -49,7 +49,6 @@ cadences:
   portfolio-surface-sweep: ""
   job-hunt-evaluate-audit: ""
   job-hunt-advance-audit: ""
-  job-hunt-tune-audit: ""
 
 # Overrides for repo defaults (optional; blank = use repo default).
 overrides:

@@ -53,11 +53,9 @@ _Avoid_: Knowledge Bank Drift Realignment (renamed)
 
 **Portfolio Surface Sweep**: A scheduled lookup-to-portfolio-proposal workflow that compares public-safe KB context with the current portfolio sink, then prepares approved branch/PR work for portfolio candidates. It does not create social drafts, merge, deploy, publish, or write to the KB.
 
-**Job Hunt Evaluate Audit**: A scheduled discovery-to-evaluation workflow in the career system sink. It drains existing queue work first, scans bounded new postings only when useful, generates reports and tracker rows, and stops before application or outreach work.
+**Job Hunt Evaluate Audit**: A scheduled discovery-to-evaluation workflow in the career system sink. It drains existing queue work first, scans bounded new postings only when useful, generates reports and tracker rows, and stops before application or outreach work. It realigns the career-system `job-search-strategy` mirror copy from the KB each run and first-party-captures a strategy signal when one surfaces, absorbing the retired Job Hunt Tune Audit.
 
-**Job Hunt Tune Audit**: A scheduled lookup-to-career-proposal workflow that compares KB job-search strategy context with the career system's personalization, then proposes approval-gated tuning changes.
-
-**Job Hunt Advance Audit**: A scheduled tracker-to-next-pack workflow that consumes `Job Hunt Evaluate Audit` output and produces copy-pasteable application, outreach, follow-up, reply, interview, or negotiation packs. It selects a small number of opportunities and generates draft packs directly, without a pre-approval gate — the packs are its reviewable output — and does not submit, send, record, or mark real-world career-system state complete without the user's confirmation.
+**Job Hunt Advance Audit**: A scheduled tracker-to-next-pack workflow that consumes `Job Hunt Evaluate Audit` output and produces copy-pasteable application, outreach, follow-up, reply, interview, or negotiation packs. It selects a small number of opportunities and generates draft packs directly, without a pre-approval gate — the packs are its reviewable output — and does not submit, send, record, or mark real-world career-system state complete without the user's confirmation. It first-party-captures a `personal-constraints` or `job-search-strategy` signal when advancing surfaces one, then realigns the career-system copy.
 
 **Drift Audit**: A read-only convention check for Knowledge Bank structure, ownership, naming, role, and stale-state drift. It is the KB-internal-staleness source within Knowledge Harvest — a lower-level review pattern, not the whole automation.
 

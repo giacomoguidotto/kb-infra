@@ -13,7 +13,7 @@ provider-backed knowledge system.
   vocabulary, and sink vocabulary.
 - Use `docs/automations/*.md` for each accepted scheduled automation prompt:
   `knowledge-harvest`, `social-draft-pulse`, `portfolio-surface-sweep`,
-  `job-hunt-evaluate-audit`, `job-hunt-advance-audit`, `job-hunt-tune-audit`.
+  `job-hunt-evaluate-audit`, `job-hunt-advance-audit`.
 
 When writing issue titles, test names, docs, or refactor proposals, prefer terms
 from `CONTEXT.md`.

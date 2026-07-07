@@ -13,11 +13,15 @@ Job Hunt Advance Audit is a tracker-to-next-pack workflow.
   than competing for repo state.
 - lookup branch: context, optional, only when fresh KB context could change the
   next pack.
-- Endpoints: `public-safe-claim-source`, `proof-points`, `personal-constraints`
-  (on demand).
+- Endpoints: `public-safe-claim-source`, `proof-points`, `personal-constraints`,
+  `job-search-strategy` (on demand).
 - State routing: owned by the sink. This automation reads the career-system's
   canonical state model and never defines its own.
-- Sink: `<career-system>`.
+- Sink: `<career-system>` — a mirror sink holding a copy of `job-search-strategy`.
+- Mandate: first-party-capture a `personal-constraints` or `job-search-strategy`
+  signal when advancing surfaces one — a stated constraint (relocation, compensation,
+  work authorization, references, availability, side-project/IP) or a targeting
+  preference — then realign the career-system copy. Signal-triggered; do not infer.
 - Approval gate: draft packs are this automation's reviewable output, not a gated
   sink write — generate them directly, **without pre-approval**, then present them.
   The shared "approve before writing to a sink" rule applies here only to canonical
@@ -74,8 +78,18 @@ Producing packs:
 - If a better durable state model is needed, propose it in the summary rather than
   silently changing schema or files.
 
+First-party capture:
+- If advancing an opportunity surfaces a new personal-constraint (relocation,
+  compensation, work authorization, references, availability, side-project/IP) or a
+  targeting preference you state in-context, propose a /capture to its owning endpoint
+  (personal-constraints or job-search-strategy), then realign the career-system copy.
+- Signal-triggered — capture only what this run surfaced explicitly; do not infer
+  across runs, that is Knowledge Harvest's job.
+
 End state:
 - Report selected opportunities and why, packs produced, lookup used or skipped,
-  blocked actions, and recommended next human approvals for real-world state.
+  any personal-constraints or job-search-strategy captures proposed and the mirror
+  realignments, blocked actions, and recommended next human approvals for real-world
+  state.
 - If no useful advancement exists, say so and include the evidence checked.
 ```

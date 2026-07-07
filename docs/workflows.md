@@ -9,16 +9,15 @@ automation. Cadences are bindings, collected at setup, not fixed here.
 
 | Automation | Consumes | Materializes into | Intervention posture |
 |------------|----------|-------------------|----------------------|
-| Job Hunt Evaluate Audit | new + queued postings | career-system | Autonomous evaluation output |
+| Job Hunt Evaluate Audit | new + queued postings; job-search-strategy | career-system | Autonomous output; strategy mirror sync + capture |
 | Job Hunt Advance Audit | Evaluate Audit output | career-system | Direct draft packs; real-world actions gated |
-| Job Hunt Tune Audit | job-search-strategy endpoint | career-system | Approval-gated tuning proposal |
 | Knowledge Harvest | activity across sources | KB (via `/capture`) | Clarify, then approval-gated writes |
 | Social Draft Pulse | public-safe endpoints | social-draft-queue | Approval-gated drafts |
 | Portfolio Surface Sweep | public-safe endpoints | portfolio | Approval-gated branch/PR work |
 
 Job Hunt Advance Audit consumes Job Hunt Evaluate Audit; schedule it after, and
-let it idle while evaluation work is still in progress. Portfolio Surface Sweep
-and Job Hunt Tune Audit are lower-frequency; offset them from each other.
+let it idle while evaluation work is still in progress. Portfolio Surface Sweep is
+lower-frequency; offset it from the heavier runs.
 
 ## 1. Knowledge Harvest
 
@@ -103,7 +102,8 @@ Trigger: the scheduled automation, or a manual request to discover and evaluate
 opportunities.
 
 Flow: run the `career-system` discovery-to-evaluation loop. Update the
-`career-system` clone to its remote first; then process existing pending/failed
+`career-system` clone to its remote first, then realign the career-system
+`job-search-strategy` copy from the KB; then process existing pending/failed
 work before scanning; scan a bounded batch only when the queue is drained;
 evaluate live postings; generate the expected reports and tracker rows; then
 verify the pipeline.
@@ -113,30 +113,15 @@ Rules:
 - This is discovery and evaluation only, not advancement or application work.
 - Update the `career-system` clone to its remote before starting; if it cannot
   fast-forward cleanly, stop and report rather than running on stale state.
+- Realign the `career-system` `job-search-strategy` copy from the KB as a user-layer
+  change; this absorbs the retired Job Hunt Tune Audit (ADR 0007).
+- First-party-capture a `job-search-strategy` signal only when a run surfaces one
+  (weak-lead scoring, target-role drift); signal-triggered, most runs capture nothing.
 - Do not submit applications, send messages, or prefill forms in a hidden browser.
 - Process existing queue work before adding new scan work.
 - Prompt source: [job-hunt-evaluate-audit.md](automations/job-hunt-evaluate-audit.md).
 
-## 5. Job Hunt Tune Audit
-
-Trigger: the scheduled automation, or a manual request after a meaningful
-strategy, proof, project, compensation, relocation, or target-role change.
-
-Flow: use `/lookup` in context mode once over the `job-search-strategy`,
-`public-safe-claim-source`, `proof-points`, `personal-constraints`, and
-`identity` endpoints. Inspect the `career-system` user-layer configuration before
-proposing changes. Return a tuning summary first. Apply repo changes only after
-approval.
-
-Rules:
-
-- This is a tuning proposal workflow, not a live application workflow.
-- Keep personalization in the `career-system` user-layer; do not edit shared
-  system defaults unless explicitly asked.
-- A no-change result is acceptable.
-- Prompt source: [job-hunt-tune-audit.md](automations/job-hunt-tune-audit.md).
-
-## 6. Job Hunt Advance Audit
+## 5. Job Hunt Advance Audit
 
 Trigger: the scheduled automation, or a manual request to advance existing
 `career-system` opportunities after evaluation.
@@ -155,6 +140,8 @@ Rules:
 - Generate draft packs directly; they are the automation's reviewable output, not a
   gated sink write. The shared "approve before writing to a sink" rule applies here
   only to canonical career-system state and real-world actions.
+- First-party-capture a `personal-constraints` or `job-search-strategy` signal when
+  advancing surfaces one, then realign the career-system copy; signal-triggered.
 - Do not edit the tracker, record follow-ups, submit, send, or mark actions completed
   without the user's confirmation.
 - Prompt source: [job-hunt-advance-audit.md](automations/job-hunt-advance-audit.md).
