@@ -12,7 +12,7 @@ automation. Cadences are bindings, collected at setup, not fixed here.
 | Job Hunt Evaluate Audit | new + queued postings; job-search-strategy | career-system | Autonomous output; strategy mirror sync + capture |
 | Job Hunt Advance Audit | Evaluate Audit output | career-system | Direct draft packs; real-world actions gated |
 | Knowledge Harvest | activity across sources | KB (via `/capture`) | Clarify, then approval-gated writes |
-| Social Draft Pulse | public-safe endpoints | social-draft-queue | Approval-gated drafts |
+| Social Draft Pulse | public-safe endpoints | social-draft-queue | Approval-gated drafts; first-party point-of-view capture |
 | Portfolio Surface Sweep | public-safe endpoints | portfolio | Approval-gated branch/PR work |
 
 Job Hunt Advance Audit consumes Job Hunt Evaluate Audit; schedule it after, and
@@ -68,8 +68,10 @@ Rules:
 - Topical candidates draw their angle from `point-of-view` or `identity`; when no
   stance is recorded, surface the hook at the gate for the user's take rather than
   inventing one.
-- New takes become `point-of-view` capture candidates for `/capture`; this
-  automation never writes to the KB itself.
+- First-party-capture a `point-of-view` take stated at the gate through `/capture`
+  (explicit-consent, public-facing); record `published-social-context` ledger updates
+  to capture at post-time, backstopped by Knowledge Harvest. It never posts or
+  publishes.
 - Flag portfolio candidates for Portfolio Surface Sweep instead of auditing the
   portfolio here.
 - Prompt source: [social-draft-pulse.md](automations/social-draft-pulse.md).

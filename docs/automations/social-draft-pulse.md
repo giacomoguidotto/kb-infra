@@ -11,7 +11,12 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
 - lookup branch: context, once per run.
 - Endpoints: `public-safe-claim-source`, `network`, `social-rules-of-engagement`,
   `selected-projects`, `identity`, `point-of-view`, `published-social-context`.
-- Sink: `<social-draft-queue>`.
+- Sink: `<social-draft-queue>` — a derived sink; materialized one-way, no mirror to
+  realign.
+- Mandate: first-party-capture within its own surfaces — a `point-of-view` signal when
+  the user states a take at the gate, and the `published-social-context` ledger. Both
+  are public-facing, so each is proposed through `/capture` as a distinct,
+  explicit-consent block. Signal-triggered; an empty run captures nothing.
 - Volume and mix: honor the per-run volume target and the project/topical content
   mix defined in `social-rules-of-engagement`; do not hardcode either here.
 - Two candidate branches: project/proof candidates mined from the KB, and topical
@@ -24,9 +29,11 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
 - Approval gate: return an idea summary first. Surface topical hooks that need the
   user's take at the gate. After approval, create drafts freely within the approved
   set.
-- Writes stay draft-only: new takes become `point-of-view` capture candidates handed
-  to `/capture`; `published-social-context` is maintained via `/capture` when posts
-  go live. This automation does not write to the KB.
+- Writes go through `/capture`, not draft-only silence: a new take becomes a
+  `point-of-view` capture the run proposes directly. `published-social-context` capture
+  is trigger-deferred — its signal is a post going live, which happens outside the run
+  and only on the user's action, so SDP records the ledger update to capture at
+  post-time and Knowledge Harvest backstops it. SDP never posts.
 - Empty result: acceptable.
 
 ## Prompt
@@ -76,7 +83,8 @@ External rule refresh:
 - Follow the refresh cadence named in social-rules-of-engagement. Prefer official
   platform docs; label tooling research as secondary.
 - If online findings contradict the KB rules, include a "KB rule realignment
-  candidate" section in the summary. Do not write to the KB from this automation.
+  candidate" section in the summary. Do not write social-rules-of-engagement — it is a
+  tunable rule dial outside this run's capture mandate.
 
 Idea summary gate:
 - Before creating any draft, return a compact idea summary sized to the volume and
@@ -100,10 +108,14 @@ Drafting:
   creation was blocked.
 
 Persona and continuity persistence:
-- When the user gives a new take at the gate, propose it as a point-of-view capture
-  candidate and hand it to /capture; do not write it to the KB from here.
-- Note which drafts, once posted, should be recorded in published-social-context via
-  /capture so the next run stays in continuity. Do not record them yourself.
+- When the user gives a new take at the gate, first-party-capture it: propose a
+  /capture to point-of-view directly, as an explicit-consent block (a public-facing
+  surface). This is your mandate — do not defer it to Knowledge Harvest.
+- published-social-context is trigger-deferred: note which drafts, once posted, should
+  be recorded in it so the next run stays in continuity. Capture it via /capture only
+  when a post has actually gone live and the user confirms; otherwise leave the
+  post-time note and let Knowledge Harvest backstop. Never record a post as live
+  yourself.
 
 Portfolio boundary:
 - Flag portfolio candidates as a handoff to Portfolio Surface Sweep; do not do

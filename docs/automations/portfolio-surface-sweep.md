@@ -11,7 +11,11 @@ Portfolio Surface Sweep is a lookup-to-portfolio-proposal workflow.
 - lookup branch: context, once per run.
 - Endpoints: `public-safe-claim-source`, `network`, `selected-projects`,
   `portfolio-change-rules`, `identity`.
-- Sink: `<portfolio>`.
+- Sink: `<portfolio>` — a derived sink; materialized one-way, no mirror to realign.
+- Mandate: no KB capture. This is a pure consumer of public-safe claims that writes
+  only to the portfolio sink; it originates no durable KB knowledge, so it captures
+  nothing. Unsupported claims are surfaced as gaps, not captures, and stale KB claims
+  are Knowledge Harvest's drift job.
 - Approval gate: return a surface summary first. After approval, prepare branch/PR
   work for approved changes.
 - Empty result: acceptable.
