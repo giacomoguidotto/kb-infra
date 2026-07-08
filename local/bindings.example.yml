@@ -26,6 +26,12 @@ endpoints:
 # Knowledge Harvest mines these for signals; blank/empty = none.
 sources:
   transcript-source: [] # list of agent transcript locations on this machine
+  # Your own public profiles, one per platform. Knowledge Harvest reads them
+  # best-effort to reconcile published-social-context. Blank = skip that platform
+  # (Harvest falls back to asking you what went out).
+  social-profile-source:
+    x: "" # e.g. https://x.com/<handle>
+    linkedin: "" # e.g. https://www.linkedin.com/in/<handle>/recent-activity/all/
 
 # External systems automations materialize into.
 sinks:

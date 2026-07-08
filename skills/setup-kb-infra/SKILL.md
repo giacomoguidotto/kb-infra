@@ -39,17 +39,17 @@ report before changing anything:
 - Version: read the current spec version from the git tags (`git describe --tags`);
   `vX.Y.Z` tags are the source of truth. Compare it against the `version` recorded
   in `local/installed.yml` to see how far the installed setup has fallen behind.
-- Desired: the endpoint and sink vocabulary in
-  [_preamble.md](../../docs/automations/_preamble.md), the endpoints and sinks each
-  **enabled** automation declares, the skills under `skills/`, the automations under
-  `docs/automations/`, and one cadence per enabled automation.
+- Desired: the endpoint, sink, and source vocabulary in
+  [_preamble.md](../../docs/automations/_preamble.md), the endpoints, sinks, and
+  sources each **enabled** automation declares, the skills under `skills/`, the
+  automations under `docs/automations/`, and one cadence per enabled automation.
 - Actual: `local/bindings.yml` (a key present with a blank or placeholder value is
   **not** a binding), `local/installed.yml`, the snapshotted prompts under
   `local/automations/`, and the installed skill copies.
-- Drive the endpoint and sink checks from the **desired** set — the endpoints and
-  sinks each enabled automation declares — not from whatever keys happen to be in
-  `bindings.yml`. For each declared endpoint, probe that it resolves to a concrete KB
-  owner; a present key is not proof of a binding.
+- Drive the endpoint, sink, and source checks from the **desired** set — the
+  endpoints, sinks, and sources each enabled automation declares — not from whatever
+  keys happen to be in `bindings.yml`. For each declared endpoint, probe that it
+  resolves to a concrete KB owner; a present key is not proof of a binding.
 - Drift to surface, by category:
   - the spec version has advanced past the installed version;
   - an endpoint an enabled automation declares does not resolve to a concrete KB
@@ -58,6 +58,9 @@ report before changing anything:
     resolves live. Verify by resolution, not by key presence;
   - a sink an enabled automation targets is unbound, disabled-yet-needed, or
     unreachable;
+  - a source an enabled automation declares is unbound or unreachable; a best-effort
+    source (for example a `<social-profile-source>` platform) may be intentionally
+    blank, which is a skip, not a gap;
   - bindings whose endpoint or sink is no longer in the spec (retired);
   - skills whose source differs from the installed copy (stale install) or is not
     installed;
@@ -107,15 +110,18 @@ Completion criterion: every endpoint an enabled automation needs resolves to a K
 owner, or the user has explicitly deferred it; no needed endpoint is left as a
 self-authored "unbound" note, and retired bindings are resolved.
 
-### 4. Reconcile the Sink Bindings
+### 4. Reconcile the Sink and Source Bindings
 
-Read the sink vocabulary from the preamble. For each sink an enabled automation
-targets, confirm its link and local clone path, collecting only what the plan
-flagged as missing, disabled-yet-needed, or unreachable. Record them in
-`local/bindings.yml`.
+Read the sink and source vocabulary from the preamble. For each sink an enabled
+automation targets, confirm its link and local clone path, collecting only what the
+plan flagged as missing, disabled-yet-needed, or unreachable. For each source an
+enabled automation declares, collect its binding the same way — a `<transcript-source>`
+is a list of local locations; a `<social-profile-source>` is one public profile URL per
+platform (currently X and LinkedIn). A best-effort source platform may be left blank as
+an explicit skip, not a gap. Record them in `local/bindings.yml`.
 
-Completion criterion: every sink an enabled automation needs has a binding, or is
-marked disabled.
+Completion criterion: every sink an enabled automation needs has a binding or is
+marked disabled, and every declared source is bound or explicitly left blank.
 
 ### 5. Reconcile the Installed Skills
 
