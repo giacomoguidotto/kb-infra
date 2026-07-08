@@ -27,10 +27,10 @@ knowledge, plus decisions, opinions, themes, and working-style patterns from git
 history and agent transcripts.
 
 Flow: fan out one subagent per source (KB-internal staleness, git history, each
-bound transcript source); each returns ranked candidate signals. Merge and
-convergence-rank them, then ask the user one question at a time and hand answered
-updates, marker candidates, discarded findings, and unresolved questions to
-`/capture` for an exact approval draft.
+bound transcript source, each bound social profile source); each returns ranked
+candidate signals. Merge and convergence-rank them, then ask the user one question
+at a time and hand answered updates, marker candidates, discarded findings, and
+unresolved questions to `/capture` for an exact approval draft.
 
 Rules:
 
@@ -41,6 +41,9 @@ Rules:
   block in the `/capture` draft.
 - Transcript-derived signals are private by default; never route them to public-safe
   or social surfaces.
+- Reconcile `published-social-context` from each bound social profile source, best-
+  effort: read what has actually been posted per platform and propose ledger updates;
+  where a platform cannot be read, ask the user what went out rather than guessing.
 - A normal discard leaves no KB trace; deferrals and final-form decisions become
   marker candidates only through approved `/capture` writes.
 - Prompt source: [knowledge-harvest.md](automations/knowledge-harvest.md).
@@ -53,9 +56,10 @@ for work-facing social drafts.
 Flow: use `/lookup` in context mode once over the `public-safe-claim-source`,
 `network`, `social-rules-of-engagement`, `selected-projects`, `identity`,
 `point-of-view`, and `published-social-context` endpoints. Draft a candidate set
-that honors the volume and project/topical mix in `social-rules-of-engagement` and
-keeps per-platform continuity. Return an idea summary first. After approval, create
-drafts in the `social-draft-queue` sink.
+that honors the volume and project/topical mix in `social-rules-of-engagement`,
+keeps per-platform continuity, and recommends a posting slot and slot-matched tone
+for each draft from the schedule in `social-rules-of-engagement`. Return an idea
+summary first. After approval, create drafts in the `social-draft-queue` sink.
 
 Rules:
 
@@ -63,6 +67,8 @@ Rules:
   post or schedule.
 - Apply the `social-rules-of-engagement` endpoint for platform strategy, volume,
   and content mix; do not hardcode them here.
+- Suggest a posting slot and write each draft in that slot's tone, from the schedule
+  in `social-rules-of-engagement`; the slot is a suggestion, not a scheduled post.
 - Keep continuity: use `published-social-context` to avoid assuming knowledge the
   platform's audience does not have, and introduce concepts on first public use.
 - Topical candidates draw their angle from `point-of-view` or `identity`; when no
