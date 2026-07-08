@@ -19,6 +19,10 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
   explicit-consent block. Signal-triggered; an empty run captures nothing.
 - Volume and mix: honor the per-run volume target and the project/topical content
   mix defined in `social-rules-of-engagement`; do not hardcode either here.
+- Scheduling: read the posting schedule from `social-rules-of-engagement` — the per-
+  platform slots and each slot's intended tone. Recommend a slot for each draft and
+  write the draft in that slot's tone. This stays draft-only: the slot is a suggestion,
+  not a scheduled post. SDP never schedules or publishes into the sink.
 - Two candidate branches: project/proof candidates mined from the KB, and topical
   candidates hooked to current public discourse. Topical angles come from
   `point-of-view` and `identity`; the automation never fabricates a stance.
@@ -45,6 +49,8 @@ Goal:
 - Pull recent public-surface context from the KB once.
 - Produce a candidate set that honors the per-run volume target and the
   project/topical content mix in social-rules-of-engagement.
+- Recommend a posting slot and a slot-matched tone for each draft, from the
+  schedule in social-rules-of-engagement.
 - Keep continuity with what has already been published, per platform.
 - Present an idea summary for approval before creating any draft.
 - After approval, create drafts in the social-draft-queue sink.
@@ -57,6 +63,8 @@ Lookup:
   public-safety boundary.
 - Apply social-rules-of-engagement for platform strategy, volume, content mix, and
   guardrails; do not invent platform rules here.
+- Read the posting schedule in social-rules-of-engagement — the per-platform slots and
+  each slot's intended tone — and use it to place and voice each draft.
 - Read published-social-context for what has already gone out and which concepts
   and projects have been introduced on each platform.
 - Read point-of-view for the user's recorded stances and recurring themes.
@@ -89,7 +97,8 @@ External rule refresh:
 Idea summary gate:
 - Before creating any draft, return a compact idea summary sized to the volume and
   mix targets. For each candidate include: content type (project or topical),
-  angle, source/evidence, platform fit, why now, whether it introduces a concept
+  angle, source/evidence, platform fit, recommended posting slot and the slot's
+  tone (from social-rules-of-engagement), why now, whether it introduces a concept
   new to that platform, public-safety notes, optional media plan, and recommended
   action (draft, defer, needs-your-take, portfolio candidate, point-of-view capture
   candidate, KB rule realignment candidate, or discard).
@@ -100,6 +109,10 @@ Idea summary gate:
 
 Drafting:
 - After approval, create drafts only, in the social-draft-queue sink.
+- Write each draft in the tone of its recommended slot, and note the recommended
+  slot on the draft (for example a leading "[slot: ...]" line or the sink's own
+  scheduling note). Do not schedule or publish — the slot is a suggestion the user
+  or a downstream tool acts on.
 - Prefer platform-specific drafts over one generic cross-post unless the approved
   idea calls for shared copy.
 - Use clear placeholders for missing media (e.g. [screenshot needed: ...]). Do not

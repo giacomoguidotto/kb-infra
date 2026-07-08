@@ -64,8 +64,9 @@ Data surfaces and rule-sets automations read from the KB:
   through approved `/capture` writes, read for continuity.
 - `portfolio-change-rules`: the portfolio model and structural constraints.
 - `social-rules-of-engagement`: per-platform drafting strategy and guardrails — the
-  per-run volume target, the project/topical content mix, and the self-contained /
-  introduce-on-first-use rule.
+  per-run volume target, the project/topical content mix, the self-contained /
+  introduce-on-first-use rule, and the posting schedule: the per-platform slots to post
+  in and the intended tone for each slot.
 - `job-search-strategy`: target roles, compensation baseline, scoring preferences.
 - `personal-constraints`: relocation, compensation, work authorization, references,
   availability, and side-project/IP freedom.
@@ -94,6 +95,12 @@ binding, referenced by role:
 - `<transcript-source>`: agent conversation transcripts on the local machine that
   Knowledge Harvest mines for signals. Read-only, forward-only by cursor, and private
   by default — derived signals never auto-flow to public-safe or social surfaces.
+- `<social-profile-source>`: the user's own public social profiles, one per platform
+  (currently X and LinkedIn), that Knowledge Harvest reads **best-effort** to reconcile
+  `published-social-context` when the social sink cannot carry a post-live trigger.
+  Read-only and public; a public source reconciling a public-facing ledger, so it does
+  not touch the private-by-default rule. Best-effort: a platform that cannot be read
+  degrades to a clarification question, never a fabricated ledger entry.
 
 ## Follow-up Marker Policy
 

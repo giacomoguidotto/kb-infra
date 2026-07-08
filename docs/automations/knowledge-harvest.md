@@ -14,8 +14,8 @@ over many sources.
 
 - Orchestrator + workers: the orchestrator fans out **one subagent per source**; each
   runs `observe → generate candidates` autonomously in its own context. Sources:
-  KB-internal staleness (the Drift Audit), git history, and each bound
-  `<transcript-source>`.
+  KB-internal staleness (the Drift Audit), git history, each bound
+  `<transcript-source>`, and each bound `<social-profile-source>`.
 - Subagent contract: each returns a ranked list of candidate signals, each carrying
   evidence, provenance (source, session/commit, timestamp), a confidence, and a
   one-line "why this might be a signal." Subagents self-clarify against their own
@@ -51,7 +51,11 @@ over many sources.
   on first run. No local rejection log — dedup comes from the cursor, learned taste
   from `signal-preferences`.
 - Privacy: transcript-derived signals are private by default and never auto-flow to
-  public-safe or social surfaces.
+  public-safe or social surfaces. The `<social-profile-source>` is the inverse case — a
+  public source reconciling the public-facing `published-social-context` ledger — so the
+  private-by-default rule does not gate it. It is **best-effort**: a platform that cannot
+  be read (for example LinkedIn's logged-out block) becomes a clarification question, not
+  a fabricated ledger entry.
 - Markers: declares the follow-up marker policy; the follow-up and final-form marker
   formats are inlined into the composed prompt at materialize time, not read from a
   spec path at runtime.
@@ -71,8 +75,9 @@ Goal:
   write proposal and wait for approval.
 
 Fan out, one subagent per source:
-- Spawn one subagent for each source: KB-internal staleness, git history, and each
-  bound <transcript-source>. Each subagent works only in its own context.
+- Spawn one subagent for each source: KB-internal staleness, git history, each
+  bound <transcript-source>, and each bound <social-profile-source>. Each subagent
+  works only in its own context.
 - Each subagent runs observe -> generate candidates and returns a ranked list.
   For every candidate include: the evidence, provenance (source, session/commit,
   timestamp), a confidence, and a one-line "why this might be a signal."
@@ -91,6 +96,13 @@ Per-source guidance:
 - Transcript sources: mine agent conversation transcripts for decisions, stated
   opinions, recurring themes, friction points, working-style patterns, and the gap
   between what was set out and what shipped. Keep these private by default.
+- Social profile sources: read each bound <social-profile-source> best-effort to see
+  what has actually been posted per platform, and generate candidate updates to the
+  published-social-context ledger — new posts, and which concepts or projects were
+  publicly introduced. This is the ledger's update path when the social sink cannot
+  carry a post-live trigger. It is a public source feeding a public-facing surface, so
+  it is not private-by-default. If a platform cannot be read, return that as a
+  clarification candidate (ask the user what went out), never a guessed entry.
 
 Merge and rank:
 - Dedup across sources and convergence-rank: a candidate corroborated by more than
