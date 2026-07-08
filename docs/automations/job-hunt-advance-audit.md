@@ -22,11 +22,15 @@ Job Hunt Advance Audit is a tracker-to-next-pack workflow.
   signal when advancing surfaces one — a stated constraint (relocation, compensation,
   work authorization, references, availability, side-project/IP) or a targeting
   preference — then realign the career-system copy. Signal-triggered; do not infer.
-- Approval gate: draft packs are this automation's reviewable output, not a gated
-  sink write — generate them directly, **without pre-approval**, then present them.
-  The shared "approve before writing to a sink" rule applies here only to canonical
-  career-system state and real-world actions; never submit, send, record, or mark
-  real-world state complete without the user's confirmation.
+- Approval gate: two things are ungated here — the draft packs (this automation's
+  reviewable output) and the tracker advance that records a draft now exists.
+  Generate packs directly and advance the career-system's own agent-owned stages as
+  part of the run, **without pre-approval**; that advance is a safe internal-state
+  write, never a real-world action. Source which advances are safe from the
+  career-system's own state model — never invent or override it. The gate survives
+  only for real-world actions and any record that asserts one happened: never submit,
+  send, click final submit, record a follow-up as sent, or mark a real-world status
+  complete without the user's confirmation.
 
 ## Prompt
 
@@ -64,12 +68,17 @@ KB lookup:
 Selection:
 - Select a small number of opportunities (up to three).
 - Generate the packs directly — there is no pre-approval gate. Draft packs are this
-  automation's reviewable output; the shared "approve before materializing a write
-  into a sink" rule applies here only to canonical career-system state and real-world
-  actions, not to producing review drafts.
-- Do not edit the tracker, record follow-ups, or create or edit action state without
-  the user's confirmation. Do not submit applications, send messages, click final
-  submit buttons, or mark a status or follow-up complete without explicit
+  automation's reviewable output, not a gated sink write.
+- Advance the tracker as part of the run. When the career-system's canonical state
+  model marks a stage as agent-owned, advance the row to its paired ready stage so it
+  records that the draft pack now exists — a safe internal-state write, never a
+  real-world action, so do not gate it. Read which advances are safe from the
+  career-system's own state model; if that model is missing or ambiguous, stop and
+  report rather than guessing. Do not leave a drafted pack stranded at its
+  pre-advance stage.
+- Keep the gate only on real-world actions and the records that assert one happened:
+  do not submit applications, send messages, click final submit buttons, record a
+  follow-up as sent, or mark a real-world status complete without the user's
   confirmation.
 
 Producing packs:
@@ -87,9 +96,9 @@ First-party capture:
   across runs, that is Knowledge Harvest's job.
 
 End state:
-- Report selected opportunities and why, packs produced, lookup used or skipped,
-  any personal-constraints or job-search-strategy captures proposed and the mirror
-  realignments, blocked actions, and recommended next human approvals for real-world
-  state.
+- Report selected opportunities and why, packs produced, the tracker advances
+  applied, lookup used or skipped, any personal-constraints or job-search-strategy
+  captures proposed and the mirror realignments, blocked actions, and recommended
+  next human approvals for real-world state.
 - If no useful advancement exists, say so and include the evidence checked.
 ```

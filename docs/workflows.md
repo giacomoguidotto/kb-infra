@@ -137,19 +137,23 @@ Trigger: the scheduled automation, or a manual request to advance existing
 Flow: inspect the `career-system` tracker, reports, and follow-up history. Use
 `/lookup` in context mode only when fresh KB context could change the next pack.
 Select a small number of opportunities and produce the draft next packs directly,
-then present them for review — no pre-approval gate. Stop before submitting, sending,
-or recording real-world state changes without the user's confirmation.
+then advance each drafted row through the career-system's own agent-owned stages so
+the tracker records that a draft exists — no pre-approval gate on either. Stop before
+submitting, sending, or recording real-world state changes without the user's
+confirmation.
 
 Rules:
 
 - This is an advancement workflow, not discovery or evaluation.
 - It consumes Job Hunt Evaluate Audit; idle when evaluation or batch work is still
   in progress.
-- Generate draft packs directly; they are the automation's reviewable output, not a
-  gated sink write. The shared "approve before writing to a sink" rule applies here
-  only to canonical career-system state and real-world actions.
+- Generate draft packs directly and advance the tracker as part of the run; both are
+  ungated. A pack is the reviewable output and the agent-owned stage advance is a safe
+  internal-state write that records a draft exists — never a real-world action. Source
+  which advances are safe from the career-system's own state model; do not leave a
+  drafted pack stranded at its pre-advance stage.
 - First-party-capture a `personal-constraints` or `job-search-strategy` signal when
   advancing surfaces one, then realign the career-system copy; signal-triggered.
-- Do not edit the tracker, record follow-ups, submit, send, or mark actions completed
-  without the user's confirmation.
+- Keep the gate only on real-world actions: do not submit, send, record a follow-up as
+  sent, or mark a real-world status complete without the user's confirmation.
 - Prompt source: [job-hunt-advance-audit.md](automations/job-hunt-advance-audit.md).
