@@ -134,11 +134,13 @@ Rules:
 Trigger: the scheduled automation, or a manual request to advance existing
 `career-system` opportunities after evaluation.
 
-Flow: inspect the `career-system` tracker, reports, and follow-up history. Use
-`/lookup` in context mode only when fresh KB context could change the next pack.
-Select a small number of opportunities and produce the draft next packs directly,
-then advance each drafted row through the career-system's own agent-owned stages so
-the tracker records that a draft exists — no pre-approval gate on either. Stop before
+Flow: inspect the `career-system` tracker, reports, and follow-up history. Resolve
+the current job-application throughput target from the career-system strategy mirror
+or `/lookup`, then select enough opportunities to satisfy that target when the queue
+allows. Use `/lookup` in context mode for pack-specific context only when fresh KB
+context could change the next pack. Produce the draft next packs directly, then
+advance each drafted row through the career-system's own agent-owned stages so the
+tracker records that a draft exists — no pre-approval gate on either. Stop before
 submitting, sending, or recording real-world state changes without the user's
 confirmation.
 
@@ -147,6 +149,8 @@ Rules:
 - This is an advancement workflow, not discovery or evaluation.
 - It consumes Job Hunt Evaluate Audit; idle when evaluation or batch work is still
   in progress.
+- Resolve the active throughput target before selection. If no active target exists,
+  fall back to a conservative small batch and report that no target was found.
 - Generate draft packs directly and advance the tracker as part of the run; both are
   ungated. A pack is the reviewable output and the agent-owned stage advance is a safe
   internal-state write that records a draft exists — never a real-world action. Source

@@ -11,8 +11,9 @@ Job Hunt Advance Audit is a tracker-to-next-pack workflow.
 - Upstream producer: Job Hunt Evaluate Audit.
 - Idle rule: if evaluation, batch, or pipeline work is still active, stop rather
   than competing for repo state.
-- lookup branch: context, optional, only when fresh KB context could change the
-  next pack.
+- lookup branch: context, required for the current job-application throughput
+  target; otherwise optional, only when fresh KB context could change the next
+  pack.
 - Endpoints: `public-safe-claim-source`, `proof-points`, `personal-constraints`,
   `job-search-strategy` (on demand).
 - State routing: owned by the sink. This automation reads the career-system's
@@ -59,14 +60,24 @@ Goal:
   missing or ambiguous, stop and report it rather than substituting your own.
 
 KB lookup:
-- Optional; start from career-system state. Use /lookup in context mode only when
-  fresh KB context could change a pack: a high-priority opportunity, a role touching
-  recent projects or public proof, or one depending on personal-constraints or
-  public-safe claim calibration. Skip for routine follow-ups or drafts fully covered
-  by the current report/profile, and say why in one line.
+- Before selection, resolve the current job-application throughput target. Search
+  the career-system strategy mirror first, then use /lookup in context mode against
+  `job-search-strategy` if the mirror lacks an active throughput target. Use the
+  target to size this run by the time until the next scheduled run. If no active
+  target is found, say so in one line and use the conservative small-batch fallback.
+- For pack-specific context, start from career-system state. Use /lookup in context
+  mode only when fresh KB context could change a pack: a high-priority opportunity,
+  a role touching recent projects or public proof, or one depending on
+  personal-constraints or public-safe claim calibration. Skip for routine follow-ups
+  or drafts fully covered by the current report/profile, and say why in one line.
 
 Selection:
-- Select a small number of opportunities (up to three).
+- Select enough opportunities to satisfy the resolved throughput target when one
+  exists; otherwise select a small number of opportunities (up to three).
+- Treat the throughput target as the minimum number of jobs to advance to a
+  user-owed ready state when the evaluated queue has enough qualified opportunities.
+  If the queue cannot satisfy the target, advance every usable opportunity and
+  report the shortage.
 - Generate the packs directly — there is no pre-approval gate. Draft packs are this
   automation's reviewable output, not a gated sink write.
 - Advance the tracker as part of the run. When the career-system's canonical state
