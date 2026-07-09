@@ -13,6 +13,8 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
   `selected-projects`, `identity`, `point-of-view`, `published-social-context`.
 - Sink: `<social-draft-queue>` — a derived sink; materialized one-way, no mirror to
   realign.
+- Source: `<typefully-published-source>` — Typefully queue, scheduled, and published
+  state for the bound social set.
 - Mandate: first-party-capture within its own surfaces — a `point-of-view` signal when
   the user states a take at the gate, and the `published-social-context` ledger. Both
   are public-facing, so each is proposed through `/capture` as a distinct,
@@ -20,24 +22,26 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
 - Volume and mix: honor the per-run volume target and the project/topical content
   mix defined in `social-rules-of-engagement`; do not hardcode either here.
 - Scheduling: read the posting schedule from `social-rules-of-engagement` — the per-
-  platform slots and each slot's intended tone. Recommend a slot for each draft and
-  write the draft in that slot's tone. This stays draft-only: the slot is a suggestion,
-  not a scheduled post. SDP never schedules or publishes into the sink.
+  platform slots and each slot's intended tone. After approval, schedule approved
+  drafts in Typefully. Do not publish immediately.
+- Late-day runs: if the automation runs too late for the current day, schedule into the
+  next coverage window instead of compressing posts into the remainder of the day. For
+  the Wednesday late-afternoon run, schedule across Thursday and Friday.
 - Two candidate branches: project/proof candidates mined from the KB, and topical
   candidates hooked to current public discourse. Topical angles come from
   `point-of-view` and `identity`; the automation never fabricates a stance.
-- Continuity: read `published-social-context` to keep a per-platform narrative and
-  to apply the self-contained / introduce-on-first-use rule from
-  `social-rules-of-engagement`. Do not reference internal vocabulary the platform's
-  audience has not been given.
+- Continuity: read `published-social-context` and the Typefully published/queue state
+  to keep a per-platform narrative and to apply the self-contained /
+  introduce-on-first-use rule from `social-rules-of-engagement`. Do not reference
+  internal vocabulary the platform's audience has not been given.
 - Approval gate: return an idea summary first. Surface topical hooks that need the
   user's take at the gate. After approval, create drafts freely within the approved
   set.
-- Writes go through `/capture`, not draft-only silence: a new take becomes a
+- Writes go through `/capture`, not scheduling silence: a new take becomes a
   `point-of-view` capture the run proposes directly. `published-social-context` capture
-  is trigger-deferred — its signal is a post going live, which happens outside the run
-  and only on the user's action, so SDP records the ledger update to capture at
-  post-time and Knowledge Harvest backstops it. SDP never posts.
+  is trigger-deferred — its signal is a post going live. Use Typefully published state
+  as the first read source for what actually went out, then propose the ledger update
+  through `/capture`. SDP never publishes immediately.
 - Empty result: acceptable.
 
 ## Prompt
@@ -53,7 +57,8 @@ Goal:
   schedule in social-rules-of-engagement.
 - Keep continuity with what has already been published, per platform.
 - Present an idea summary for approval before creating any draft.
-- After approval, create drafts in the social-draft-queue sink.
+- After approval, create drafts in the social-draft-queue sink and schedule them in
+  Typefully across the appropriate coverage window.
 
 Lookup:
 - Use /lookup in context mode over: public-safe-claim-source, network,
@@ -65,8 +70,9 @@ Lookup:
   guardrails; do not invent platform rules here.
 - Read the posting schedule in social-rules-of-engagement — the per-platform slots and
   each slot's intended tone — and use it to place and voice each draft.
-- Read published-social-context for what has already gone out and which concepts
-  and projects have been introduced on each platform.
+- Read published-social-context and Typefully published/queue state for what has
+  already gone out, what is already scheduled, and which concepts and projects have
+  been introduced on each platform.
 - Read point-of-view for the user's recorded stances and recurring themes.
 
 Candidate branches:
@@ -108,11 +114,14 @@ Idea summary gate:
   content direction is approved.
 
 Drafting:
-- After approval, create drafts only, in the social-draft-queue sink.
+- After approval, create drafts in the social-draft-queue sink.
 - Write each draft in the tone of its recommended slot, and note the recommended
-  slot on the draft (for example a leading "[slot: ...]" line or the sink's own
-  scheduling note). Do not schedule or publish — the slot is a suggestion the user
-  or a downstream tool acts on.
+  slot on the draft using the sink's own scheduling note or scratchpad.
+- Schedule approved drafts in Typefully, using the per-run coverage target. If the
+  current day is already late relative to the automation cadence, use subsequent days
+  in the coverage window instead of scheduling into the current evening.
+- Do not publish immediately. Scheduling is allowed after approval; instant publishing
+  still requires an explicit publish-now instruction.
 - Prefer platform-specific drafts over one generic cross-post unless the approved
   idea calls for shared copy.
 - Use clear placeholders for missing media (e.g. [screenshot needed: ...]). Do not
@@ -124,11 +133,9 @@ Persona and continuity persistence:
 - When the user gives a new take at the gate, first-party-capture it: propose a
   /capture to point-of-view directly, as an explicit-consent block (a public-facing
   surface). This is your mandate — do not defer it to Knowledge Harvest.
-- published-social-context is trigger-deferred: note which drafts, once posted, should
-  be recorded in it so the next run stays in continuity. Capture it via /capture only
-  when a post has actually gone live and the user confirms; otherwise leave the
-  post-time note and let Knowledge Harvest backstop. Never record a post as live
-  yourself.
+- published-social-context is trigger-deferred: once Typefully shows a post as live,
+  propose the ledger update through /capture so the next run stays in continuity.
+  Knowledge Harvest still backstops missed live-post reconciliation.
 
 Portfolio boundary:
 - Flag portfolio candidates as a handoff to Portfolio Surface Sweep; do not do
@@ -137,8 +144,8 @@ Portfolio boundary:
 End state:
 - If no useful candidates exist, say so and include the evidence checked.
 - Otherwise stop at the idea summary and wait for approval, then create the
-  approved drafts.
-- Report created draft links or IDs, blocked actions, needs-your-take items,
-  portfolio candidates, point-of-view capture candidates, published-social-context
-  updates to record, and any KB rule realignment candidates.
+  approved drafts and schedule them.
+- Report created draft links or IDs, scheduled times, blocked actions,
+  needs-your-take items, portfolio candidates, point-of-view capture candidates,
+  published-social-context updates to record, and any KB rule realignment candidates.
 ```

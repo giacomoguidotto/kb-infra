@@ -59,25 +59,29 @@ Flow: use `/lookup` in context mode once over the `public-safe-claim-source`,
 that honors the volume and project/topical mix in `social-rules-of-engagement`,
 keeps per-platform continuity, and recommends a posting slot and slot-matched tone
 for each draft from the schedule in `social-rules-of-engagement`. Return an idea
-summary first. After approval, create drafts in the `social-draft-queue` sink.
+summary first. After approval, create drafts in the `social-draft-queue` sink and
+schedule them in Typefully across the run's coverage window.
 
 Rules:
 
-- This is a social draft workflow, not a publishing workflow. Draft only; do not
-  post or schedule.
+- This is a social draft and scheduling workflow, not an immediate publishing
+  workflow. It may schedule approved drafts in Typefully; it must not publish now
+  without an explicit publish-now instruction.
 - Apply the `social-rules-of-engagement` endpoint for platform strategy, volume,
   and content mix; do not hardcode them here.
 - Suggest a posting slot and write each draft in that slot's tone, from the schedule
-  in `social-rules-of-engagement`; the slot is a suggestion, not a scheduled post.
+  in `social-rules-of-engagement`; after approval, materialize those slots into
+  Typefully scheduled posts.
 - Keep continuity: use `published-social-context` to avoid assuming knowledge the
-  platform's audience does not have, and introduce concepts on first public use.
+  platform's audience does not have, use Typefully published/queue state as live
+  scheduling and publication context, and introduce concepts on first public use.
 - Topical candidates draw their angle from `point-of-view` or `identity`; when no
   stance is recorded, surface the hook at the gate for the user's take rather than
   inventing one.
 - First-party-capture a `point-of-view` take stated at the gate through `/capture`
   (explicit-consent, public-facing); record `published-social-context` ledger updates
-  to capture at post-time, backstopped by Knowledge Harvest. It never posts or
-  publishes.
+  after Typefully shows posts as live, backstopped by Knowledge Harvest. It never
+  publishes immediately.
 - Flag portfolio candidates for Portfolio Surface Sweep instead of auditing the
   portfolio here.
 - Prompt source: [social-draft-pulse.md](automations/social-draft-pulse.md).

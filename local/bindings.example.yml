@@ -32,6 +32,12 @@ sources:
   social-profile-source:
     x: "" # e.g. https://x.com/<handle>
     linkedin: "" # e.g. https://www.linkedin.com/in/<handle>/recent-activity/all/
+  # Optional: the social sink's own published and scheduled state. Use when the
+  # social tool can read posts and scheduled drafts directly.
+  typefully-published-source:
+    social_set_id: ""
+    username: ""
+    platforms: []
 
 # External systems automations materialize into.
 sinks:
@@ -44,7 +50,7 @@ sinks:
     clone: ""
     enabled: false
   social-draft-queue:
-    tool: "" # e.g. typefully
+    tool: "" # e.g. typefully; social_set_id=123; schedule_after_approval=true
     enabled: false
 
 # Automation cadences (local timezone).
@@ -60,3 +66,4 @@ cadences:
 overrides:
   follow-up-marker-policy: ""
   draft-style: "" # blank = shipped Notion-style palette; else describe your restyle
+  social-draft-scheduling: "" # optional scheduling policy for social-draft-queue

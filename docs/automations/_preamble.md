@@ -101,6 +101,12 @@ binding, referenced by role:
   Read-only and public; a public source reconciling a public-facing ledger, so it does
   not touch the private-by-default rule. Best-effort: a platform that cannot be read
   degrades to a clarification question, never a fabricated ledger entry.
+- `<typefully-published-source>`: Typefully's own queue, scheduled, and published
+  state for the bound social set. Social Draft Pulse reads it before drafting or
+  scheduling so it can avoid duplicates, schedule into open future slots, and use
+  published posts as evidence for later `published-social-context` capture drafts.
+  Read-only as a source; actual draft creation and scheduling happen through the
+  `<social-draft-queue>` sink after approval.
 
 ## Follow-up Marker Policy
 
