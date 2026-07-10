@@ -13,6 +13,8 @@ Job Hunt Evaluate Audit is a discovery-to-evaluation workflow that runs inside t
   the rest of the career-system loop needs no KB context.
 - Endpoints: `job-search-strategy`.
 - Sink: `<career-system>` — a mirror sink holding a copy of `job-search-strategy`.
+- Execution profile: `balanced/medium` — this is a repeatable orchestration loop
+  around sink-native health, queue, scan, evaluation, and verification contracts.
 - Startup sync: update the `<career-system>` clone to its remote and confirm a
   clean working tree before the loop runs; then realign the career-system
   `job-search-strategy` copy from the KB. Stop on a non-fast-forward rather than

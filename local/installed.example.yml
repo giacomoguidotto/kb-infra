@@ -12,5 +12,7 @@ materialized_at: "" # ISO timestamp of the last apply
 automations:
   social-draft-pulse:
     cadence: "" # the RRULE this automation was scheduled with
+    model: "" # concrete model applied in the harness
+    reasoning_effort: "" # concrete reasoning/delegation setting applied
     body_sha: "" # sha256 of the composed prompt
     prompt: "" # snapshot path, e.g. local/automations/social-draft-pulse.md

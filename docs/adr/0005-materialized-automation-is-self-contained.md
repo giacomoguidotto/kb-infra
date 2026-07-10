@@ -53,8 +53,13 @@ rather than as the raw material for a single self-contained artifact.
 - The composer treats the preamble as a lookup table: it injects the shared
   operating rules and, for each surface or sink capability the automation
   declares, one resolved line — never the whole catalog, the provider block,
-  cadence, or overrides. Cadence lives in `local/installed.yml` and is the
-  harness's concern, not the agent's.
+  cadence, model selection, reasoning effort, or overrides. Cadence and concrete
+  model selection live in the local desired/installed state and the harness; they
+  are runtime metadata, not prompt text.
+- Automation sources declare only a provider-agnostic execution profile. Setup maps
+  that recommendation to a model and reasoning effort supported by the local
+  harness, while a recorded concrete local selection remains the materialized
+  choice and drift boundary.
 - Automation bodies reference the sink by role as the working directory and read only
   the sink's own docs; they never read kb-infra spec files at runtime.
 - A runtime dependency on a kb-infra convention (for example Knowledge Harvest's

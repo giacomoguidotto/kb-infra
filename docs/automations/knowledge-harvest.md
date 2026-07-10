@@ -16,6 +16,9 @@ over many sources.
   runs `observe → generate candidates` autonomously in its own context. Sources:
   KB-internal staleness (the Drift Audit), git history, each bound
   `<transcript-source>`, and each bound `<social-profile-source>`.
+- Execution profile: `frontier/parallel` — the source lanes divide cleanly across
+  subagents, while cross-source convergence, reconciliation, and personal-signal
+  judgment require the strongest available synthesis.
 - Subagent contract: each returns a ranked list of candidate signals, each carrying
   evidence, provenance (source, session/commit, timestamp), a confidence, and a
   one-line "why this might be a signal." Subagents self-clarify against their own

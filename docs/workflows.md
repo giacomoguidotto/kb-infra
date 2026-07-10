@@ -7,17 +7,24 @@ automation. Cadences are bindings, collected at setup, not fixed here.
 
 ## Automation Set
 
-| Automation | Consumes | Materializes into | Intervention posture |
-|------------|----------|-------------------|----------------------|
-| Job Hunt Evaluate Audit | new + queued postings; job-search-strategy | career-system | Autonomous output; strategy mirror sync + capture |
-| Job Hunt Advance Audit | Evaluate Audit output | career-system | Direct draft packs; real-world actions gated |
-| Knowledge Harvest | activity across sources | KB (via `/capture`) | Clarify, then approval-gated writes |
-| Social Draft Pulse | public-safe endpoints | social-draft-queue | Approval-gated drafts; first-party point-of-view capture |
-| Portfolio Surface Sweep | public-safe endpoints | portfolio | Approval-gated branch/PR work |
+| Automation | Consumes | Materializes into | Recommended execution profile | Intervention posture |
+|------------|----------|-------------------|-------------------------------|----------------------|
+| Job Hunt Evaluate Audit | new + queued postings; job-search-strategy | career-system | balanced / medium | Autonomous output; strategy mirror sync + capture |
+| Job Hunt Advance Audit | Evaluate Audit output | career-system | frontier / high | Direct draft packs; real-world actions gated |
+| Knowledge Harvest | activity across sources | KB (via `/capture`) | frontier / parallel | Clarify, then approval-gated writes |
+| Social Draft Pulse | public-safe endpoints | social-draft-queue | frontier / medium | Approval-gated drafts; first-party point-of-view capture |
+| Portfolio Surface Sweep | public-safe endpoints | portfolio | balanced / medium | Approval-gated branch/PR work |
 
 Job Hunt Advance Audit consumes Job Hunt Evaluate Audit; schedule it after, and
 let it idle while evaluation work is still in progress. Portfolio Surface Sweep is
 lower-frequency; offset it from the heavier runs.
+
+Execution profiles are provider-agnostic recommendations, not model identifiers.
+`frontier` favors the strongest available model for ambiguous, high-value synthesis;
+`balanced` favors a strong everyday model with a better cost/capability tradeoff;
+`parallel` requires a frontier model and a harness mode that can delegate independent
+workstreams. Setup resolves each profile to a concrete local model and reasoning
+effort, and records the applied selection for drift detection.
 
 ## 1. Knowledge Harvest
 

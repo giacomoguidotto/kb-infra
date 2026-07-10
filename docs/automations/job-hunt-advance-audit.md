@@ -20,6 +20,8 @@ Job Hunt Advance Audit is a tracker-to-next-pack workflow.
   canonical state model and never defines its own.
 - Sink: `<career-system>` — a mirror sink holding a copy of `job-search-strategy`.
 - Sink capabilities: `advance-workflow`, `related-opportunity-selector`.
+- Execution profile: `frontier/high` — selection, organizational research,
+  personalized packs, and safe state transitions are high-value judgment work.
 - Mandate: first-party-capture a `personal-constraints` or `job-search-strategy`
   signal when advancing surfaces one — a stated constraint (relocation, compensation,
   work authorization, references, availability, side-project/IP) or a targeting

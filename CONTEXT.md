@@ -7,6 +7,12 @@ _Avoid_: second brain, source of truth, runtime, knowledge store
 
 **Materialization**: The live system a repo definition becomes once it runs elsewhere: a scheduled automation, a KB page structure, or an agent-loaded skill. The repo owns the definition; the materialization runs outside it.
 
+**Execution Profile**: A provider-agnostic recommendation for the capability,
+reasoning depth, and delegation posture an automation needs. The committed spec
+declares the profile; setup resolves it to a concrete model and reasoning effort
+supported by the local harness, records that choice in gitignored `local/`, and
+materializes it as harness metadata rather than prompt text.
+
 **KB Provider**: The backend that stores a Knowledge Bank. The spec is provider-agnostic and discovers the concrete provider and structure at setup.
 
 **Endpoint**: A named context surface or rule-set an automation reads from the KB, such as selected projects, public-safe claim source, portfolio change rules, or social rules of engagement. Automations reference endpoints by role; setup binds each to a concrete KB location.
@@ -27,8 +33,9 @@ prompt.
 
 **Derived Sink**: A sink materialized one-way from KB signals, such as `portfolio` or `social-draft-queue`. The KB is the single source; the sink carries no inherited drift.
 
-**Binding**: A concrete personal value for a sink, sink capability, or endpoint,
-supplied at setup and stored in gitignored `local/`. Never committed.
+**Binding**: A concrete local value for a provider, sink, sink capability, endpoint,
+cadence, or runtime model selection, supplied or resolved at setup and stored in
+gitignored `local/`. Personal and provider-specific values are never committed.
 
 **Setup**: A user-invoked skill that materializes the infrastructure: it connects the KB provider, collects bindings through a grill, installs the lookup and capture skills, and bootstraps the automations.
 

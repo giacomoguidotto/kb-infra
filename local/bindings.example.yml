@@ -56,6 +56,24 @@ sinks:
     tool: "" # e.g. typefully; social_set_id=123; schedule_after_approval=true
     enabled: false
 
+# Concrete harness choices resolved from the provider-agnostic execution profiles.
+models:
+  knowledge-harvest:
+    model: ""
+    reasoning_effort: ""
+  social-draft-pulse:
+    model: ""
+    reasoning_effort: ""
+  portfolio-surface-sweep:
+    model: ""
+    reasoning_effort: ""
+  job-hunt-evaluate-audit:
+    model: ""
+    reasoning_effort: ""
+  job-hunt-advance-audit:
+    model: ""
+    reasoning_effort: ""
+
 # Automation cadences (local timezone).
 cadences:
   timezone: ""

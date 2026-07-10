@@ -91,6 +91,37 @@ fi
 grep -q 'automation body explicitly classifies a narrow in-mandate write' docs/automations/_preamble.md || \
   err '_preamble.md approval rule does not recognize explicitly authorized safe internal writes'
 
+# 8. Every automation declares a provider-agnostic execution profile, and setup has
+# a concrete local model binding slot without committing provider model ids.
+AUTOMATION_SPECS=(
+  docs/automations/knowledge-harvest.md
+  docs/automations/social-draft-pulse.md
+  docs/automations/portfolio-surface-sweep.md
+  docs/automations/job-hunt-evaluate-audit.md
+  docs/automations/job-hunt-advance-audit.md
+)
+MODEL_EXAMPLE=$(sed -n '/^models:/,/^[a-z][a-z_-]*:/p' local/bindings.example.yml)
+for spec in "${AUTOMATION_SPECS[@]}"; do
+  profile=$(sed -n 's/^- Execution profile: `\([^`]*\)`.*/\1/p' "$spec")
+  case "$profile" in
+    frontier/medium|frontier/high|frontier/parallel|balanced/medium|balanced/high|efficient/low|efficient/medium) ;;
+    '') err "$spec declares no execution profile" ;;
+    *) err "$spec declares unsupported execution profile '$profile'" ;;
+  esac
+  automation=$(basename "$spec" .md)
+  grep -q "^  ${automation}:$" <<< "$MODEL_EXAMPLE" || \
+    err "bindings.example.yml missing model slot for '${automation}'"
+done
+grep -q 'reasoning_effort:' local/installed.example.yml || \
+  err 'installed.example.yml does not record reasoning effort'
+grep -q 'Reconcile the Runtime Model Bindings' skills/setup-kb-infra/SKILL.md || \
+  err 'setup skill does not reconcile runtime model bindings'
+if git grep -nIE 'gpt-[0-9]|claude-[0-9]|gemini-[0-9]' -- ':!local/*.yml' ':!scripts/check.sh' >/dev/null 2>&1; then
+  echo 'Provider-specific model identifier in committed spec:'
+  git grep -nIE 'gpt-[0-9]|claude-[0-9]|gemini-[0-9]' -- ':!local/*.yml' ':!scripts/check.sh'
+  fail=1
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
   exit 1

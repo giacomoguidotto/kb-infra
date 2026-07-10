@@ -15,6 +15,9 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
   realign.
 - Source: `<typefully-published-source>` — Typefully queue, scheduled, and published
   state for the bound social set.
+- Execution profile: `frontier/medium` — public-facing voice, continuity, and
+  creative polish benefit from frontier capability without routinely paying for
+  deeper reasoning.
 - Mandate: first-party-capture within its own surfaces — a `point-of-view` signal when
   the user states a take at the gate, and the `published-social-context` ledger. Both
   are public-facing, so each is proposed through `/capture` as a distinct,
