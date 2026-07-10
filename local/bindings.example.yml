@@ -32,12 +32,25 @@ sources:
   social-profile-source:
     x: "" # e.g. https://x.com/<handle>
     linkedin: "" # e.g. https://www.linkedin.com/in/<handle>/recent-activity/all/
-  # Optional: the social sink's own published and scheduled state. Use when the
-  # social tool can read posts and scheduled drafts directly.
-  typefully-published-source:
-    social_set_id: ""
-    username: ""
+  # The bound social publishing system's read side. Concrete account values and
+  # native read instructions stay local; blank capabilities are hard gaps when an
+  # enabled automation declares them.
+  social-publishing-source:
+    tool: ""
+    account: ""
     platforms: []
+    capabilities:
+      publication-history: ""
+      post-analytics: ""
+      queue-timeline: ""
+      queue-schedule: ""
+  # Private, read-only availability evidence. Event details constrain scheduling
+  # only and never become social content.
+  availability-calendar-source:
+    calendar: ""
+    access: read-only
+    capabilities:
+      upcoming-availability: ""
 
 # External systems automations materialize into.
 sinks:
@@ -53,7 +66,7 @@ sinks:
     clone: ""
     enabled: false
   social-draft-queue:
-    tool: "" # e.g. typefully; social_set_id=123; schedule_after_approval=true
+    tool: "" # concrete tool handle plus approval-gated scheduling instructions
     enabled: false
 
 # Concrete harness choices resolved from the provider-agnostic execution profiles.
@@ -87,4 +100,3 @@ cadences:
 overrides:
   follow-up-marker-policy: ""
   draft-style: "" # blank = shipped Notion-style palette; else describe your restyle
-  social-draft-scheduling: "" # optional scheduling policy for social-draft-queue

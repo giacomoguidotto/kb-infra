@@ -4,6 +4,12 @@ status: accepted
 
 # Personal specifics are bindings, not spec
 
+> **Superseded in part** by
+> [ADR 0011](0011-social-scheduling-uses-capability-bound-live-sources.md): the
+> binding taxonomy now also includes read-only external sources and source
+> capabilities. The rule that personal and provider-specific values stay in
+> gitignored bindings is unchanged.
+
 The spec stays generic; everything personal is a **binding** supplied at setup
 and stored in gitignored `local/`, never committed. Three kinds of binding exist:
 **sinks** (external systems an automation materializes into — a career system, a

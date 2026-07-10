@@ -9,6 +9,12 @@ status: accepted
 > "stays draft-only" claim below holds only for the sink-publish half (draft only; do
 > not post). Social Draft Pulse now first-party-captures `point-of-view` and
 > `published-social-context` within its mandate, through `/capture` approval.
+>
+> **Superseded in part** by
+> [ADR 0011](0011-social-scheduling-uses-capability-bound-live-sources.md):
+> `published-social-context` is now a semantic audience and argument ledger rather
+> than a publication mirror, and live eligible slots replace the per-run volume
+> target as the capacity authority.
 
 Social Draft Pulse keeps a model of what a public audience already knows and of the
 user's persona **in the KB**, and drafts a content mix of project/proof and topical

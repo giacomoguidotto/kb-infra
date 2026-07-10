@@ -62,33 +62,40 @@ for work-facing social drafts.
 
 Flow: use `/lookup` in context mode once over the `public-safe-claim-source`,
 `network`, `social-rules-of-engagement`, `selected-projects`, `identity`,
-`point-of-view`, and `published-social-context` endpoints. Draft a candidate set
-that honors the volume and project/topical mix in `social-rules-of-engagement`,
-keeps per-platform continuity, and recommends a posting slot and slot-matched tone
-for each draft from the schedule in `social-rules-of-engagement`. Return an idea
-summary first. After approval, create drafts in the `social-draft-queue` sink and
-schedule them in Typefully across the run's coverage window.
+`point-of-view`, and `published-social-context` endpoints. Reconcile the semantic
+audience and argument state against the `social-publishing-source`, derive eligible
+open slots from its recurring schedule and queue timeline, then apply the KB's
+day-eligibility and recovery rules to read-only evidence from the
+`availability-calendar-source`. Return a slot-sized idea summary first. After
+approval, create and schedule drafts in the `social-draft-queue` sink.
 
 Rules:
 
 - This is a social draft and scheduling workflow, not an immediate publishing
-  workflow. It may schedule approved drafts in Typefully; it must not publish now
-  without an explicit publish-now instruction.
-- Apply the `social-rules-of-engagement` endpoint for platform strategy, volume,
-  and content mix; do not hardcode them here.
-- Suggest a posting slot and write each draft in that slot's tone, from the schedule
-  in `social-rules-of-engagement`; after approval, materialize those slots into
-  Typefully scheduled posts.
-- Keep continuity: use `published-social-context` to avoid assuming knowledge the
-  platform's audience does not have, use Typefully published/queue state as live
-  scheduling and publication context, and introduce concepts on first public use.
+  workflow. It may schedule approved drafts through the bound sink; it must not
+  publish now without an explicit publish-now instruction.
+- Apply `social-rules-of-engagement` for platform strategy, content mix,
+  day-eligibility and recovery rules, slot tone, and testing-window policy. Derive
+  capacity from enabled, eligible, unfilled live slots; do not hardcode counts or
+  weekday expansions.
+- Calendar events are private scheduling evidence only. Reduce them to eligibility
+  constraints and never turn their details into content or public claims.
+- Keep continuity by using `published-social-context` for semantic audience and
+  argument state and the social publishing source for raw publication, analytics,
+  queue, and schedule evidence. Do not mirror source records or duplicate concepts
+  that already have canonical KB owners.
+- Use account analytics to propose controlled testing windows with a hypothesis,
+  comparable baseline, repeated observation window, and success measure. Schedule an
+  explicit test time only after approval; never mutate the recurring schedule
+  autonomously. When an eligible day has no recurring slot, evaluate it under this
+  testing policy instead of silently treating it as an off day.
 - Topical candidates draw their angle from `point-of-view` or `identity`; when no
   stance is recorded, surface the hook at the gate for the user's take rather than
   inventing one.
 - First-party-capture a `point-of-view` take stated at the gate through `/capture`
-  (explicit-consent, public-facing); record `published-social-context` ledger updates
-  after Typefully shows posts as live, backstopped by Knowledge Harvest. It never
-  publishes immediately.
+  (explicit-consent, public-facing); after posts go live, batch only the semantic
+  `published-social-context` delta through `/capture`, backstopped by Knowledge
+  Harvest. It never publishes immediately.
 - Flag portfolio candidates for Portfolio Surface Sweep instead of auditing the
   portfolio here.
 - Prompt source: [social-draft-pulse.md](automations/social-draft-pulse.md).

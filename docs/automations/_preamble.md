@@ -9,8 +9,8 @@ from `local/bindings.yml`. The full catalog, the provider block, cadence, and bl
 overrides never reach the prompt. See
 [ADR 0005](../adr/0005-materialized-automation-is-self-contained.md).
 
-Reference surfaces, sinks, and sink capabilities **by role**, never by a concrete
-page, repo, command, or path.
+Reference surfaces, sinks, sources, and their capabilities **by role**, never by a
+concrete page, repo, command, or path.
 `/lookup` resolves an endpoint live by meaning, so a binding is a location hint, not a
 hard dependency. Keep the shared rules here in one place; do not restate them inside
 individual automation prompts.
@@ -62,14 +62,17 @@ Data surfaces and rule-sets automations read from the KB:
 - `point-of-view`: the user's recorded public stances, opinions, and recurring themes;
   grows only through approved `/capture` writes — automations read it and never
   fabricate a stance.
-- `published-social-context`: the per-platform ledger of what has been published and
-  which concepts and projects were publicly introduced on each channel; maintained
-  through approved `/capture` writes, read for continuity.
+- `published-social-context`: the per-platform semantic audience and argument ledger:
+  what the audience can be assumed to know, which concepts and projects were
+  introduced, which broader arguments are in flight, and links to their canonical KB
+  owners. It does not mirror post copy, publication history, queue state, or metrics;
+  those remain in the bound social publishing source. Maintained through approved
+  `/capture` writes and read for continuity.
 - `portfolio-change-rules`: the portfolio model and structural constraints.
 - `social-rules-of-engagement`: per-platform drafting strategy and guardrails — the
-  per-run volume target, the project/topical content mix, the self-contained /
-  introduce-on-first-use rule, and the posting schedule: the per-platform slots to post
-  in and the intended tone for each slot.
+  project/topical content mix, the self-contained / introduce-on-first-use rule,
+  day-eligibility and recovery rules, and the posting schedule: the per-platform slots
+  to post in and the intended tone for each slot.
 - `job-search-strategy`: target roles, compensation baseline, scoring preferences.
 - `personal-constraints`: relocation, compensation, work authorization, references,
   availability, and side-project/IP freedom.
@@ -119,12 +122,36 @@ binding, referenced by role:
   Read-only and public; a public source reconciling a public-facing ledger, so it does
   not touch the private-by-default rule. Best-effort: a platform that cannot be read
   degrades to a clarification question, never a fabricated ledger entry.
-- `<typefully-published-source>`: Typefully's own queue, scheduled, and published
-  state for the bound social set. Social Draft Pulse reads it before drafting or
-  scheduling so it can avoid duplicates, schedule into open future slots, and use
-  published posts as evidence for later `published-social-context` capture drafts.
-  Read-only as a source; actual draft creation and scheduling happen through the
-  `<social-draft-queue>` sink after approval.
+- `<social-publishing-source>`: the bound social publishing system's queue, recurring
+  schedule, published history, and account analytics. Social Draft Pulse reads it
+  before drafting or scheduling to avoid duplicates, find eligible open slots, and
+  reconcile semantic continuity after posts go live. Read-only as a source; actual
+  draft creation and scheduling happen through `<social-draft-queue>` after approval.
+- `<availability-calendar-source>`: the user's upcoming calendar availability and
+  free/busy evidence for the coverage window. Social Draft Pulse uses it only to apply
+  the KB's day-eligibility and recovery rules. Event details are private scheduling
+  evidence and never become post ideas, claims, or public copy.
+
+### Source Capabilities
+
+Read operations supplied by the concrete implementation of a bound source.
+Automations declare these by role; setup resolves each to a concrete command or
+native workflow instruction and emits only the declared capability into the composed
+prompt.
+
+- `publication-history`: read posts that actually went live, with stable identifiers,
+  platform, and publication time, so the run can reconcile the semantic audience and
+  argument delta without treating a scheduled draft as published.
+- `post-analytics`: read account-specific performance for published posts over
+  comparable windows, including any platform or metric limitations. Metrics remain in
+  the source and inform controlled scheduling proposals; they are not copied into the
+  KB ledger.
+- `queue-timeline`: read queued and scheduled drafts with their exact times and state,
+  so occupied slots and duplicates are visible before drafting.
+- `queue-schedule`: read the recurring per-platform schedule, timezone, and enabled
+  slots so the run can derive the eligible coverage capacity without hardcoded counts.
+- `upcoming-availability`: read upcoming events or free/busy state over the coverage
+  window. Calendar details stay private and are reduced to scheduling constraints.
 
 ## Follow-up Marker Policy
 

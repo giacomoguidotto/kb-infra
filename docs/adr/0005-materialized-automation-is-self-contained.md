@@ -4,6 +4,13 @@ status: accepted
 
 # A materialized automation runs in the sink checkout and must be self-contained
 
+> **Superseded in part** by
+> [ADR 0011](0011-social-scheduling-uses-capability-bound-live-sources.md): declared
+> source capabilities follow the same resolved-line composition rule, and an
+> automation may explicitly require its human-readable coverage cadence in the
+> prompt when the next run defines its responsibility window. Undeclared cadence and
+> model metadata remain excluded.
+
 [ADR 0001](0001-source-of-record-not-runtime.md) fixes that kb-infra is a spec:
 each automation is authored here and **materializes** into a scheduled run
 elsewhere. This ADR pins down *where* "elsewhere" is and what the running agent may

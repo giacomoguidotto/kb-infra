@@ -122,6 +122,44 @@ if git grep -nIE 'gpt-[0-9]|claude-[0-9]|gemini-[0-9]' -- ':!local/*.yml' ':!scr
   fail=1
 fi
 
+# 9. Social Draft Pulse consumes provider-neutral social and availability sources,
+# with every required read operation expressed as a source capability that setup can
+# resolve into the materialized prompt.
+SOCIAL_SPEC='docs/automations/social-draft-pulse.md'
+for source in social-publishing-source availability-calendar-source; do
+  grep -q "<${source}>" "$SOCIAL_SPEC" || err "$SOCIAL_SPEC missing source '${source}'"
+  grep -q "<${source}>" docs/automations/_preamble.md || err "_preamble.md missing source '${source}'"
+  grep -q "^  ${source}:" local/bindings.example.yml || err "bindings.example.yml missing source '${source}'"
+done
+DECLARED_SOURCE_CAPABILITIES=$(
+  awk '
+    /^- Source capabilities:/ { declared=1; next }
+    declared && /^  - / { print; next }
+    declared && /^    `/ { print; next }
+    declared { exit }
+  ' "$SOCIAL_SPEC" | grep -oE '`[a-z0-9-]+`' | tr -d '`'
+)
+if [ -z "$DECLARED_SOURCE_CAPABILITIES" ]; then
+  err "$SOCIAL_SPEC declares no source capabilities"
+fi
+while IFS= read -r capability; do
+  [ -n "$capability" ] || continue
+  grep -q "${capability}" docs/automations/_preamble.md || err "_preamble.md missing source capability '${capability}'"
+  grep -q "${capability}" local/bindings.example.yml || err "bindings.example.yml missing source capability '${capability}'"
+done <<< "$DECLARED_SOURCE_CAPABILITIES"
+grep -q '## Source capabilities' skills/setup-kb-infra/SKILL.md || \
+  err 'setup skill does not compose declared source capabilities'
+grep -q '^- Coverage cadence: required' "$SOCIAL_SPEC" || \
+  err "$SOCIAL_SPEC does not declare required coverage cadence context"
+grep -q '## Coverage cadence' skills/setup-kb-infra/SKILL.md || \
+  err 'setup skill does not compose declared coverage cadence context'
+if grep -q '<typefully-published-source>' "$SOCIAL_SPEC" docs/automations/_preamble.md; then
+  err 'provider-specific Typefully source leaked into the current automation contract'
+fi
+if grep -Eq 'Wednesday late-afternoon|Thursday and Friday' "$SOCIAL_SPEC"; then
+  err "$SOCIAL_SPEC hardcodes a weekday-specific coverage example"
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
   exit 1

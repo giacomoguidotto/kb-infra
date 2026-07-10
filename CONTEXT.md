@@ -19,7 +19,7 @@ materializes it as harness metadata rather than prompt text.
 
 **Point-of-View Surface**: An incrementally-built KB endpoint holding the user's public persona — recorded stances, opinions, and recurring themes that topical social drafts draw from. It grows over time only through approved `/capture` writes; automations read it and never fabricate a stance.
 
-**Published Social Context**: A per-platform KB endpoint recording what has already been published and which concepts and projects have been publicly introduced on each channel. Automations read it to keep continuity and avoid assuming audience knowledge; it is maintained through approved `/capture` writes. When the social sink cannot carry a post-live trigger, Knowledge Harvest reconciles it best-effort from the Social Profile Source.
+**Published Social Context**: A per-platform semantic audience and argument ledger. It records what an audience can be assumed to know, which concepts and projects were introduced, which broader arguments are in flight, and pointers to their canonical KB owners. It deliberately does not mirror post copy, publication history, queue state, analytics, or concepts already owned elsewhere in the KB. Automations read it for continuity and maintain semantic deltas through approved `/capture` writes after reconciling live publication evidence.
 
 **Sink**: An external system an automation materializes into, such as a career system, a portfolio repo, or a social draft queue. Referenced by role, never by repo name or path.
 
@@ -29,13 +29,20 @@ committed automation references the capability by role; setup binds it to a
 concrete command or native workflow and injects that only into the materialized
 prompt.
 
+**Source Capability**: A named read operation required from a source implementation,
+such as publication history, post analytics, queue state, recurring schedule, or
+upcoming availability. The committed automation references the capability by role;
+setup binds it to a concrete command or native workflow and injects that only into
+the materialized prompt.
+
 **Mirror Sink**: A sink that stores its own copy of a KB endpoint, such as `career-system` holding a copy of `job-search-strategy`. A first-party capture that changes the mirrored endpoint realigns the sink's copy; drift is bidirectional.
 
 **Derived Sink**: A sink materialized one-way from KB signals, such as `portfolio` or `social-draft-queue`. The KB is the single source; the sink carries no inherited drift.
 
-**Binding**: A concrete local value for a provider, sink, sink capability, endpoint,
-cadence, or runtime model selection, supplied or resolved at setup and stored in
-gitignored `local/`. Personal and provider-specific values are never committed.
+**Binding**: A concrete local value for a provider, sink, source, sink or source
+capability, endpoint, cadence, or runtime model selection, supplied or resolved at
+setup and stored in gitignored `local/`. Personal and provider-specific values are
+never committed.
 
 **Setup**: A user-invoked skill that materializes the infrastructure: it connects the KB provider, collects bindings through a grill, installs the lookup and capture skills, and bootstraps the automations.
 
@@ -63,7 +70,15 @@ _Avoid_: Knowledge Bank Drift Realignment (renamed)
 
 **Signal-preferences**: A KB endpoint holding the user's criteria for what is worth remembering — the emergent rubric Knowledge Harvest reads to rank candidates. It starts as a loose seed of registers plus a permanent open "surprising/uncategorised" bucket and grows only through approved rubric updates, rendered as a distinct block in the `/capture` draft.
 
-**Social Draft Pulse**: A scheduled lookup-to-social-draft workflow that turns recent public-safe KB context into approved drafts in the social draft queue sink. It drafts a content mix of project/proof and topical posts, keeps per-platform continuity through the published social context surface plus Typefully published/queue state, grounds topical angles in the point-of-view surface, and schedules approved drafts in Typefully using the posting slots and slot-matched tone from social rules of engagement. It first-party-captures a point-of-view take stated at the gate and the published-social-context ledger after posts go live (both public-facing, via explicit-consent `/capture`), but never publishes immediately.
+**Social Draft Pulse**: A scheduled lookup-to-social-draft workflow that turns recent public-safe KB context into approved drafts in the social draft queue sink. It fills eligible open slots across the coverage window, evaluates eligible days without recurring slots as controlled testing-window candidates, uses private calendar availability only to apply KB scheduling rules, and keeps continuity through the semantic published social context plus live publishing state. It never changes the recurring schedule autonomously. It first-party-captures a point-of-view take stated at the gate and batches semantic published-social-context updates after posts go live (both public-facing, via explicit-consent `/capture`), but never publishes immediately.
+
+**Social Publishing Source**: The read-only view of the bound social publishing
+system: publication history, account analytics, queue timeline, and recurring posting
+schedule. It supplies live operational evidence; it is not a duplicate KB ledger.
+
+**Availability Calendar Source**: A read-only source of upcoming events or free/busy
+state used to apply the KB's day-eligibility and recovery rules. Calendar details are
+private scheduling evidence and never become content candidates or public claims.
 
 **Social Profile Source**: A read-only external source, one per platform (currently X and LinkedIn), holding the user's own public social profiles. Knowledge Harvest reads it best-effort to reconcile the published social context ledger when the social sink cannot carry a post-live trigger. It is a public source feeding a public-facing surface, so it is exempt from the transcript private-by-default rule; a platform that cannot be read degrades to a clarification question, never a fabricated entry.
 
