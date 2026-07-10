@@ -17,11 +17,18 @@ _Avoid_: second brain, source of truth, runtime, knowledge store
 
 **Sink**: An external system an automation materializes into, such as a career system, a portfolio repo, or a social draft queue. Referenced by role, never by repo name or path.
 
+**Sink Capability**: A named operation required from a sink implementation, such
+as an advancement workflow or deterministic related-opportunity selector. The
+committed automation references the capability by role; setup binds it to a
+concrete command or native workflow and injects that only into the materialized
+prompt.
+
 **Mirror Sink**: A sink that stores its own copy of a KB endpoint, such as `career-system` holding a copy of `job-search-strategy`. A first-party capture that changes the mirrored endpoint realigns the sink's copy; drift is bidirectional.
 
 **Derived Sink**: A sink materialized one-way from KB signals, such as `portfolio` or `social-draft-queue`. The KB is the single source; the sink carries no inherited drift.
 
-**Binding**: A concrete personal value for a sink or endpoint, supplied at setup and stored in gitignored `local/`. Never committed.
+**Binding**: A concrete personal value for a sink, sink capability, or endpoint,
+supplied at setup and stored in gitignored `local/`. Never committed.
 
 **Setup**: A user-invoked skill that materializes the infrastructure: it connects the KB provider, collects bindings through a grill, installs the lookup and capture skills, and bootstraps the automations.
 

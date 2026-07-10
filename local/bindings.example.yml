@@ -45,6 +45,9 @@ sinks:
     repo: ""
     clone: ""
     enabled: false
+    capabilities:
+      advance-workflow: "" # sink-native next-work orchestration contract
+      related-opportunity-selector: "" # deterministic pre-ranking command/workflow
   portfolio:
     repo: ""
     clone: ""

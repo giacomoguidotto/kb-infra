@@ -19,6 +19,7 @@ Job Hunt Advance Audit is a tracker-to-next-pack workflow.
 - State routing: owned by the sink. This automation reads the career-system's
   canonical state model and never defines its own.
 - Sink: `<career-system>` — a mirror sink holding a copy of `job-search-strategy`.
+- Sink capabilities: `advance-workflow`, `related-opportunity-selector`.
 - Mandate: first-party-capture a `personal-constraints` or `job-search-strategy`
   signal when advancing surfaces one — a stated constraint (relocation, compensation,
   work authorization, references, availability, side-project/IP) or a targeting
@@ -59,6 +60,20 @@ Goal:
   canonical state model; do not invent, restate, or override it. If that model is
   missing or ambiguous, stop and report it rather than substituting your own.
 
+Execution contract:
+- Use the bound `advance-workflow` as the sole sink-native orchestration contract.
+  Do not reproduce its lifecycle, routing, pack, or writer rules in this prompt.
+- Before throughput, decision, or score ranking, invoke the bound
+  `related-opportunity-selector`. Treat its `eligible` result as the exclusive
+  Agent-owned selection input. Never rebuild candidates from raw tracker rows or
+  re-add anything it reports as `suppressed`.
+- If it reports unresolved related groups, perform the sink workflow's required
+  organizational or ownership research, persist the evidence-backed partition or
+  conservative shared fallback in the sink, and rerun the selector. Do not select
+  a blocked group before the rerun clears it. Other already-eligible groups may
+  continue.
+- An unattended run never uses a coordination or related-opportunity override.
+
 KB lookup:
 - Before selection, resolve the current job-application throughput target. Search
   the career-system strategy mirror first, then use /lookup in context mode against
@@ -72,8 +87,9 @@ KB lookup:
   or drafts fully covered by the current report/profile, and say why in one line.
 
 Selection:
-- Select enough opportunities to satisfy the resolved throughput target when one
-  exists; otherwise select a small number of opportunities (up to three).
+- Select only from the bound selector's `eligible` result. From that set, choose
+  enough opportunities to satisfy the resolved throughput target when one exists;
+  otherwise select a small number of opportunities (up to three).
 - Treat the throughput target as the minimum number of jobs to advance to a
   user-owed ready state when the evaluated queue has enough qualified opportunities.
   If the queue cannot satisfy the target, advance every usable opportunity and
@@ -93,8 +109,8 @@ Selection:
   confirmation.
 
 Producing packs:
-- Produce the selected packs, reusing the career-system's existing mode rules
-  rather than restating them. Packs are drafts for review.
+- Produce the selected packs through the bound `advance-workflow`. Packs are
+  drafts for review.
 - If a better durable state model is needed, propose it in the summary rather than
   silently changing schema or files.
 
@@ -108,8 +124,9 @@ First-party capture:
 
 End state:
 - Report selected opportunities and why, packs produced, the tracker advances
-  applied, lookup used or skipped, any personal-constraints or job-search-strategy
-  captures proposed and the mirror realignments, blocked actions, and recommended
-  next human approvals for real-world state.
+  applied, related opportunities suppressed or awaiting research, lookup used or
+  skipped, any personal-constraints or job-search-strategy captures proposed and
+  the mirror realignments, blocked actions, and recommended next human approvals
+  for real-world state.
 - If no useful advancement exists, say so and include the evidence checked.
 ```

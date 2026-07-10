@@ -9,7 +9,8 @@ from `local/bindings.yml`. The full catalog, the provider block, cadence, and bl
 overrides never reach the prompt. See
 [ADR 0005](../adr/0005-materialized-automation-is-self-contained.md).
 
-Reference surfaces and sinks **by role**, never by a concrete page, repo, or path.
+Reference surfaces, sinks, and sink capabilities **by role**, never by a concrete
+page, repo, command, or path.
 `/lookup` resolves an endpoint live by meaning, so a binding is a location hint, not a
 hard dependency. Keep the shared rules here in one place; do not restate them inside
 individual automation prompts.
@@ -27,8 +28,10 @@ Injected into every composed prompt:
   dedups first-party captures against current KB state, proposes what a run should
   have captured but did not, and surfaces conflicts. Do not defer an in-mandate
   capture to a later harvest.
-- Return a run summary and wait for approval before materializing any write into a
-  sink.
+- Return a run summary and wait for approval before materializing a write into a
+  sink, unless the automation body explicitly classifies a narrow in-mandate write
+  as safe and ungated. That exception never authorizes a real-world action, public
+  send/publish, or a record claiming one happened.
 - Reconcile sink drift by the sink's kind: a mirror sink that holds a copy of a KB
   endpoint gets its copy realigned to the KB; a derived sink materialized from KB
   signals updates one way and carries no inherited drift.
@@ -86,6 +89,21 @@ clone path (or tool handle). The primary sink clone is the run's working directo
   from KB signals; no inherited drift.
 - `<social-draft-queue>`: the social draft tool. A derived sink — materialized one-way
   from KB signals; no inherited drift.
+
+### Sink Capabilities
+
+Operations supplied by the concrete implementation of a bound sink. Automations
+declare these by role; setup resolves each to an executable command or native
+workflow instruction and emits only the declared capability into the composed
+prompt.
+
+- `advance-workflow`: the sink-native orchestration contract for selecting,
+  producing, and recording Agent-owned next work. It owns the sink's lifecycle
+  vocabulary and canonical writers; the automation never reconstructs them.
+- `related-opportunity-selector`: a deterministic, read-only preflight applied
+  before global throughput or priority ranking. It returns an exclusive eligible
+  set, suppressed related alternatives, and unresolved groups requiring research.
+  An unattended automation may not bypass or override its suppression result.
 
 ### Sources
 

@@ -140,9 +140,13 @@ Trigger: the scheduled automation, or a manual request to advance existing
 
 Flow: inspect the `career-system` tracker, reports, and follow-up history. Resolve
 the current job-application throughput target from the career-system strategy mirror
-or `/lookup`, then select enough opportunities to satisfy that target when the queue
-allows. Use `/lookup` in context mode for pack-specific context only when fresh KB
-context could change the next pack. Produce the draft next packs directly, then
+or `/lookup`, invoke the bound deterministic related-opportunity selector, then
+select enough eligible opportunities to satisfy that target when the queue allows.
+Suppressed alternatives never re-enter through score sorting; unresolved groups
+are researched and persisted in the sink before the selector is rerun. Use
+`/lookup` in context mode for pack-specific context only when fresh KB context
+could change the next pack. Produce the draft next packs directly through the
+bound advancement workflow, then
 advance each drafted row through the career-system's own agent-owned stages so the
 tracker records that a draft exists — no pre-approval gate on either. Stop before
 submitting, sending, or recording real-world state changes without the user's
@@ -155,6 +159,9 @@ Rules:
   in progress.
 - Resolve the active throughput target before selection. If no active target exists,
   fall back to a conservative small batch and report that no target was found.
+- Run the bound related-opportunity selector before ranking. Its eligible set is
+  exclusive; never bypass suppression in an unattended run. Resolve and persist
+  any required organizational/ownership research, then rerun it.
 - Generate draft packs directly and advance the tracker as part of the run; both are
   ungated. A pack is the reviewable output and the agent-owned stage advance is a safe
   internal-state write that records a draft exists — never a real-world action. Source

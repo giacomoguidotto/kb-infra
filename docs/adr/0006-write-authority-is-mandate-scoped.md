@@ -48,6 +48,10 @@ write to the KB" language.
   reconciler. The rule lives once in the Operating Rules per
   [ADR 0005](0005-materialized-automation-is-self-contained.md), not restated per
   prompt.
+- Sink writes remain approval-gated by default. An automation body may explicitly
+  classify a narrow in-mandate write as safe and ungated (for example recording
+  that an internal draft now exists); that exception never extends to real-world
+  actions, public sends/publishes, or records asserting those actions happened.
 - "Writes to the KB" and "publishes to a sink" stay distinct invariants. Relaxing an
   automation's "does not write to the KB" does not touch "does not post, schedule, or
   publish"; inbound KB capture is low-risk, auto-publishing to a public sink stays

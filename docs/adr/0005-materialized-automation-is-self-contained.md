@@ -51,13 +51,17 @@ rather than as the raw material for a single self-contained artifact.
 ## Consequences
 
 - The composer treats the preamble as a lookup table: it injects the shared
-  operating rules and, for each surface the automation declares, one resolved line —
-  never the whole catalog, the provider block, cadence, or overrides. Cadence lives
-  in `local/installed.yml` and is the harness's concern, not the agent's.
+  operating rules and, for each surface or sink capability the automation
+  declares, one resolved line — never the whole catalog, the provider block,
+  cadence, or overrides. Cadence lives in `local/installed.yml` and is the
+  harness's concern, not the agent's.
 - Automation bodies reference the sink by role as the working directory and read only
   the sink's own docs; they never read kb-infra spec files at runtime.
 - A runtime dependency on a kb-infra convention (for example Knowledge Harvest's
   follow-up marker formats) is **inlined** into the composed prompt at materialize
   time, not left as a path the agent is told to open.
+- Sink-native commands and workflow names are capability bindings. The generic
+  automation declares the operation it needs; only materialization names the
+  concrete implementation in the bound sink checkout.
 - A composed prompt is judged self-contained: if a run needs a fact, that fact is in
   the prompt or reachable through `/lookup`, never through the spec checkout.

@@ -71,6 +71,26 @@ done < <(git ls-files '*.md')
 
 if [ -s "$TMP_BROKEN" ]; then fail=1; fi
 
+# 7. Job-hunt advancement stays sink-agnostic while declaring the concrete
+# capabilities setup must bind into a self-contained materialization.
+ADVANCE_SPEC='docs/automations/job-hunt-advance-audit.md'
+DECLARED_CAPABILITIES=$(sed -n 's/^- Sink capabilities: //p' "$ADVANCE_SPEC" | grep -oE '`[a-z0-9-]+`' | tr -d '`')
+if [ -z "$DECLARED_CAPABILITIES" ]; then
+  err "$ADVANCE_SPEC declares no sink capabilities"
+fi
+while IFS= read -r capability; do
+  [ -n "$capability" ] || continue
+  grep -q "${capability}" "$ADVANCE_SPEC" || err "$ADVANCE_SPEC missing sink capability '${capability}'"
+  grep -q "${capability}" docs/automations/_preamble.md || err "_preamble.md missing sink capability '${capability}'"
+  grep -q "${capability}" local/bindings.example.yml || err "bindings.example.yml missing sink capability '${capability}'"
+done <<< "$DECLARED_CAPABILITIES"
+grep -q '## Sink capabilities' skills/setup-kb-infra/SKILL.md || err 'setup skill does not compose declared sink capabilities'
+if grep -Eq 'candidacy-select\.mjs|modes/next\.md|career-ops next' "$ADVANCE_SPEC"; then
+  err "$ADVANCE_SPEC hardcodes one career-system implementation instead of bound capabilities"
+fi
+grep -q 'automation body explicitly classifies a narrow in-mandate write' docs/automations/_preamble.md || \
+  err '_preamble.md approval rule does not recognize explicitly authorized safe internal writes'
+
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
   exit 1
