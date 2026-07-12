@@ -320,6 +320,10 @@ relations. After a write, read back the result and run local checks. After all
 batches, rerun the global audit. Preserve stable page identities and a rollback
 path. Audits propose exact drafts; they never write to the KB.
 
+Use the [reproducible read-only baseline](audits/read-only-baseline.md) snapshot
+envelope and compiler for full audits. Live snapshots and findings remain in
+gitignored `local/audits/`; only the provider-neutral contract is committed.
+
 ## OKF Boundary
 
 Open Knowledge Format is a future read-only interchange adapter, not the KB's

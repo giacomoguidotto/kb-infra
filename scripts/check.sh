@@ -160,10 +160,9 @@ if grep -Eq 'Wednesday late-afternoon|Thursday and Friday' "$SOCIAL_SPEC"; then
   err "$SOCIAL_SPEC hardcodes a weekday-specific coverage example"
 fi
 
-# 10. The executable Capture contract matches the normative conventions and all
-# representative safe, flagged, and blocked transitions validate as expected.
-if ! python3 tests/test_capture_validation.py; then
-  err 'Capture transition validation tests failed'
+# 10. Provider-neutral executable contracts keep their black-box regression tests.
+if ! python3 -m unittest discover -s tests -p 'test_*.py'; then
+  err 'executable contract tests failed'
 fi
 
 if [ "$fail" -ne 0 ]; then
