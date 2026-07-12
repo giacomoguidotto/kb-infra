@@ -90,6 +90,12 @@ private scheduling evidence and never become content candidates or public claims
 
 **Drift Audit**: A read-only convention check for Knowledge Bank structure, ownership, naming, role, and stale-state drift. It is the KB-internal-staleness source within Knowledge Harvest — a lower-level review pattern, not the whole automation.
 
+**Audit Baseline**: A reproducible Drift Audit result compiled from an initial
+read-only KB snapshot and a recheck of the same stable identities. It records
+coverage, partial or inaccessible resources, unresolved exceptions, classified
+findings, references, and concurrent drift. Live baseline data is a binding kept
+in gitignored `local/audits/`, never committed as spec.
+
 **Follow-up Marker**: A short page-body line that tells a future lookup to ask the user about a deferred or time-ambiguous update.
 
 **Approval Draft**: A reviewable proposal showing exact KB writes before anything is applied.
