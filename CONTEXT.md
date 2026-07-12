@@ -96,4 +96,37 @@ private scheduling evidence and never become content candidates or public claims
 
 **Narrow Load**: Read only the Knowledge Bank Infrastructure docs or KB pages relevant to the current task.
 
-**Role**: A hidden or low-visibility KB property used only when hierarchy is not enough. Valid values are `Canonical`, `Adapter`, `Raw`, and `Archive`.
+**Type**: What a KB page represents in its provider or domain. Type is
+provider-defined and independent of who owns the meaning, how mature its content
+is, and what each section means.
+
+**Ownership**: Whether a page owns meaning or presents meaning owned elsewhere.
+`Canonical` pages own their subject; `Adapter` pages present selected knowledge
+for an audience or workflow. `Unresolved` is a migration state for pages whose
+owner has not yet been established. Source trustworthiness belongs to provenance,
+not Ownership.
+
+**Maturity**: The editorial processing state of page content. `Raw` is incoming or
+unaudited, `Developing` is useful but explicitly unsettled, and `Stable` is
+reconciled, approved, supported, and safe to reuse. Maturity does not express
+truth, confidence, volatility, relevance, or lifecycle. New content starts `Raw`;
+the operating aim is to make retained knowledge `Stable`.
+
+**Kind**: The semantic class of a section or knowledge unit. The versioned initial
+registry is `State`, `Direction`, `Decision`, `Rule`, `Preference`, `Procedure`,
+`Event`, `Evidence`, `Open item`, `Schema`, `Example`, and `Citation`. Kind is
+independent of page Type, Ownership, and Maturity.
+
+**Active Canonical View**: The current human-facing KB: relevant pages reconciled
+to show their best current meaning without routine archive filters. Presence in
+this view implies relevance, not certainty or permanence.
+
+**Revision Evidence**: The recoverable record behind an accepted KB change. It
+links the prior revision, exact diff, source, actor, capture time, revision
+identity, and any `supersedes`, `revises`, or `invalidates` relation. A changed
+State also retains its distinct observation time.
+
+**Semantic Quality Gate**: The evidence-bearing checks in an Approval Draft that
+must pass before a Capture write. It distinguishes deterministic checks from
+semantic judgments and reports `Pass`, `Flag`, `Not checked`, or
+`Not applicable` with checked scope and evidence.

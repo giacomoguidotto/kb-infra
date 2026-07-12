@@ -2,10 +2,13 @@
 
 Research dates: 2026-07-10 to 2026-07-12
 
-Implementation status: accepted. Use [Full-contract research stress test
-(2026-07-12)](#full-contract-research-stress-test-2026-07-12) as the normative
-implementation contract. Earlier sections preserve the research and design path;
-where wording conflicts, the full-contract stress test governs.
+Implementation status: accepted and materialized by
+[ADR 0012](../adr/0012-semantic-authoring-and-non-destructive-reconciliation.md)
+and the [Knowledge Bank conventions](../knowledge-bank-conventions.md). This file
+is their research specification. Earlier sections preserve the research and design
+path; where wording conflicts, the
+[full-contract stress test](#full-contract-research-stress-test-2026-07-12)
+governs the research conclusions, and the materialized contract governs operation.
 
 ## Conclusion
 
