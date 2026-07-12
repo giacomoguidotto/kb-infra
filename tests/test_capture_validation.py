@@ -300,6 +300,19 @@ class CaptureValidationTest(unittest.TestCase):
                 matching = [result for result in report["results"] if result["check"] == "kind-structure"]
                 self.assertEqual(matching[0]["status"], "Flag")
 
+    def test_malformed_target_shape_is_an_evidence_bearing_block(self) -> None:
+        record = json.loads((FIXTURES / "stable.json").read_text())
+        record["target"] = "page:project-alpha"
+
+        completed, report = self.validate_record(record)
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        self.assertEqual(report["disposition"], "Block")
+        audit = [result for result in report["results"] if result["check"] == "audit-baseline"]
+        self.assertEqual(audit[0]["status"], "Not applicable")
+        ownership = [result for result in report["results"] if result["check"] == "ownership-structure"]
+        self.assertEqual(ownership[0]["status"], "Flag")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -243,6 +243,10 @@ unsafe deletion blocks the write. Human approval is a control, not proof.
 
 The provider-neutral Capture transition record is versioned in
 [`contracts/capture-transition-v1.json`](../contracts/capture-transition-v1.json).
+The Capture skill carries its runtime contract and validator so a materialized
+skill does not depend on a `kb-infra` checkout. Setup copies the complete package
+byte-identically; the repository contract remains an enforced compatibility copy,
+and the root command below delegates to the packaged validator.
 Validate one JSON record with:
 
 ```sh
@@ -270,6 +274,12 @@ false and records human approval as required and `Not checked`: validation never
 approves a KB write. Representative records live in
 [`tests/fixtures/capture-transitions/`](../tests/fixtures/capture-transitions/), and
 the repository check runs their black-box validation tests.
+
+When a compiled read-only audit baseline informed discovery, pass its matching
+`manifest.json` and `findings.json` with `--audit-manifest` and
+`--audit-findings`. The validator checks their hash binding, schema and
+Kind-registry versions, target coverage, access, and concurrent-drift state. This makes baseline evidence
+reproducible; it never replaces Capture's fresh live reads.
 
 ## Follow-up Markers
 
