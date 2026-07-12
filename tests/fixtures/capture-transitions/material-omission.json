@@ -1,0 +1,15 @@
+{
+  "capture_record_version": 1,
+  "id": "material-omission",
+  "operation": "replace-section",
+  "target": {"owner_id": "page:project-alpha", "ownership": "Canonical", "type": "Project"},
+  "maturity": {"from": "Developing", "to": "Stable"},
+  "kind": "direction",
+  "assertions": [{"id": "assertion:direction", "text": "Project Alpha aims to support exports.", "source_refs": ["source:planning"]}],
+  "sources": [{"id": "source:planning", "locator": "fixture://planning/8"}],
+  "references": [{"id": "page:project-alpha", "resolves": true}, {"id": "revision:project-alpha-3", "resolves": true}],
+  "revision": {"id": "revision:material-omission", "prior_revision": "revision:project-alpha-3", "actor": "agent:fixture", "captured_at": "2026-07-12T13:40:00Z", "diff": "-Project Alpha aims to support read-only exports.\n+Project Alpha aims to support exports.", "relation": "revises"},
+  "semantic_judgments": [
+    {"check": "coverage", "status": "Flag", "scope": "source:planning assertions and the replacement Direction", "evidence": ["The draft omits the source requirement that exports remain read-only."], "issues": ["material-omission"]}
+  ]
+}

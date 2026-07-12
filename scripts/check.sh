@@ -160,6 +160,12 @@ if grep -Eq 'Wednesday late-afternoon|Thursday and Friday' "$SOCIAL_SPEC"; then
   err "$SOCIAL_SPEC hardcodes a weekday-specific coverage example"
 fi
 
+# 10. The executable Capture contract matches the normative conventions and all
+# representative safe, flagged, and blocked transitions validate as expected.
+if ! python3 tests/test_capture_validation.py; then
+  err 'Capture transition validation tests failed'
+fi
+
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
   exit 1

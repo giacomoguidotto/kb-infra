@@ -239,6 +239,38 @@ At minimum, the gate covers:
 Unresolved ownership, contradiction, material omission, unsupported assertion, or
 unsafe deletion blocks the write. Human approval is a control, not proof.
 
+### Executable Validation
+
+The provider-neutral Capture transition record is versioned in
+[`contracts/capture-transition-v1.json`](../contracts/capture-transition-v1.json).
+Validate one JSON record with:
+
+```sh
+python3 scripts/validate-capture-transition.py <record.json>
+```
+
+The validator generates deterministic results for the record contract, operation,
+provider-defined Type, registered Kind and structurally expressible Kind
+constraints, Maturity, Ownership structure, source provenance, timezone-aware
+absolute time, exact Revision Evidence, references, per-assertion Adapter links,
+retained Raw context, and deletion structure. Lifecycle stays in the operation: a
+deletion keeps its content Maturity unchanged and uses an `invalidates` revision
+relation. The validator carries supplied semantic judgments into separate result
+rows only when each judgment has a registered check, status, checked scope,
+evidence, and issue code. Missing judgments become `Not checked`; malformed,
+unknown, or duplicate judgments are deterministic contract failures.
+In particular, Kind registration and required assertion fields are deterministic;
+whether the prose preserves the Kind's semantic force is a separate
+`kind-and-semantic-force` judgment and is never inferred from structure.
+
+The report disposition is `Pass`, `Flag`, or `Block`. Blocking deterministic
+failures and the five contract-defined semantic blockers return exit status 2;
+`Pass` and non-blocking `Flag` return 0. Every report still sets `write_allowed` to
+false and records human approval as required and `Not checked`: validation never
+approves a KB write. Representative records live in
+[`tests/fixtures/capture-transitions/`](../tests/fixtures/capture-transitions/), and
+the repository check runs their black-box validation tests.
+
 ## Follow-up Markers
 
 Use a follow-up marker for a deferred or time-ambiguous knowledge update that a

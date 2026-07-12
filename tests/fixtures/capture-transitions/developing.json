@@ -1,0 +1,23 @@
+{
+  "capture_record_version": 1,
+  "id": "developing-direction",
+  "operation": "update",
+  "target": {"owner_id": "page:project-alpha", "ownership": "Canonical", "type": "Project"},
+  "maturity": {"from": "Raw", "to": "Developing"},
+  "kind": "direction",
+  "assertions": [
+    {"id": "assertion:direction", "text": "Project Alpha is exploring a portable export.", "source_refs": ["source:planning"]}
+  ],
+  "sources": [{"id": "source:planning", "locator": "fixture://planning/7"}],
+  "references": [{"id": "page:project-alpha", "resolves": true}, {"id": "revision:project-alpha-1", "resolves": true}],
+  "revision": {"id": "revision:developing", "prior_revision": "revision:project-alpha-1", "actor": "agent:fixture", "captured_at": "2026-07-12T12:10:00Z", "diff": "-No portable export direction.\n+Project Alpha is exploring a portable export.", "relation": "revises"},
+  "semantic_judgments": [
+    {"check": "ownership", "status": "Pass", "scope": "page:project-alpha and linked owners", "evidence": ["No competing owner was found."], "issues": []},
+    {"check": "coverage", "status": "Pass", "scope": "source:planning", "evidence": ["assertion:direction maps the source aim."], "issues": []},
+    {"check": "preservation", "status": "Pass", "scope": "the affected Direction section", "evidence": ["No qualifier or prior direction is removed."], "issues": []},
+    {"check": "faithfulness", "status": "Pass", "scope": "assertion:direction", "evidence": ["Exploring preserves the unsettled semantic force."], "issues": []},
+    {"check": "duplication-and-contradiction", "status": "Pass", "scope": "the affected section and linked owners", "evidence": ["No duplicate or contradiction was found."], "issues": []},
+    {"check": "kind-and-semantic-force", "status": "Pass", "scope": "assertion:direction as Direction", "evidence": ["Exploring expresses an unsettled aim rather than a Decision."], "issues": []},
+    {"check": "deletion-safety", "status": "Not applicable", "scope": "operation update", "evidence": ["The transition does not delete a page."], "issues": []}
+  ]
+}

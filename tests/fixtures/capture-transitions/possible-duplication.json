@@ -1,0 +1,15 @@
+{
+  "capture_record_version": 1,
+  "id": "possible-duplication",
+  "operation": "update",
+  "target": {"owner_id": "page:project-alpha", "ownership": "Canonical", "type": "Project"},
+  "maturity": {"from": "Raw", "to": "Developing"},
+  "kind": "direction",
+  "assertions": [{"id": "assertion:export", "text": "Project Alpha is exploring portable exports.", "source_refs": ["source:planning"]}],
+  "sources": [{"id": "source:planning", "locator": "fixture://planning/9"}],
+  "references": [{"id": "page:project-alpha", "resolves": true}, {"id": "revision:project-alpha-3", "resolves": true}],
+  "revision": {"id": "revision:possible-duplication", "prior_revision": "revision:project-alpha-3", "actor": "agent:fixture", "captured_at": "2026-07-12T14:00:00Z", "diff": "-No portable export direction.\n+Project Alpha is exploring portable exports.", "relation": "revises"},
+  "semantic_judgments": [
+    {"check": "duplication-and-contradiction", "status": "Flag", "scope": "assertion:export and the linked roadmap", "evidence": ["The wording resembles a roadmap direction, but equivalence is unresolved."], "issues": ["possible-duplication"]}
+  ]
+}

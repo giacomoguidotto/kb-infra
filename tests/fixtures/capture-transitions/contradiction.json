@@ -1,0 +1,15 @@
+{
+  "capture_record_version": 1,
+  "id": "contradiction",
+  "operation": "update",
+  "target": {"owner_id": "page:project-alpha", "ownership": "Canonical", "type": "Project"},
+  "maturity": {"from": "Stable", "to": "Stable"},
+  "kind": "state",
+  "assertions": [{"id": "assertion:runtime", "text": "Project Alpha uses a hosted runtime.", "source_refs": ["source:new-note"], "observed_at": "2026-07-12"}],
+  "sources": [{"id": "source:new-note", "locator": "fixture://note/4"}],
+  "references": [{"id": "page:project-alpha", "resolves": true}, {"id": "revision:project-alpha-2", "resolves": true}],
+  "revision": {"id": "revision:contradiction", "prior_revision": "revision:project-alpha-2", "actor": "agent:fixture", "captured_at": "2026-07-12T13:20:00Z", "diff": "-Project Alpha uses a local runtime.\n+Project Alpha uses a hosted runtime.", "relation": "supersedes"},
+  "semantic_judgments": [
+    {"check": "duplication-and-contradiction", "status": "Flag", "scope": "the current runtime State and assertion:runtime", "evidence": ["The current owner says the runtime is local; the new source says it is hosted, with no superseding evidence."], "issues": ["contradiction"]}
+  ]
+}

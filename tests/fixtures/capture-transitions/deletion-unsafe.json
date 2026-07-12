@@ -1,0 +1,20 @@
+{
+  "capture_record_version": 1,
+  "id": "unsafe-deletion",
+  "operation": "delete",
+  "target": {"owner_id": "page:obsolete-adapter", "ownership": "Adapter", "type": "Public project", "canonical_owner_refs": ["page:project-alpha"]},
+  "maturity": {"from": "Stable", "to": "Stable"},
+  "kind": "state",
+  "assertions": [],
+  "sources": [{"id": "source:deletion-review", "locator": "fixture://audit/20"}],
+  "references": [
+    {"id": "page:obsolete-adapter", "resolves": true},
+    {"id": "page:project-alpha", "resolves": true},
+    {"id": "revision:obsolete-adapter-2", "resolves": true}
+  ],
+  "revision": {"id": "revision:unsafe-deletion", "prior_revision": "revision:obsolete-adapter-2", "actor": "agent:fixture", "captured_at": "2026-07-12T13:50:00Z", "diff": "-Obsolete public adapter.\n+<deleted from the Active Canonical View>", "relation": "invalidates"},
+  "deletion": {"content_inventory": {"unique_content_migrated": true}, "inbound_links": {"checked": true, "unrebound": ["page:public-index"]}, "recovery_ref": "revision:obsolete-adapter-2"},
+  "semantic_judgments": [
+    {"check": "deletion-safety", "status": "Flag", "scope": "inbound links to page:obsolete-adapter", "evidence": ["page:public-index still points to the page proposed for deletion."], "issues": ["unsafe-deletion"]}
+  ]
+}
