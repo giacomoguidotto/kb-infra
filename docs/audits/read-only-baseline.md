@@ -91,3 +91,53 @@ semantic coverage.
 The compiler performs no network calls and exposes no write operation. Provider
 reads happen before compilation; any later repair remains a separate exact-draft,
 approval-gated Capture workflow.
+
+## Baseline-to-frontier contract
+
+A compiled baseline is discovery evidence, not a migration plan. Build the live
+migration frontier from the record-level findings and relationship graph in the
+matching `manifest.json` and `findings.json`; aggregate counts or a narrative audit
+summary are not sufficient inputs.
+
+Before drafting tickets, confirm that the baseline pair has matching hashes and
+contract versions, every readable record has complete semantic assessments, and
+all partial access, discovery limits, unresolved exceptions, and concurrent drift
+remain explicit. A changed, unverifiable, or newly discovered target must be read
+again before it can enter an approval draft.
+
+Classify the record-level work in this order:
+
+1. **Global taxonomy decisions.** Settle provider-neutral decisions that every
+   area must share, such as canonical Type vocabulary, representation of
+   Ownership, Maturity, Kind and Revision Evidence, and the rules for redirects
+   and safe deletion.
+2. **Cross-area Ownership conflicts.** Resolve competing canonical owners and
+   decide which surfaces become Adapters before an area-local ticket can depend on
+   those owners.
+3. **Area-local reconciliation batches.** Select one bounded owner subgraph and
+   reconcile all applicable findings end to end. Split the work again whenever
+   one fresh agent context or one reviewable Approval Draft cannot hold it. Do not
+   leave a ticket for all remaining pages.
+4. **Final global re-audit.** Block this ticket on every reconciliation batch and
+   regenerate the full two-pass baseline. Compare coverage, unresolved exceptions,
+   relationships, semantic assessments, and concurrent drift with the starting
+   baseline without treating an access limitation as success.
+
+Every write-bearing ticket must require one approval-batched Capture run that:
+
+- re-reads every target plus its inbound and outbound references immediately
+  before drafting, and stops for a refreshed draft when any fingerprint drifted;
+- shows exact before and after content, semantic decisions, deletions, preserved
+  references, and Revision Evidence before the first write;
+- applies only the approved batch, preserves stable identities, Revision Evidence,
+  and a rollback path, and deletes only after canonical ownership, replacements or
+  redirects, and inbound references are resolved;
+- reads back every mutation and deletion, verifies the retained Revision Evidence,
+  and reruns the bounded area audit before reporting completion.
+
+The issue tracker is the live frontier source of truth. Before publication, present
+the exact ticket tree and blocking graph for approval. After approval, publish in
+dependency order so every blocker references a real ticket. Tracker issues name
+the provider-neutral area and selection rule; provider identifiers, personal page
+content, manifests, and findings stay under gitignored `local/audits/`. Commit this
+operating contract, not a duplicate inventory of issue bodies.
