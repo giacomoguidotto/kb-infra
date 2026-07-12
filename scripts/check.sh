@@ -162,7 +162,7 @@ fi
 
 # 10. Provider-neutral executable contracts keep their black-box regression tests.
 if ! python3 -m unittest discover -s tests -p 'test_*.py'; then
-  err 'audit baseline tests failed'
+  err 'executable contract tests failed'
 fi
 
 if [ "$fail" -ne 0 ]; then

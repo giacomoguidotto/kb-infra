@@ -1,0 +1,98 @@
+{
+  "capture_record_version": 1,
+  "id": "stable-state",
+  "operation": "replace-section",
+  "target": {
+    "owner_id": "page:project-alpha",
+    "ownership": "Canonical",
+    "type": "Project"
+  },
+  "maturity": {
+    "from": "Raw",
+    "to": "Stable"
+  },
+  "kind": "state",
+  "assertions": [
+    {
+      "id": "assertion:runtime",
+      "text": "Project Alpha uses the local harness runtime.",
+      "source_refs": ["source:run-log"],
+      "observed_at": "2026-07-12"
+    }
+  ],
+  "sources": [
+    {
+      "id": "source:run-log",
+      "locator": "fixture://run-log/42"
+    }
+  ],
+  "references": [
+    {
+      "id": "page:project-alpha",
+      "resolves": true
+    },
+    {
+      "id": "revision:project-alpha-1",
+      "resolves": true
+    }
+  ],
+  "revision": {
+    "id": "revision:stable-state",
+    "prior_revision": "revision:project-alpha-1",
+    "actor": "agent:fixture",
+    "captured_at": "2026-07-12T12:00:00Z",
+    "diff": "-Project Alpha used the hosted runtime.\n+Project Alpha uses the local harness runtime.",
+    "relation": "supersedes"
+  },
+  "semantic_judgments": [
+    {
+      "check": "ownership",
+      "status": "Pass",
+      "scope": "page:project-alpha and linked owners",
+      "evidence": ["The owner comparison found no competing owner."],
+      "issues": []
+    },
+    {
+      "check": "coverage",
+      "status": "Pass",
+      "scope": "source:run-log assertions",
+      "evidence": ["assertion:runtime maps to the replacement State."],
+      "issues": []
+    },
+    {
+      "check": "preservation",
+      "status": "Pass",
+      "scope": "the replaced runtime State",
+      "evidence": ["The prior revision and exact diff preserve the old value."],
+      "issues": []
+    },
+    {
+      "check": "faithfulness",
+      "status": "Pass",
+      "scope": "assertion:runtime",
+      "evidence": ["The assertion states only the runtime shown by source:run-log."],
+      "issues": []
+    },
+    {
+      "check": "duplication-and-contradiction",
+      "status": "Pass",
+      "scope": "the affected section and linked owners",
+      "evidence": ["No duplicate or contradictory runtime assertion was found."],
+      "issues": []
+    },
+    {
+      "check": "kind-and-semantic-force",
+      "status": "Pass",
+      "scope": "assertion:runtime as State",
+      "evidence": ["The assertion states a verified current condition without implying a decision or direction."],
+      "issues": []
+    },
+    {
+      "check": "deletion-safety",
+      "status": "Not applicable",
+      "scope": "operation replace-section",
+      "evidence": ["The transition does not delete a page."],
+      "issues": []
+    }
+  ]
+}

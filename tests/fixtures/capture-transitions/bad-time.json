@@ -1,0 +1,12 @@
+{
+  "capture_record_version": 1,
+  "id": "bad-time",
+  "operation": "update",
+  "target": {"owner_id": "page:project-alpha", "ownership": "Canonical", "type": "Project"},
+  "maturity": {"from": "Raw", "to": "Stable"},
+  "kind": "state",
+  "assertions": [{"id": "assertion:state", "text": "Project Alpha is active today.", "source_refs": ["source:note"], "observed_at": "today"}],
+  "sources": [{"id": "source:note", "locator": "fixture://note/2"}],
+  "references": [{"id": "page:project-alpha", "resolves": true}, {"id": "revision:project-alpha-1", "resolves": true}],
+  "revision": {"id": "revision:bad-time", "prior_revision": "revision:project-alpha-1", "actor": "agent:fixture", "captured_at": "2026-07-12", "diff": "-Project Alpha was inactive.\n+Project Alpha is active today.", "relation": "supersedes"}
+}

@@ -1,0 +1,15 @@
+{
+  "capture_record_version": 1,
+  "id": "missing-evidence",
+  "operation": "create",
+  "target": {"owner_id": "page:project-alpha", "ownership": "Canonical", "type": "Project"},
+  "maturity": {"from": "Raw", "to": "Stable"},
+  "kind": "decision",
+  "assertions": [{"id": "assertion:decision", "text": "Project Alpha will use a hosted runtime.", "choice": "Use a hosted runtime.", "source_refs": []}],
+  "sources": [],
+  "references": [{"id": "page:project-alpha", "resolves": true}, {"id": "revision:project-alpha-2", "resolves": true}],
+  "revision": {"id": "revision:missing-evidence", "prior_revision": "revision:project-alpha-2", "actor": "agent:fixture", "captured_at": "2026-07-12T13:30:00Z", "diff": "-No runtime Decision.\n+Project Alpha will use a hosted runtime.", "relation": "revises"},
+  "semantic_judgments": [
+    {"check": "faithfulness", "status": "Flag", "scope": "assertion:decision and all supplied sources", "evidence": ["No supplied source supports this commitment."], "issues": ["unsupported-assertion"]}
+  ]
+}
