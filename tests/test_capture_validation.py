@@ -201,6 +201,41 @@ class CaptureValidationTest(unittest.TestCase):
         matching = [result for result in report["results"] if result["check"] == "time-and-provenance"]
         self.assertEqual(matching[0]["status"], "Flag")
 
+    def test_captured_at_accepts_a_registered_provider_apply_time_derivation(self) -> None:
+        record = json.loads((FIXTURES / "stable.json").read_text())
+        record["revision"]["captured_at"] = {
+            "derivation": "provider-created-time",
+            "field": "Captured at",
+        }
+
+        completed, report = self.validate_record(record)
+
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertEqual(report["disposition"], "Pass")
+        matching = [
+            result
+            for result in report["results"]
+            if result["check"] == "time-and-provenance"
+        ]
+        self.assertEqual(matching[0]["status"], "Pass")
+
+    def test_captured_at_rejects_an_unregistered_apply_time_derivation(self) -> None:
+        record = json.loads((FIXTURES / "stable.json").read_text())
+        record["revision"]["captured_at"] = {
+            "derivation": "draft-time",
+            "field": "Drafted at",
+        }
+
+        completed, report = self.validate_record(record)
+
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        matching = [
+            result
+            for result in report["results"]
+            if result["check"] == "time-and-provenance"
+        ]
+        self.assertEqual(matching[0]["status"], "Flag")
+
     def test_rule_requires_scope_and_normative_force(self) -> None:
         record = json.loads((FIXTURES / "stable.json").read_text())
         record["kind"] = "rule"

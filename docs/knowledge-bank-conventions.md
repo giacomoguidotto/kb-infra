@@ -198,6 +198,11 @@ or `invalidates` relation. An Approval Draft counts as provenance only when it i
 durably retained and linked to the resulting revision. Raw content requires
 stronger visible provenance than Stable content.
 
+Before approval, a transition record may represent `captured_at` with the
+registered `provider-created-time` derivation and the exact provider field that
+will assign it. It must not substitute the draft timestamp. Read-back replaces
+the derivation with, and verifies, the provider-assigned absolute time.
+
 ## Reconciliation
 
 Capture reconciles the Active Canonical View; it does not merely append notes.
