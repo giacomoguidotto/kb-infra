@@ -1,348 +1,180 @@
 # Knowledge Bank Conventions
 
-These conventions define how agents author and maintain the Knowledge Bank. The
-KB remains the source of truth; this repo holds the provider-agnostic operating
-contract. `setup-kb-infra` discovers how the concrete provider maps to it.
-
-The contract is based on the accepted
-[semantic-authoring research](research/semantic-authoring-and-okf.md) and
+These conventions define how agents author the KB. The KB is the source of truth;
+this repo holds the provider-neutral rules. See the supporting
+[research](research/semantic-authoring-and-okf.md) and
 [ADR 0012](adr/0012-semantic-authoring-and-non-destructive-reconciliation.md).
 
 ## Global Invariants
 
-Every page and Capture draft must satisfy three invariants:
+1. **Avoid duplication.** Keep one canonical owner per meaning; reconcile or link
+   instead of copying.
+2. **Be concise without loss.** Use the shortest wording that preserves meaning,
+   scope, qualifiers, time, rationale, and useful evidence.
+3. **Serve agents and people.** Make semantics explicit enough to parse and natural
+   enough to browse.
 
-1. Avoid duplication: one canonical owner per meaning; link or reconcile instead
-   of copying.
-2. Prefer the shortest wording that preserves meaning, scope, qualifiers, and
-   evidence.
-3. Make semantics explicit enough for an agent to parse and natural enough for a
-   person to browse.
+These rules apply everywhere without imposing a universal page template.
 
-These invariants govern all page Types, Ownership values, Maturity values, and
-Kinds. They do not require a rigid page profile.
+## Active View And Metadata
 
-## Database Shape
+Keep the active KB relevant. Preserve history through provider revisions or a bound
+evidence surface, not by keeping obsolete pages in ordinary views. Before deleting
+anything, migrate unique meaning, rebind inbound links, and confirm recovery.
 
-The main KB database is the eagle-eye view of the Knowledge Bank. Keep visible
-views sparse. Do not add maintenance-only metadata to the main table unless it
-improves day-to-day scanning.
+Use hierarchy before metadata: a page's parent and location should explain its
+context. Add only properties that improve ownership, retrieval, or everyday use.
 
-Use hierarchy as the primary classifier. A page's parent and location should
-explain its context before a property does. Keep the fewest pages that preserve
-clear ownership and retrieval. Prefer strengthening an existing owner page over
-creating another page.
+Keep four semantic axes independent:
 
-Maintain an **Active Canonical View** for people and agents. Presence in that view
-implies relevance. Do not keep irrelevant pages merely to preserve history: first
-migrate unique durable content, rebind inbound links, and ensure the deletion or
-invalidation is recoverable through Revision Evidence.
-
-## Orthogonal Axes
-
-Describe a page or section with four independent questions:
-
-| Axis | Question | Values |
+| Axis | Meaning | Values |
 | --- | --- | --- |
-| Type | What does the page represent? | Provider- or domain-defined. |
-| Ownership | Who owns this meaning? | `Canonical`, `Adapter`; `Unresolved` only during migration. |
-| Maturity | How editorially processed is the content? | `Raw`, `Developing`, `Stable`. |
-| Kind | What does this section or unit mean? | The versioned registry below. |
+| Type | What the page represents | Provider- or domain-defined |
+| Ownership | Where meaning is owned | `Canonical`, `Adapter`; migration-only `Unresolved` |
+| Maturity | How processed the content is | `Raw`, `Developing`, `Stable` |
+| Kind | What a section or unit means | Registry below |
 
-Do not derive one axis from another. A project Type can contain Stable State,
-Developing Direction, and Raw Evidence. An Adapter can be Stable without becoming
-Canonical. Orthogonality does not make every combination valid: Kind-specific
-rules and the quality gate still apply.
+Do not use Ownership for trust, relevance, lifecycle, or maturity. Do not infer one
+axis from another.
 
 ### Ownership
 
-Choose one canonical owner for each fact, chapter, lesson, term, or policy. Other
-pages link to the owner instead of restating it. Canonical ownership may be
-implicit only after a complete baseline audit has confirmed one owner and the
-migration is complete. Capture must still check for competing owners before every
-write.
+A Canonical page owns its subject. An Adapter presents selected meaning for a
+purpose and links back to its owner. Until migration establishes an owner,
+`Unresolved` is honest and blocks Capture.
 
-An Adapter presents selected knowledge for a purpose. Mark it explicitly and link
-each adapted meaning to its canonical owner. An Adapter must not silently become a
-second owner.
-
-Before that audit and migration are complete, a missing marker does not imply
-Canonical ownership. Capture must establish the owner explicitly or mark ambiguous
-ownership `Unresolved`, never silently `Canonical`. Unresolved ownership blocks a
-Capture write. Source credibility and trustworthiness belong in provenance; they
-are not Ownership values.
+Check for competing owners before each write. Store source trust in provenance,
+not Ownership.
 
 ### Maturity
 
-Maturity measures editorial processing only:
+- `Raw`: new intake or unaudited legacy content.
+- `Developing`: reconciled and useful, but explicitly unsettled.
+- `Stable`: reconciled, supported, and safe to reuse.
 
-- `Raw`: new intake or unaudited legacy content. It does not silently participate
-  in ordinary answers.
-- `Developing`: reconciled, approved, and useful, but explicitly unsettled or
-  expected to change.
-- `Stable`: reconciled, approved, sufficiently supported, and safe to reuse.
-
-All incoming content defaults to `Raw`; retained knowledge should normally progress
-toward `Stable`. Stable does not mean immutable, certain, true forever, or final.
-Volatility belongs in time metadata, uncertainty in the prose, and relevance in
-the Active Canonical View.
-
-The normal transition is:
-
-```text
-Raw -> Semantic Quality Gate -> Stable | Developing | retained Raw
-```
-
-Retained Raw content in the Active Canonical View must name its owner, provenance,
-retention reason, and next review or distillation action. `Archive` and `Final` are
-not Maturity values.
+New intake defaults to Raw; retained knowledge should normally progress to Stable.
+Stable means reusable, not immutable or eternally true. Express uncertainty in the
+content, volatility in time, and relevance through presence in the active view.
 
 ## Kind Registry
 
-The initial registry is version 1. Each Kind has a stable identifier independent
-of its displayed heading. An agent must use explicit Kind metadata or a registered
-mapping; it must not infer Kind from arbitrary heading text. Preferred headings
-may be adapted for readability, while registered aliases remain retrieval aids.
+Use one dominant Kind per section. Store the stable ID in provider metadata or a
+registered mapping; headings may use readable aliases.
 
-| ID | Kind | Meaning and semantic force | Preferred heading; aliases |
-| --- | --- | --- | --- |
-| `state` | State | A verified current condition. Use `is`, `has`, or `uses`; show `as of` when volatility changes interpretation. | State; Current state, Status |
-| `direction` | Direction | An aim or exploration, not a settled choice. Use `aims to`, `is intended to`, or `is exploring`. | Direction; Intent, Goal |
-| `decision` | Decision | A selected option or commitment. State the choice before rationale and alternatives. | Decisions; Choice, Commitment |
-| `rule` | Rule | A scoped norm. `must` has no exception, `should` is the default with justified exceptions, and `may` grants permission. | Rules; Policy, Constraint |
-| `preference` | Preference | What a named subject favors or avoids, including strength when material. | Preferences; Tendency |
-| `procedure` | Procedure | Ordered actions with an observable outcome. Use imperative steps. | Procedure; Steps, How to |
-| `event` | Event | Something that happened. Use an absolute date when known and past tense. | Events; History, Timeline |
-| `evidence` | Evidence | Material supporting or qualifying a claim, with provenance. | Evidence; Sources, Basis |
-| `open-item` | Open item | An unresolved question or outcome requiring follow-up. Phrase it directly. | Open questions; Follow-up, Unknowns |
-| `schema` | Schema | A reusable shape, field contract, or controlled vocabulary. | Schema; Fields, Vocabulary |
-| `example` | Example | A concrete illustration that does not itself define the rule. | Examples; Sample |
-| `citation` | Citation | An external source reference with enough identity to retrieve it. | Citations; References |
+| ID | Kind | Semantic force |
+| --- | --- | --- |
+| `state` | State | A current condition; name the subject and observation time when volatility matters. |
+| `direction` | Direction | An aim or exploration, not a settled choice. |
+| `decision` | Decision | A selected option or commitment; state the choice first. |
+| `rule` | Rule | A scoped norm: `must`, `should`, or `may`. |
+| `preference` | Preference | What a named subject favors or avoids. |
+| `procedure` | Procedure | Ordered actions with an observable result. |
+| `event` | Event | Something that happened; use past tense and an absolute date when known. |
+| `evidence` | Evidence | Material supporting or qualifying a claim, with provenance. |
+| `open-item` | Open item | An unresolved question or outcome requiring follow-up. |
+| `schema` | Schema | A reusable shape, field contract, or vocabulary. |
+| `example` | Example | An illustration that does not define the rule. |
+| `citation` | Citation | A retrievable external source reference. |
 
-Treat semantic-force phrases as preferred controlled authoring, not a closed
-dictionary. Lowercase `must`, `should`, and `may` are this project's contract; they
-do not claim IETF BCP 14 semantics. Every Rule needs a scope. Do not use `will`
-where it could mean either a prediction or a commitment. State uncertainty
-explicitly.
+Add or retire a Kind only after repeated captures reveal meaning the registry cannot
+represent. Preserve stable IDs or publish a migration mapping.
 
-Add, merge, or retire a Kind only after repeated captures expose ambiguity that the
-registry cannot represent. Version the change and preserve stable IDs or an
-explicit migration mapping.
+## Page And Section Structure
 
-## Page and Section Structure
+- Keep one canonical subject per page and one primary claim, instruction, or
+  question per knowledge unit.
+- Start with a one-sentence description.
+- Put current or actionable content before supporting history.
+- Keep qualifiers, rationale, and evidence beside the claim they affect.
+- Put open items and citations last when adjacency does not require otherwise.
+- Create no empty sections or decorative structure.
 
-Keep one canonical subject per page and one dominant Kind per section. A knowledge
-unit should carry one primary claim, instruction, or question while retaining the
-subject, scope, qualifiers, time, uncertainty, and adjacent rationale or evidence
-needed for independent interpretation.
+Use the least complex shape that preserves relationships: prose for one assertion,
+bullets for unordered peers, numbers for sequence, labelled entries for definitions,
+and tables only for repeated comparable records. Keep examples distinct from rules.
 
-Do not create universal page profiles, empty sections, or decorative structure.
-Order what exists by these rules:
+## Language And Naming
 
-1. Put a one-sentence description first.
-2. Put current or actionable content before supporting history and evidence.
-3. Put Open questions and Citations last.
+Use one canonical term per concept and keep aliases at its owner for retrieval.
+Expand uncommon abbreviations and flag uncertain equivalence. Avoid ambiguous
+`will`; name a prediction, direction, or decision.
 
-Claim-to-qualifier, rationale, and evidence adjacency overrides the global order.
-Citations may remain last when inline correspondence still makes the supporting
-source unambiguous.
+Project pages usually use stable repository or product slugs. Other pages use clear
+human names; the parent path may supply context. Add title context only when search
+results would otherwise be ambiguous.
 
-Choose the least complex presentation that preserves relationships:
+Tone comes from the bound KB or target surface, never from the length, mood, or
+verbosity of the preceding conversation. Without a binding, write in a neutral,
+direct, calm voice.
 
-- use short prose for one assertion or a tightly coupled explanation;
-- use parallel bullets for two or more unordered peers;
-- use numbers for ordered or ranked items;
-- use a description or labelled list for term-definition pairs;
-- use a table for repeated records with comparable attributes;
-- separate examples from rules while keeping them adjacent when needed;
-- number external Citations and use inline correspondence when source mapping
-  would otherwise be unclear.
+## Time And Revision Evidence
 
-## Naming and Terminology
+Keep temporal meanings distinct:
 
-Use names that make retrieval unambiguous without making the workspace stiff.
-Project pages should usually use stable repo or product slugs—the same handle used
-on GitHub and in local paths. Put the human-readable description in the body.
+- `observed_at`: when a State was observed;
+- `event_at`: when an Event happened;
+- `valid_from` / `valid_until`: when knowledge applies;
+- `captured_at`: when an approved mutation entered the KB.
 
-Use human-readable names for life areas, credentials, milestones, lesson
-collections, strategies, and public concepts. Generic names are allowed only when
-the parent path disambiguates them. If search results are ambiguous, add context to
-the title.
+Use absolute anchors; never substitute one time for another.
 
-Use one canonical term for one concept. Keep aliases with the term's owner as
-retrieval aids, not duplicate definitions. Expand uncommon abbreviations. Flag
-uncertain equivalence instead of silently merging concepts. Cross-cutting terms
-must have one vocabulary owner.
+Every accepted mutation must remain recoverable through provider history or the
+bound Revision Evidence surface. Retain the source, actor, capture time, affected
+owner, prior revision, and exact change. When meaning changes, identify whether the
+new revision supersedes, revises, or invalidates the prior one. A changed State also
+keeps its observation time.
 
-## Time and Provenance
+## Reconciliation And Capture
 
-Use four distinct temporal meanings:
+Capture maintains the active canonical view; it does not append session summaries.
 
-- `observed_at`: when a State was observed. Retain it internally for every State;
-  add visible `as of` only when volatility changes interpretation.
-- `event_at`: when an Event happened. Use an exact known date and show it with the
-  Event.
-- `valid_from` and `valid_until`: the optional interval in which knowledge applies.
-  Record either only when validity changes interpretation.
-- `captured_at`: when an accepted mutation entered the KB. Retain it for every
-  mutation.
+Before drafting:
 
-Never use relative time without an absolute anchor. Do not substitute one temporal
-meaning for another.
+1. Read the complete affected section, live schema, likely owner, and competing
+   owners.
+2. Compare each new meaning with current content and relevant relations.
+3. Preserve, merge, replace, append, or remove it deliberately.
+4. Rewrite the smallest coherent section that expresses the result.
+5. Append only chronological Events or new peers in an existing set.
+6. Show the exact current and proposed result in the approval draft.
 
-Visible citations and dates are selective; Revision Evidence is universal. Every
-accepted mutation must retain the source, actor, `captured_at`, affected owner,
-revision identity, prior revision, and exact diff, plus `observed_at` for every
-State it changes. When meaning changes, record an explicit `supersedes`, `revises`,
-or `invalidates` relation. An Approval Draft counts as provenance only when it is
-durably retained and linked to the resulting revision. Raw content requires
-stronger visible provenance than Stable content.
+Check ownership, source coverage, faithfulness, duplication, contradiction,
+semantic force, time, and deletion safety. Unresolved ownership, contradiction,
+unsupported content, material omission, or unsafe deletion blocks the write. A
+formal machine-readable report is unnecessary; the approval draft must make the
+evidence and any gap understandable.
 
-Before approval, a transition record may represent `captured_at` with the
-registered `provider-created-time` derivation and the exact provider field that
-will assign it. It must not substitute the draft timestamp. Read-back replaces
-the derivation with, and verifies, the provider-assigned absolute time.
+Immediately before applying an approved draft, re-read the affected targets. Drift
+invalidates approval. After applying, read back every result.
 
-## Reconciliation
+## Lookup Markers
 
-Capture reconciles the Active Canonical View; it does not merely append notes.
-Before drafting a write:
-
-1. Read the complete affected section and its owner context.
-2. Compare every new assertion with current content and linked owners.
-3. Preserve, merge, replace, or delete each affected meaning deliberately.
-4. Rewrite the smallest coherent section that can express the result.
-5. Append only a genuine chronological Event or a new peer in an existing set.
-6. Remove superseded wording in the same write.
-7. Show the exact before/after diff and preserved Revision Evidence.
-
-Reconciliation may simplify the active page, but it must not destroy history.
-
-## Semantic Quality Gate
-
-Every Approval Draft must show the gate, either visible or collapsed. Each result
-uses `Pass`, `Flag`, `Not checked`, or `Not applicable` and includes the checked
-scope plus evidence. A bare `Pass` is invalid.
-
-Separate deterministic checks—allowed Kind, absolute date syntax, link resolution,
-required fields—from semantic judgments—correct owner, contradiction, duplication,
-faithful compression, and material omission.
-
-At minimum, the gate covers:
-
-| Check | Required evidence |
-| --- | --- |
-| Ownership | Canonical owner checked, competing owners considered, Adapter links identified. |
-| Coverage | Source assertions mapped to preserved, changed, omitted, or rejected content. |
-| Preservation | Qualifiers, uncertainty, time, rationale, and unique durable content accounted for. |
-| Faithfulness | Draft claims trace to sources without unsupported strengthening. |
-| Duplication and contradiction | Affected section and linked owners compared. |
-| Kind and semantic force | Stable Kind ID and Kind-specific constraints checked. |
-| Time and provenance | Required anchors, source, actor, and revision evidence present. |
-| Deletion safety | Unique content, inbound links, and recovery path checked when deleting. |
-
-Unresolved ownership, contradiction, material omission, unsupported assertion, or
-unsafe deletion blocks the write. Human approval is a control, not proof.
-
-### Executable Validation
-
-The provider-neutral Capture transition record is versioned in
-[`contracts/capture-transition-v1.json`](../contracts/capture-transition-v1.json).
-The Capture skill carries its runtime contract and validator so a materialized
-skill does not depend on a `kb-infra` checkout. Setup copies the complete package
-byte-identically; the repository contract remains an enforced compatibility copy,
-and the root command below delegates to the packaged validator.
-Validate one JSON record with:
-
-```sh
-python3 scripts/validate-capture-transition.py <record.json>
-```
-
-The validator generates deterministic results for the record contract, operation,
-provider-defined Type, registered Kind and structurally expressible Kind
-constraints, Maturity, Ownership structure, source provenance, timezone-aware
-absolute time, exact Revision Evidence, references, per-assertion Adapter links,
-retained Raw context, and deletion structure. Lifecycle stays in the operation: a
-deletion keeps its content Maturity unchanged and uses an `invalidates` revision
-relation. The validator carries supplied semantic judgments into separate result
-rows only when each judgment has a registered check, status, checked scope,
-evidence, and issue code. Missing judgments become `Not checked`; malformed,
-unknown, or duplicate judgments are deterministic contract failures.
-In particular, Kind registration and required assertion fields are deterministic;
-whether the prose preserves the Kind's semantic force is a separate
-`kind-and-semantic-force` judgment and is never inferred from structure.
-
-The report disposition is `Pass`, `Flag`, or `Block`. Blocking deterministic
-failures and the five contract-defined semantic blockers return exit status 2;
-`Pass` and non-blocking `Flag` return 0. Every report still sets `write_allowed` to
-false and records human approval as required and `Not checked`: validation never
-approves a KB write. Representative records live in
-[`tests/fixtures/capture-transitions/`](../tests/fixtures/capture-transitions/), and
-the repository check runs their black-box validation tests.
-
-When a compiled read-only audit baseline informed discovery, pass its matching
-`manifest.json` and `findings.json` with `--audit-manifest` and
-`--audit-findings`. The validator checks their hash binding, schema and
-Kind-registry versions, target coverage, access, and concurrent-drift state. This makes baseline evidence
-reproducible; it never replaces Capture's fresh live reads.
-
-## Follow-up Markers
-
-Use a follow-up marker for a deferred or time-ambiguous knowledge update that a
-future lookup should ask about. It is an `Open item`, not a task status.
+Use a follow-up marker for a deferred knowledge question, not a task status:
 
 ```md
 Follow-up: ask again on YYYY-MM-DD: <short question or update prompt>.
 ```
 
-- Put it near the start of the page body, after any structural block that must stay
-  first.
-- Use an absolute ISO date in the user's local calendar.
-- Keep the prompt short enough to ask directly.
-- Use a page-body marker instead of a dated task property when the update is a
-  deferred knowledge question rather than a dated task.
-- Remove or replace it only through an approved Capture write after resolution or
-  intentional deferral.
+Use an absolute local date and keep the marker near the content it affects. Remove
+or defer it only through approved Capture.
 
-## Final Form Markers
-
-A final form marker is a rare lookup interaction directive, not Maturity. Use it
-only when the user explicitly says a topic should no longer prompt questions.
+Use a final-form marker only when the user explicitly closes a topic to future
+questions:
 
 ```md
 Lookup: this topic is in its final form; its content should not be questioned unless the user explicitly reopens it.
 ```
 
-Put it near the content it covers. Lookup skips that content until the user reopens
-it. Add, remove, or change the marker only through an approved Capture write.
+This is a lookup directive, not Maturity.
 
-## Drift Audits
+## Audits And OKF
 
-Drift audits are read-only and reproducible. A full audit produces a coverage
-manifest with page IDs, inaccessible or partial records, timestamp, convention and
-Kind-registry version, and unresolved exceptions. It checks:
+Drift audits are read-only. Check duplicates, competing owners, ambiguous names,
+misused metadata, unsupported Raw reuse, Kind mismatch, missing time or provenance,
+stale State, due follow-ups, broken relations, unclear hierarchy, and irrelevant
+active pages. Keep private snapshots under gitignored `local/`; do not commit a KB
+mirror or require a repository compiler.
 
-- duplicate meanings, ambiguous names, and competing owners;
-- Unresolved Ownership or Adapters that have started owning canonical facts;
-- Raw content used as Stable knowledge or retained without required context;
-- Kind or semantic-force mismatch;
-- missing time, provenance, revision evidence, or source correspondence;
-- stale State, due Follow-up markers, relative time, and broken relations;
-- sparse high-importance pages, unclear parentage, and irrelevant active pages.
-
-Before each migration batch, re-read its targets and inbound and outbound
-relations. After a write, read back the result and run local checks. After all
-batches, rerun the global audit. Preserve stable page identities and a rollback
-path. Audits propose exact drafts; they never write to the KB.
-
-Use the [reproducible read-only baseline](audits/read-only-baseline.md) snapshot
-envelope and compiler for full audits. Live snapshots and findings remain in
-gitignored `local/audits/`; only the provider-neutral contract is committed.
-
-## OKF Boundary
-
-Open Knowledge Format is a future read-only interchange adapter, not the KB's
-native semantic contract. An adapter must pin an OKF version or commit, map stable
-provider page IDs rather than titles or hierarchy, preserve unknown fields, and
-export Kinds through a documented producer extension instead of overloading page
-Type. KB validation remains stricter than OKF conformance.
+Open Knowledge Format remains a future read-only interchange adapter, not the KB's
+native contract. Pin its version, map stable provider IDs, preserve unknown fields,
+and export Kinds through a documented extension.

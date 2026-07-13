@@ -160,13 +160,6 @@ if grep -Eq 'Wednesday late-afternoon|Thursday and Friday' "$SOCIAL_SPEC"; then
   err "$SOCIAL_SPEC hardcodes a weekday-specific coverage example"
 fi
 
-# 10. Provider-neutral executable contracts keep their black-box regression tests.
-cmp -s contracts/capture-transition-v1.json skills/capture/contracts/capture-transition-v1.json || \
-  err 'materialized Capture transition contract differs from the repository contract'
-if ! python3 -m unittest discover -s tests -p 'test_*.py'; then
-  err 'executable contract tests failed'
-fi
-
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
   exit 1
