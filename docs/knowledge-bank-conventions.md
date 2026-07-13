@@ -81,6 +81,13 @@ represent. Preserve stable IDs or publish a migration mapping.
 
 ## Page And Section Structure
 
+Treat rows whose meaning is fully carried by a structured table's schema and fields
+as records, not knowledge pages. The data source supplies their type and context; do
+not force page-level Ownership, Maturity, Kind, or semantic prose into a Notes field
+or blank page body. Use table and hierarchy context to disambiguate repeated titles.
+Treat a row as a knowledge page only when its page body owns independent durable
+knowledge.
+
 - Keep one canonical subject per page and one primary claim, instruction, or
   question per knowledge unit.
 - Start with a one-sentence description.
