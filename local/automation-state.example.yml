@@ -1,0 +1,5 @@
+# Setup materializes this schema in harness-owned automation-local state for each
+# enabled automation. The automation updates the timestamp only after it reaches its
+# defined end state.
+
+last_completed_at: "" # ISO 8601 timestamp; blank until a completion is verified

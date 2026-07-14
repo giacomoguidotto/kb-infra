@@ -39,10 +39,17 @@ Injected into every composed prompt:
 - Keep public claims source-backed and public-safe; do not turn vibes into facts.
 - Do not duplicate KB knowledge into repo files or local state; the KB is the
   knowledge ledger and each sink is its own work queue.
-- Local state is disposable: use gitignored `local/` only for mechanical hints (last
-  run time, refresh dates, commit cursors), never copied KB facts, answered
-  questions, or approved/rejected/suppression decisions. Deleting it may make the
-  next run slower, never less correct.
+- Resolved harness-owned automation-local state is disposable: use it only for
+  mechanical hints (last completion time, refresh dates, commit cursors), never
+  copied KB facts, answered questions, or approved/rejected/suppression decisions.
+  Deleting it may make the next run slower, never less correct.
+- Read `last_completed_at` from the resolved automation-local state location at startup.
+  It records the last successful completion, not the last invocation. Update it to
+  the current ISO 8601 timestamp only after the run reaches its defined End state and
+  all required automation-owned work is complete. A fully checked no-op may count as
+  complete. Human follow-up the automation is forbidden to perform does not prevent
+  completion. Do not update it while waiting for required approval or clarification,
+  or when the run is blocked, stopped on an error, or interrupted.
 
 ## Vocabulary
 

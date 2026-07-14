@@ -2,6 +2,7 @@
 local/*
 !local/bindings.example.yml
 !local/installed.example.yml
+!local/automation-state.example.yml
 
 # OS/editor noise
 .DS_Store

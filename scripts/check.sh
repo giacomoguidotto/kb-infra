@@ -204,6 +204,52 @@ grep -q 'invalidation>div { min-width:0; }' "$CAPTURE_DRAFT" || \
 grep -q 'grid-template-columns:minmax(0,1fr)' "$CAPTURE_DRAFT" || \
   err "$CAPTURE_DRAFT does not collapse invalidation to a shrinkable mobile column"
 
+# 11. Every automation gets a disposable runtime-state file whose completion
+# timestamp advances only after the automation reaches its defined end state.
+AUTOMATION_STATE_EXAMPLE='local/automation-state.example.yml'
+if [ ! -f "$AUTOMATION_STATE_EXAMPLE" ]; then
+  err "$AUTOMATION_STATE_EXAMPLE is missing"
+else
+  grep -q '^last_completed_at:' "$AUTOMATION_STATE_EXAMPLE" || \
+    err "$AUTOMATION_STATE_EXAMPLE does not define last_completed_at"
+fi
+grep -q 'last_completed_at' docs/automations/_preamble.md || \
+  err '_preamble.md does not define the completion timestamp rule'
+grep -q 'harness-owned automation-local state' docs/automations/_preamble.md || \
+  err '_preamble.md does not route completion state to the harness'
+grep -q 'resolved automation-local state location' docs/automations/_preamble.md || \
+  err '_preamble.md assumes the harness exposes a state file'
+if grep -q 'automation-local state file' docs/automations/_preamble.md; then
+  err '_preamble.md is not compatible with structured harness state'
+fi
+grep -q 'harness-owned automation-local state' "$AUTOMATION_STATE_EXAMPLE" || \
+  err "$AUTOMATION_STATE_EXAMPLE does not describe harness-owned state"
+if grep -q 'local/state' docs/automations/_preamble.md "$AUTOMATION_STATE_EXAMPLE"; then
+  err 'automation completion contract still points runtime state into kb-infra/local'
+fi
+grep -q 'waiting for required approval or clarification' docs/automations/_preamble.md || \
+  err '_preamble.md lets reply-gated runs advance the completion timestamp'
+grep -q 'blocked, stopped on an error' docs/automations/_preamble.md || \
+  err '_preamble.md lets blocked or failed runs advance the completion timestamp'
+grep -q '## Local state' skills/setup-kb-infra/SKILL.md || \
+  err 'setup skill does not compose the automation-local state path'
+grep -q 'harness-owned automation-local state' skills/setup-kb-infra/SKILL.md || \
+  err 'setup skill does not define harness-owned runtime state'
+grep -q 'Never point runtime state into the kb-infra checkout' skills/setup-kb-infra/SKILL.md || \
+  err 'setup skill allows the spec checkout to become a runtime dependency'
+if grep -q 'local/state/<automation>.yml' skills/setup-kb-infra/SKILL.md; then
+  err 'setup skill stores runtime state inside the kb-infra checkout'
+fi
+if grep -q 'its local state path' skills/setup-kb-infra/SKILL.md; then
+  err 'setup skill completion criterion excludes structured harness state'
+fi
+grep -q 'preserve its existing `last_completed_at` value' skills/setup-kb-infra/SKILL.md || \
+  err 'setup skill may erase completion history during reconcile'
+for spec in docs/automations/knowledge-harvest.md docs/automations/job-hunt-advance-audit.md; do
+  grep -q '^End state:' "$spec" || \
+    err "$spec has no explicit end state for last_completed_at"
+done
+
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
   exit 1
