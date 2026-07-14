@@ -160,6 +160,23 @@ if grep -Eq 'Wednesday late-afternoon|Thursday and Friday' "$SOCIAL_SPEC"; then
   err "$SOCIAL_SPEC hardcodes a weekday-specific coverage example"
 fi
 
+# 10. Replacement capture drafts visibly invalidate an explicitly rejected draft.
+CAPTURE_SKILL='skills/capture/SKILL.md'
+CAPTURE_DRAFT='skills/capture/HTML-DRAFT.md'
+EXAMPLE_DRAFT='assets/example-draft.html'
+grep -q 'Every draft generated to replace that rejected draft' "$CAPTURE_SKILL" || \
+  err "$CAPTURE_SKILL does not require rejected-draft replacement history"
+grep -q 'Previous Draft Invalidated' "$CAPTURE_DRAFT" || \
+  err "$CAPTURE_DRAFT is missing the rejected-draft invalidation section"
+grep -q 'class="invalidation"' "$EXAMPLE_DRAFT" || \
+  err "$EXAMPLE_DRAFT does not demonstrate the invalidation component"
+grep -q '>Previous Draft Invalidated<' "$EXAMPLE_DRAFT" || \
+  err "$EXAMPLE_DRAFT is missing the exact invalidation heading"
+grep -q 'invalidation>div { min-width:0; }' "$CAPTURE_DRAFT" || \
+  err "$CAPTURE_DRAFT does not let invalidation content shrink on narrow screens"
+grep -q 'grid-template-columns:minmax(0,1fr)' "$CAPTURE_DRAFT" || \
+  err "$CAPTURE_DRAFT does not collapse invalidation to a shrinkable mobile column"
+
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
   exit 1
