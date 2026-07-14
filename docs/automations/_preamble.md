@@ -131,6 +131,10 @@ binding, referenced by role:
   free/busy evidence for the coverage window. Social Draft Pulse uses it only to apply
   the KB's day-eligibility and recovery rules. Event details are private scheduling
   evidence and never become post ideas, claims, or public copy.
+- `<external-signal-source>`: a bounded public research surface for current discourse
+  and ecosystem changes relevant to the user's active field and projects. Social
+  Draft Pulse reads it before candidate generation. It supplies timely evidence, not
+  a user stance, a verified personal claim, or a durable KB record.
 
 ### Source Capabilities
 
@@ -152,6 +156,9 @@ prompt.
   slots so the run can derive the eligible coverage capacity without hardcoded counts.
 - `upcoming-availability`: read upcoming events or free/busy state over the coverage
   window. Calendar details stay private and are reduced to scheduling constraints.
+- `current-public-signals`: read recent primary sources and direct public evidence
+  relevant to the user's active field and projects, preserving source and observed
+  date and distinguishing recurring signals from isolated attention spikes.
 
 ## Follow-up Marker Policy
 

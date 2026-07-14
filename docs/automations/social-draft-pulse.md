@@ -1,23 +1,26 @@
 # Social Draft Pulse Automation
 
-Prompt source for the scheduled automation that turns recent KB context into
-approval-gated drafts in the `social-draft-queue` sink. Include
+Prompt source for the scheduled automation that turns performance feedback,
+external signals, and recent KB context into approval-gated drafts in the
+`social-draft-queue` sink. Include
 [the preamble](_preamble.md) when materializing this automation.
 
 ## Design
 
-Social Draft Pulse is a lookup-to-social-draft workflow.
+Social Draft Pulse is a feedback-to-social-draft workflow.
 
 - Lookup branch: context, once per run.
 - Endpoints: `public-safe-claim-source`, `network`, `social-rules-of-engagement`,
   `selected-projects`, `identity`, `point-of-view`, `published-social-context`.
 - Sink: `<social-draft-queue>` — a derived sink; materialized one-way, no mirror to
   realign.
-- Sources: `<social-publishing-source>`, `<availability-calendar-source>`.
+- Sources: `<social-publishing-source>`, `<availability-calendar-source>`,
+  `<external-signal-source>`.
 - Source capabilities:
   - social-publishing-source: `publication-history`, `post-analytics`,
     `queue-timeline`, `queue-schedule`.
   - availability-calendar-source: `upcoming-availability`.
+  - external-signal-source: `current-public-signals`.
 - Coverage cadence: required — setup materializes the human-readable recurrence and
   timezone so the run can derive its responsibility window through the next run.
 - Execution profile: `frontier/medium` — public-facing voice, continuity, and
@@ -39,6 +42,11 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
 - Scheduling: after approval, schedule approved drafts through the bound sink. If a
   current-day slot is no longer eligible, use later eligible open slots rather than
   compressing posts into the remainder of the day.
+- Feedback loop: every run begins with recent publication and analytics evidence,
+  checks current external signals, and makes an explicit course-correction decision
+  before mining new candidates. The review uses a comparable trailing baseline and
+  treats sparse evidence as inconclusive rather than forcing a change. See
+  [ADR 0013](../adr/0013-social-draft-pulse-starts-with-feedback.md).
 - Testing windows: account-specific analytics may justify a controlled candidate
   slot outside the recurring schedule. Propose the hypothesis, comparison window,
   and success measure at the gate. Never mutate the recurring schedule
@@ -62,12 +70,43 @@ Social Draft Pulse is a lookup-to-social-draft workflow.
 You are running Social Draft Pulse.
 
 Goal:
+- Start with an evidence review of recent social performance and relevant external
+  signals, then decide whether the current direction should hold or change.
 - Pull recent public-surface context from the KB once.
 - Reconcile semantic audience and argument state against live publication history.
 - Determine the enabled, eligible, unfilled posting slots in the coverage window.
 - Produce one slot-matched candidate for each slot worth filling.
 - Present an idea summary for approval before creating or scheduling any draft.
 - After approval, create and schedule drafts through the social-draft-queue sink.
+
+Opening performance and signal review:
+- This is the first working phase of every run. Before KB candidate mining, use
+  publication-history and post-analytics to inspect posts published since the
+  previous pulse. Add a trailing set of comparable posts when needed to avoid
+  judging a direction from only a few days or from posts with unequal time to
+  accumulate results.
+- Compare only metrics the bound source actually supports, using the same platform
+  and observation window where possible. Analyze results by content lane, angle,
+  opening hook, format, emotional or proof-led framing, audience assumption, and
+  posting time. Classify findings as worked, did not work, or inconclusive, and do
+  not claim causation from correlation.
+- Use current-public-signals to scan external signals relevant to the user's active
+  field and projects before generating candidates. Prefer primary sources and direct
+  public evidence; distinguish a durable shift or recurring conversation from a
+  one-off spike. An external signal is a reason to investigate an angle, never
+  permission to invent the user's stance or repeat an unverified claim.
+- If analytics or an external source is unavailable, report the missing evidence
+  and continue in a degraded mode. Never silently replace account evidence with
+  generic benchmarks.
+- After combining this review with the KB context below, make one explicit
+  course-correction decision: hold, refine, test, or realign. State the evidence,
+  confidence, and concrete implications for content mix, angles, format, framing,
+  narrative sequence, or bounded timing tests. Sparse or mixed evidence normally
+  implies hold or test, not a broad reset.
+- A course correction can shape this run's proposal, but it cannot autonomously
+  rewrite KB strategy, fabricate a point of view, or change the recurring schedule.
+  Route a strategy conflict to a KB rule realignment candidate and a timing claim to
+  the controlled testing-window path.
 
 Lookup:
 - Use /lookup in context mode over: public-safe-claim-source, network,
@@ -147,6 +186,9 @@ Testing windows and analytics:
   normal approval path; do not apply it autonomously.
 
 External rule refresh:
+- The opening external-signal scan happens every run. This separate rule refresh
+  follows the slower cadence named in social-rules-of-engagement and asks whether
+  platform mechanics or documented constraints changed.
 - Follow the refresh cadence named in social-rules-of-engagement. Prefer official
   platform docs; label tooling research as secondary.
 - If online findings contradict the KB rules, include a "KB rule realignment
@@ -154,8 +196,13 @@ External rule refresh:
   a tunable rule dial outside this run's capture mandate.
 
 Idea summary gate:
-- Before creating any draft, return a compact idea summary sized to the eligible open
-  slots. For each candidate include: content type, angle, source/evidence, platform
+- Before creating any draft, lead with a compact feedback review containing:
+  performance window and comparable baseline; what worked; what did not work or
+  remains inconclusive; External signals checked; the course-correction decision
+  (hold, refine, test, or realign); confidence; and the resulting instructions for
+  this candidate set.
+- Follow it with an idea summary sized to the eligible open slots. For each candidate
+  include: content type, angle, source/evidence, platform
   fit, recommended posting time and slot-matched tone, why now, whether it introduces
   a concept new to that platform, public-safety notes, optional media plan, and
   recommended action (draft, defer, needs-your-take, testing-window candidate,
@@ -198,11 +245,12 @@ Portfolio boundary:
 
 End state:
 - If no useful candidates or eligible slots exist, say so and include the evidence
-  checked without exposing private calendar details.
+  checked, including the opening feedback review, without exposing private calendar
+  details.
 - Otherwise stop at the idea summary and wait for approval, then create and schedule
   only the approved drafts.
 - Report created draft links or IDs, scheduled times, blocked actions,
   needs-your-take items, testing-window candidates, portfolio candidates,
   point-of-view capture candidates, semantic published-social-context updates to
-  record, and any KB rule realignment candidates.
+  record, the course-correction decision, and any KB rule realignment candidates.
 ```

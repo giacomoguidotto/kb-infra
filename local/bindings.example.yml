@@ -51,6 +51,13 @@ sources:
     access: read-only
     capabilities:
       upcoming-availability: ""
+  # Public, time-sensitive research used to understand current discourse before
+  # social candidate generation. It never supplies the user's stance by itself.
+  external-signal-source:
+    tool: ""
+    scope: ""
+    capabilities:
+      current-public-signals: ""
 
 # External systems automations materialize into.
 sinks:

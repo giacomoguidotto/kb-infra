@@ -70,7 +70,7 @@ _Avoid_: Knowledge Bank Drift Realignment (renamed)
 
 **Signal-preferences**: A KB endpoint holding the user's criteria for what is worth remembering — the emergent rubric Knowledge Harvest reads to rank candidates. It starts as a loose seed of registers plus a permanent open "surprising/uncategorised" bucket and grows only through approved rubric updates, rendered as a distinct block in the `/capture` draft.
 
-**Social Draft Pulse**: A scheduled lookup-to-social-draft workflow that turns recent public-safe KB context into approved drafts in the social draft queue sink. It fills eligible open slots across the coverage window, evaluates eligible days without recurring slots as controlled testing-window candidates, uses private calendar availability only to apply KB scheduling rules, and keeps continuity through the semantic published social context plus live publishing state. It never changes the recurring schedule autonomously. It first-party-captures a point-of-view take stated at the gate and batches semantic published-social-context updates after posts go live (both public-facing, via explicit-consent `/capture`), but never publishes immediately.
+**Social Draft Pulse**: A scheduled feedback-to-social-draft workflow that begins with recent account analytics and current external signals, then combines that evidence with public-safe KB context to decide whether to hold, refine, test, or realign the next approved candidate set. It fills eligible open slots across the coverage window, evaluates eligible days without recurring slots as controlled testing-window candidates, uses private calendar availability only to apply KB scheduling rules, and keeps continuity through the semantic published social context plus live publishing state. It never changes the recurring schedule autonomously. It first-party-captures a point-of-view take stated at the gate and batches semantic published-social-context updates after posts go live (both public-facing, via explicit-consent `/capture`), but never publishes immediately.
 
 **Social Publishing Source**: The read-only view of the bound social publishing
 system: publication history, account analytics, queue timeline, and recurring posting
@@ -79,6 +79,11 @@ schedule. It supplies live operational evidence; it is not a duplicate KB ledger
 **Availability Calendar Source**: A read-only source of upcoming events or free/busy
 state used to apply the KB's day-eligibility and recovery rules. Calendar details are
 private scheduling evidence and never become content candidates or public claims.
+
+**External Signal Source**: A read-only public research surface for current discourse
+and ecosystem changes relevant to active projects and the user's field. It supplies
+timely evidence for Social Draft Pulse, but never creates a user stance, verifies a
+personal claim, or becomes a duplicate KB ledger.
 
 **Social Profile Source**: A read-only external source, one per platform (currently X and LinkedIn), holding the user's own public social profiles. Knowledge Harvest reads it best-effort to reconcile the published social context ledger when the social sink cannot carry a post-live trigger. It is a public source feeding a public-facing surface, so it is exempt from the transcript private-by-default rule; a platform that cannot be read degrades to a clarification question, never a fabricated entry.
 

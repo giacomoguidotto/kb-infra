@@ -126,7 +126,7 @@ fi
 # with every required read operation expressed as a source capability that setup can
 # resolve into the materialized prompt.
 SOCIAL_SPEC='docs/automations/social-draft-pulse.md'
-for source in social-publishing-source availability-calendar-source; do
+for source in social-publishing-source availability-calendar-source external-signal-source; do
   grep -q "<${source}>" "$SOCIAL_SPEC" || err "$SOCIAL_SPEC missing source '${source}'"
   grep -q "<${source}>" docs/automations/_preamble.md || err "_preamble.md missing source '${source}'"
   grep -q "^  ${source}:" local/bindings.example.yml || err "bindings.example.yml missing source '${source}'"
@@ -159,6 +159,33 @@ fi
 if grep -Eq 'Wednesday late-afternoon|Thursday and Friday' "$SOCIAL_SPEC"; then
   err "$SOCIAL_SPEC hardcodes a weekday-specific coverage example"
 fi
+OPENING_REVIEW=$(
+  awk '
+    /^Opening performance and signal review:/ { review=1 }
+    review { print }
+    review && /^Lookup:/ { exit }
+  ' "$SOCIAL_SPEC"
+)
+[ -n "$OPENING_REVIEW" ] || \
+  err "$SOCIAL_SPEC does not start each run with a performance and signal review"
+OPENING_REVIEW_LINE=$(grep -n '^Opening performance and signal review:' "$SOCIAL_SPEC" | head -1 | cut -d: -f1)
+LOOKUP_LINE=$(grep -n '^Lookup:' "$SOCIAL_SPEC" | head -1 | cut -d: -f1)
+if [ -n "$OPENING_REVIEW_LINE" ] && [ -n "$LOOKUP_LINE" ] && \
+   [ "$OPENING_REVIEW_LINE" -ge "$LOOKUP_LINE" ]; then
+  err "$SOCIAL_SPEC performance and signal review does not precede KB lookup"
+fi
+grep -q 'post-analytics' <<< "$OPENING_REVIEW" || \
+  err "$SOCIAL_SPEC opening review does not read post analytics"
+grep -q 'previous pulse' <<< "$OPENING_REVIEW" || \
+  err "$SOCIAL_SPEC opening review does not inspect results since the previous pulse"
+grep -q 'worked, did not work, or inconclusive' <<< "$OPENING_REVIEW" || \
+  err "$SOCIAL_SPEC opening review does not classify what worked and what did not"
+grep -q 'external signals' <<< "$OPENING_REVIEW" || \
+  err "$SOCIAL_SPEC opening review does not inspect external signals"
+grep -q 'hold, refine, test, or realign' <<< "$OPENING_REVIEW" || \
+  err "$SOCIAL_SPEC opening review does not require an explicit course-correction decision"
+grep -q 'External signals checked' "$SOCIAL_SPEC" || \
+  err "$SOCIAL_SPEC does not expose external signals at the approval gate"
 
 # 10. Replacement capture drafts visibly invalidate an explicitly rejected draft.
 CAPTURE_SKILL='skills/capture/SKILL.md'
