@@ -20,6 +20,12 @@ model.
 
 - Keep page `Type`, meaning `Ownership`, editorial `Maturity`, and section `Kind`
   independent.
+- Choose Type from the page's primary purpose. Durable prose inside an Area,
+  Project, or Task does not turn it into a Knowledge page.
+- Treat provider views as human projections. Operational views show work; knowledge
+  views show reference material without duplicating either.
+- When one Parent/Subtasks hierarchy contains both work and knowledge, require
+  Type-aware views so knowledge does not appear as work.
 - Use `Canonical` and `Adapter` Ownership, with `Unresolved` only during migration.
 - Default intake to `Raw`; promote reconciled knowledge to `Developing` or `Stable`.
 - Use the twelve stable Kinds defined in

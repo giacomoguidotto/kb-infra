@@ -22,20 +22,49 @@ Keep the active KB relevant. Preserve history through provider revisions or a bo
 evidence surface, not by keeping obsolete pages in ordinary views. Before deleting
 anything, migrate unique meaning, rebind inbound links, and confirm recovery.
 
-Use hierarchy before metadata: a page's parent and location should explain its
-context. Add only properties that improve ownership, retrieval, or everyday use.
+Use hierarchy before metadata when the provider hierarchy has the intended meaning:
+a page's parent and location should explain its context. When one Parent/Subtasks
+hierarchy contains both work and knowledge, Type-aware views must prevent knowledge
+from appearing as work. Add only properties that improve ownership, retrieval, or
+everyday use.
 
 Keep four semantic axes independent:
 
 | Axis | Meaning | Values |
 | --- | --- | --- |
-| Type | What the page represents | Provider- or domain-defined |
+| Type | What the page represents | Provider-defined; otherwise `Area`, `Project`, `Task`, `Knowledge page` |
 | Ownership | Where meaning is owned | `Canonical`, `Adapter`; migration-only `Unresolved` |
 | Maturity | How processed the content is | `Raw`, `Developing`, `Stable` |
 | Kind | What a section or unit means | Registry below |
 
 Do not use Ownership for trust, relevance, lifecycle, or maturity. Do not infer one
 axis from another.
+
+### Type
+
+Use the provider's native Type vocabulary when it is semantically adequate.
+Otherwise use this minimal set:
+
+- `Area`: an ongoing sphere of responsibility.
+- `Project`: a bounded outcome with an end state.
+- `Task`: an executable action, including a recurring action when Status supplies
+  recurrence.
+- `Knowledge page`: reusable meaning or reference material whose primary purpose is
+  retrieval and reuse.
+
+Choose Type from primary purpose, not body length or the presence of durable prose.
+An Area, Project, or Task may own State, Decision, Rule, Evidence, and other typed
+sections. Section Kinds describe that content without changing the page Type. Do
+not infer Type from Ownership, Maturity, Status, Parent, or Kind.
+
+A schema-carried record may leave Type empty when its data source already supplies
+the complete record type and context. Add another Type only after repeated pages
+cannot be represented by this set.
+
+Provider views are human interfaces over the same source of truth. An operational
+view shows Areas, Projects, Tasks, and migration-unclassified rows while excluding
+confirmed Knowledge pages. A knowledge view may show the inverse. Do not duplicate
+pages to serve both views, and do not hide unclassified rows during migration.
 
 ### Ownership
 
@@ -85,8 +114,8 @@ Treat rows whose meaning is fully carried by a structured table's schema and fie
 as records, not knowledge pages. The data source supplies their type and context; do
 not force page-level Ownership, Maturity, Kind, or semantic prose into a Notes field
 or blank page body. Use table and hierarchy context to disambiguate repeated titles.
-Treat a row as a knowledge page only when its page body owns independent durable
-knowledge.
+Use `Knowledge page` only when reusable knowledge is the page's primary purpose. An
+Area, Project, or Task may own independent durable knowledge without changing Type.
 
 - Keep one canonical subject per page and one primary claim, instruction, or
   question per knowledge unit.

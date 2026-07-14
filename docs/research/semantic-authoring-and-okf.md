@@ -12,6 +12,7 @@ The evidence supports:
 - one canonical owner and canonical term per meaning;
 - concise controlled authoring without a formal controlled language;
 - independent page Type, meaning Ownership, editorial Maturity, and section Kind;
+- page Type chosen from the page's operational purpose, not the richness of its body;
 - flexible pages with one dominant Kind per section;
 - presentation chosen by relationships, not Kind alone;
 - reconciled active content with recoverable revisions;
@@ -30,6 +31,12 @@ structures inside each type. It also distinguishes ordered, unordered, and infor
 procedures. A semantic type can therefore constrain meaning without fixing one
 visual form. [OASIS DITA concept topic](https://docs.oasis-open.org/dita/dita/v1.3/os/part2-tech-content/archSpec/technicalContent/dita-concept-topic.html),
 [OASIS DITA task elements](https://docs.oasis-open.org/dita/dita/v1.3/os/part2-tech-content/langRef/containers/task-elements.html)
+
+Type describes the artifact, while section semantics describe its contents. A
+Project may contain State, Decision, Rule, and Evidence sections without becoming a
+Knowledge page. In a mixed provider container, filtered views are projections for a
+human use case; they must not redefine Type or make reference material appear as
+work.
 
 Diataxis likewise separates documentation by user need rather than prescribing one
 page template. Its four modes are useful at page scale but too coarse to replace
