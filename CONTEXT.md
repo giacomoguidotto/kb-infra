@@ -24,10 +24,16 @@ materializes it as harness metadata rather than prompt text.
 **Sink**: An external system an automation materializes into, such as a career system, a portfolio repo, or a social draft queue. Referenced by role, never by repo name or path.
 
 **Sink Capability**: A named operation required from a sink implementation, such
-as an advancement workflow or deterministic related-opportunity selector. The
+as an advancement workflow, wait review, or deterministic related-opportunity selector. The
 committed automation references the capability by role; setup binds it to a
 concrete command or native workflow and injects that only into the materialized
 prompt.
+
+**Communication Strategy**: The canonical KB endpoint for the user's cross-surface
+voice, tone, charisma, authoring, persuasion, channel strategy, and evidence-
+sufficiency rules. It is an optional personalization input to sinks, never a
+dependency: a sink must retain complete generic defaults when it is absent. Other
+surfaces link to it rather than copying settled guidance.
 
 **Source Capability**: A named read operation required from a source implementation,
 such as publication history, post analytics, queue state, recurring schedule, or
@@ -91,7 +97,7 @@ personal claim, or becomes a duplicate KB ledger.
 
 **Job Hunt Evaluate Audit**: A scheduled discovery-to-evaluation workflow in the career system sink. It drains existing queue work first, scans bounded new postings only when useful, generates reports and tracker rows, and stops before application or outreach work. It realigns the career-system `job-search-strategy` mirror copy from the KB each run and first-party-captures a strategy signal when one surfaces, absorbing the retired Job Hunt Tune Audit.
 
-**Job Hunt Advance Audit**: A scheduled tracker-to-next-pack workflow that consumes `Job Hunt Evaluate Audit` output and produces copy-pasteable application, outreach, follow-up, reply, interview, or negotiation packs. It resolves the current job-application throughput target, selects enough opportunities to satisfy it when the queue allows, generates draft packs directly, and advances the career-system's own agent-owned tracker stages to record that a draft exists — both ungated, the packs being its reviewable output and the advance a safe internal-state write. The approval gate survives only for real-world actions: it does not submit, send, record a follow-up as sent, or mark a real-world status complete without the user's confirmation. It first-party-captures a `personal-constraints` or `job-search-strategy` signal when advancing surfaces one, then realigns the career-system copy.
+**Job Hunt Advance Audit**: A scheduled tracker-to-next-plan and wait-review workflow that consumes `Job Hunt Evaluate Audit` output. For user-owned work it asks the career-system sink to produce ranked, copy-pasteable routes through its own communication planner and records only safe agent-owned projection state. For externally owned waits it asks the sink to review confirmed attempts and cadence, then drafts or recommends the next route without inventing a response or changing factual lifecycle state. It resolves the current job-application throughput target, uses optional `communication-strategy` personalization when available, and always checks whether personal outcome evidence is sufficient before drawing a channel conclusion. Draft plans and safe internal projection writes are ungated. The approval gate survives for every real-world action and record that asserts one happened. It first-party-captures a `personal-constraints` or `job-search-strategy` signal when advancing surfaces one, then realigns the career-system copy.
 
 **Drift Audit**: A read-only convention check for Knowledge Bank structure, ownership, naming, role, and stale-state drift. It is the KB-internal-staleness source within Knowledge Harvest — a lower-level review pattern, not the whole automation.
 

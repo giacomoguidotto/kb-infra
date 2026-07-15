@@ -11,7 +11,7 @@ Cadences and concrete models are local bindings resolved by setup.
 | Social Draft Pulse | Turn performance feedback, external signals, and public-safe context into scheduled drafts | Social draft queue | [Prompt](automations/social-draft-pulse.md) |
 | Portfolio Surface Sweep | Compare public-safe context with the portfolio | Reviewed branch/PR work | [Prompt](automations/portfolio-surface-sweep.md) |
 | Job Hunt Evaluate Audit | Discover and evaluate opportunities | Career-system reports and rows | [Prompt](automations/job-hunt-evaluate-audit.md) |
-| Job Hunt Advance Audit | Produce next packs from evaluated opportunities | Draft application/outreach work | [Prompt](automations/job-hunt-advance-audit.md) |
+| Job Hunt Advance Audit | Produce ranked approach plans and review externally owned waits | Draft application/outreach work and next-route recommendations | [Prompt](automations/job-hunt-advance-audit.md) |
 
 Job Hunt Advance Audit consumes Evaluate Audit output and should run afterward.
 Portfolio Surface Sweep is lower-frequency and should be offset from heavier runs.

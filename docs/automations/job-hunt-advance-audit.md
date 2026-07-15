@@ -6,22 +6,25 @@ lookup. Include [the preamble](_preamble.md) when materializing this automation.
 
 ## Design
 
-Job Hunt Advance Audit is a tracker-to-next-pack workflow.
+Job Hunt Advance Audit is a tracker-to-next-plan and wait-review workflow.
 
 - Upstream producer: Job Hunt Evaluate Audit.
 - Idle rule: if evaluation, batch, or pipeline work is still active, stop rather
   than competing for repo state.
 - lookup branch: context, required for the current job-application throughput
   target; otherwise optional, only when fresh KB context could change the next
-  pack.
+  plan. `communication-strategy` is optional personalization, never a sink
+  prerequisite.
 - Endpoints: `public-safe-claim-source`, `proof-points`, `personal-constraints`,
-  `job-search-strategy` (on demand).
+  `job-search-strategy`, `communication-strategy` (on demand).
 - State routing: owned by the sink. This automation reads the career-system's
   canonical state model and never defines its own.
 - Sink: `<career-system>` — a mirror sink holding a copy of `job-search-strategy`.
-- Sink capabilities: `advance-workflow`, `related-opportunity-selector`.
+- Sink capabilities: `advance-workflow`, `wait-review`,
+  `related-opportunity-selector`.
 - Execution profile: `frontier/high` — selection, organizational research,
-  personalized packs, and safe state transitions are high-value judgment work.
+  personalized plans, route ranking, wait review, and safe state transitions are
+  high-value judgment work.
 - Mandate: first-party-capture a `personal-constraints` or `job-search-strategy`
   signal when advancing surfaces one — a stated constraint (relocation, compensation,
   work authorization, references, availability, side-project/IP) or a targeting
@@ -58,13 +61,20 @@ Idle rule:
 
 Goal:
 - Advance the most promising existing opportunities after evaluation.
+- Review externally owned waits that are due or cold and recommend the next useful
+  route without inventing external state.
 - Source all lifecycle and next-action routing from the career-system's own
   canonical state model; do not invent, restate, or override it. If that model is
   missing or ambiguous, stop and report it rather than substituting your own.
 
 Execution contract:
-- Use the bound `advance-workflow` as the sole sink-native orchestration contract.
-  Do not reproduce its lifecycle, routing, pack, or writer rules in this prompt.
+- Use the bound `advance-workflow` as the sole sink-native orchestration contract
+  for user-owned next work. Do not reproduce its lifecycle, routing, plan, pack,
+  communication-planning, or writer rules in this prompt.
+- Use the bound `wait-review` as the sole sink-native contract for externally owned
+  waits. It may return wait, a drafted next route, a deprioritization recommendation,
+  or a discard recommendation. It never records an attempt, invents a response, or
+  changes factual lifecycle state.
 - Before throughput, decision, or score ranking, invoke the bound
   `related-opportunity-selector`. Treat its `eligible` result as the exclusive
   Agent-owned selection input. Never rebuild candidates from raw tracker rows or
@@ -75,6 +85,18 @@ Execution contract:
   a blocked group before the rerun clears it. Other already-eligible groups may
   continue.
 - An unattended run never uses a coordination or related-opportunity override.
+
+Evidence sufficiency:
+- Inspect the sink's current confirmed attempt and outcome data before drawing any
+  conclusion about personal channel performance.
+- Treat personal channel evidence as sufficient only when every compared channel
+  has at least eight comparable resolved observations and at least two meaningful
+  progressions, and the sink's comparability/confounder check passes. Passing the
+  floor permits a conclusion but does not force one.
+- When evidence is insufficient or confounded, use generic priors only as a
+  planning aid and never present them as the user's success rate. Mention the gap in
+  a plan only when it changes the recommended action; keep full samples, rates, and
+  caveats in audit output.
 
 KB lookup:
 - Before selection, resolve the current job-application throughput target. Search
@@ -87,6 +109,10 @@ KB lookup:
   a role touching recent projects or public proof, or one depending on
   personal-constraints or public-safe claim calibration. Skip for routine follow-ups
   or drafts fully covered by the current report/profile, and say why in one line.
+- Resolve `communication-strategy` when register, persuasion, proof selection, or
+  channel ordering could change the plan. Pass it to the sink as optional
+  personalization without copying it into the automation or treating its absence
+  as a blocker. When absent, use the sink's complete generic defaults.
 
 Selection:
 - Select only from the bound selector's `eligible` result. From that set, choose
@@ -109,10 +135,24 @@ Selection:
   do not submit applications, send messages, click final submit buttons, record a
   follow-up as sent, or mark a real-world status complete without the user's
   confirmation.
+- Review due or cold externally owned waits separately through `wait-review`; they
+  do not count toward the application-throughput target and are not inputs to the
+  Agent-owned related-opportunity selector.
 
-Producing packs:
-- Produce the selected packs through the bound `advance-workflow`. Packs are
-  drafts for review.
+Producing plans and packs:
+- Produce selected work through the bound `advance-workflow`. The sink's shared
+  communication planner owns context, register, objective, proof anchors, ranked
+  routes, formal-route handling, evidence basis, and missing blockers. Packs are
+  executable projections of that plan and remain drafts for review.
+- Present a compact communication-strategy line in each plan or pack so the user
+  can see the intended register, signal, and route without exposing the full audit.
+- Prefer the highest-signal useful route, while preserving formal submission as one
+  ranked route. Timing, required process, reference dependency, and deadline risk
+  may make the formal route immediate.
+- Produce externally owned recommendations through `wait-review`. If the sink says
+  to wait, preserve the wait. If it drafts a next route, leave the lifecycle fact
+  unchanged until the user confirms acting. If it recommends deprioritizing or
+  discarding, report that recommendation for the user to decide.
 - If a better durable state model is needed, propose it in the summary rather than
   silently changing schema or files.
 
@@ -125,7 +165,8 @@ First-party capture:
   across runs, that is Knowledge Harvest's job.
 
 End state:
-- Report selected opportunities and why, packs produced, the tracker advances
+- Report selected opportunities and why, plans and packs produced, waits reviewed,
+  evidence sufficiency, the tracker advances
   applied, related opportunities suppressed or awaiting research, lookup used or
   skipped, any personal-constraints or job-search-strategy captures proposed and
   the mirror realignments, blocked actions, and recommended next human approvals

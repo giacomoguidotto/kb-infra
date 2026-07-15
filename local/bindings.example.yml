@@ -19,6 +19,7 @@ endpoints:
   portfolio-change-rules: ""
   social-rules-of-engagement: ""
   job-search-strategy: ""
+  communication-strategy: "" # optional; sink generic defaults remain complete
   personal-constraints: ""
   signal-preferences: ""
 
@@ -67,6 +68,7 @@ sinks:
     enabled: false
     capabilities:
       advance-workflow: "" # sink-native next-work orchestration contract
+      wait-review: "" # sink-native review of externally owned waits and next routes
       related-opportunity-selector: "" # deterministic pre-ranking command/workflow
   portfolio:
     repo: ""

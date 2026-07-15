@@ -81,6 +81,10 @@ Data surfaces and rule-sets automations read from the KB:
   day-eligibility and recovery rules, and the posting schedule: the per-platform slots
   to post in and the intended tone for each slot.
 - `job-search-strategy`: target roles, compensation baseline, scoring preferences.
+- `communication-strategy`: the user's canonical cross-surface voice, tone,
+  charisma, authoring, persuasion, channel strategy, and evidence-sufficiency
+  rules. Optional personalization only; a bound sink retains complete generic
+  defaults when this endpoint is absent.
 - `personal-constraints`: relocation, compensation, work authorization, references,
   availability, and side-project/IP freedom.
 - `signal-preferences`: the user's criteria for what is worth remembering — the
@@ -110,6 +114,10 @@ prompt.
 - `advance-workflow`: the sink-native orchestration contract for selecting,
   producing, and recording Agent-owned next work. It owns the sink's lifecycle
   vocabulary and canonical writers; the automation never reconstructs them.
+- `wait-review`: the sink-native read and recommendation contract for externally
+  owned waits. It reads confirmed real-world attempts, current generated guidance,
+  and cadence, then returns wait, next-route, deprioritize, or discard advice. It
+  never invents a response, records an attempt, or changes factual lifecycle state.
 - `related-opportunity-selector`: a deterministic, read-only preflight applied
   before global throughput or priority ranking. It returns an exclusive eligible
   set, suppressed related alternatives, and unresolved groups requiring research.
