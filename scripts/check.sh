@@ -165,6 +165,12 @@ fi
 if grep -Eq 'Wednesday late-afternoon|Thursday and Friday' "$SOCIAL_SPEC"; then
   err "$SOCIAL_SPEC hardcodes a weekday-specific coverage example"
 fi
+grep -q 'Do not schedule a media-dependent draft' "$SOCIAL_SPEC" || \
+  err "$SOCIAL_SPEC does not keep media-dependent drafts unscheduled"
+grep -q 'reply in this' "$SOCIAL_SPEC" || \
+  err "$SOCIAL_SPEC does not define the media-ready reply trigger"
+grep -q 'propose a media-independent rewrite' "$SOCIAL_SPEC" || \
+  err "$SOCIAL_SPEC does not define the media-independent rewrite path"
 OPENING_REVIEW=$(
   awk '
     /^Opening performance and signal review:/ { review=1 }

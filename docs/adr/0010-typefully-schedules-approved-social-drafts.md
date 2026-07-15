@@ -7,7 +7,9 @@ status: accepted
 The provider-specific source shape and weekday example in this decision are
 superseded by [ADR 0011](0011-social-scheduling-uses-capability-bound-live-sources.md).
 Its approval gate, scheduling permission, and no-immediate-publish boundary remain
-in force.
+in force. [ADR 0015](0015-media-dependent-social-drafts-wait-for-user-readiness.md)
+narrows the scheduling permission for drafts that still require a user-supplied
+attachment.
 
 Typefully is now the scheduling sink for approved Social Draft Pulse posts. Social
 Draft Pulse still stops at the idea-summary gate before creating anything, but after

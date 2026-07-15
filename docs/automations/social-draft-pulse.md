@@ -39,9 +39,12 @@ Social Draft Pulse is a feedback-to-social-draft workflow.
   calendar evidence and apply the day-type, travel, evening, and recovery rules in
   `social-rules-of-engagement`. Calendar details remain private scheduling evidence
   and never become content.
-- Scheduling: after approval, schedule approved drafts through the bound sink. If a
-  current-day slot is no longer eligible, use later eligible open slots rather than
-  compressing posts into the remainder of the day.
+- Scheduling: after approval, create approved drafts through the bound sink and
+  schedule only drafts that do not depend on an outstanding user-supplied photo,
+  screenshot, or other manual attachment. Keep media-dependent drafts unscheduled
+  until the user confirms readiness in the conversation. If a current-day slot is
+  no longer eligible, use later eligible open slots rather than compressing posts
+  into the remainder of the day.
 - Feedback loop: every run begins with recent publication and analytics evidence,
   checks current external signals, and makes an explicit course-correction decision
   before mining new candidates. The review uses a comparable trailing baseline and
@@ -60,8 +63,9 @@ Social Draft Pulse is a feedback-to-social-draft workflow.
   Reconcile the live delta before drafting without copying source records into the
   KB or duplicating concepts owned elsewhere.
 - Approval gate: return an idea summary first. Surface topical hooks that need the
-  user's take and any proposed testing window. After approval, create and schedule
-  drafts only within the approved set.
+  user's take, any proposed testing window, and whether each candidate requires a
+  manual media attachment. After approval, create drafts only within the approved
+  set and schedule only those whose required inputs are ready.
 - Empty result: acceptable.
 
 ## Prompt
@@ -77,7 +81,8 @@ Goal:
 - Determine the enabled, eligible, unfilled posting slots in the coverage window.
 - Produce one slot-matched candidate for each slot worth filling.
 - Present an idea summary for approval before creating or scheduling any draft.
-- After approval, create and schedule drafts through the social-draft-queue sink.
+- After approval, create drafts through the social-draft-queue sink and schedule
+  only those that have no outstanding manual media requirement.
 
 Opening performance and signal review:
 - This is the first working phase of every run. Before KB candidate mining, use
@@ -153,7 +158,6 @@ Coverage and availability:
   normal candidates, but an evidence-backed one may be proposed explicitly as a
   testing window. Size the candidate set from the remaining recurring slots plus
   proposed test candidates. A low-capacity or empty window is a valid result.
-
 Candidate branches:
 - Project/proof branch: mine selected-projects and public-safe-claim-source for
   progress, proof, and milestone candidates.
@@ -204,10 +208,13 @@ Idea summary gate:
 - Follow it with an idea summary sized to the eligible open slots. For each candidate
   include: content type, angle, source/evidence, platform
   fit, recommended posting time and slot-matched tone, why now, whether it introduces
-  a concept new to that platform, public-safety notes, optional media plan, and
-  recommended action (draft, defer, needs-your-take, testing-window candidate,
-  portfolio candidate, point-of-view capture candidate, KB rule realignment
-  candidate, or discard).
+  a concept new to that platform, public-safety notes, media readiness
+  (media-independent or required manual attachment), the exact attachment needed,
+  and recommended action (draft, draft-only pending media, defer, needs-your-take,
+  testing-window candidate, portfolio candidate, point-of-view capture candidate,
+  KB rule realignment candidate, or discard).
+- Treat media as required only when the post depends on the user supplying it. An
+  optional media enhancement does not block scheduling media-independent copy.
 - Summarize calendar influence only as a private eligibility result; do not expose
   event details.
 - For topical candidates without a recorded stance, mark them needs-your-take and
@@ -216,17 +223,27 @@ Idea summary gate:
   until the content direction and any testing windows are approved.
 
 Drafting and scheduling:
-- After approval, create drafts in the social-draft-queue sink.
-- Write each draft in the tone of its approved slot and schedule it at that exact
-  time through the sink.
+- After approval, create every approved draft in the social-draft-queue sink.
+- Write each media-independent draft in the tone of its approved slot and schedule it
+  at that exact time through the sink.
+- Do not schedule a media-dependent draft. Leave it unscheduled, report its draft
+  link or ID and exact attachment requirement, and ask the user to reply in this
+  conversation after attaching the media.
+- When the user confirms that the attachment is ready, re-read the live queue and
+  schedule the existing draft at its approved time if that slot remains eligible and
+  open. Otherwise, use the next approved, eligible open slot. The earlier content
+  approval remains valid unless the copy changes.
+- If the user cannot provide the required media, propose a media-independent rewrite
+  in the conversation. Wait for approval before replacing the draft copy and
+  scheduling it into the next approved, eligible open slot.
 - If a current-day slot has elapsed or become ineligible, use a later approved,
   eligible open slot in the coverage window instead of compressing the schedule.
 - Do not publish immediately. Instant publishing requires an explicit publish-now
   instruction.
 - Prefer platform-specific drafts over one generic cross-post unless the approved
   idea calls for shared copy.
-- Use clear placeholders for missing media (e.g. [screenshot needed: ...]). Do not
-  imply unseen media exists.
+- Keep missing-media instructions in the conversation beside the draft link or ID,
+  not in public post copy. Do not imply unseen media exists.
 - If the sink is unavailable, return copy-ready drafts in the thread and say draft
   creation or scheduling was blocked.
 
@@ -247,9 +264,10 @@ End state:
 - If no useful candidates or eligible slots exist, say so and include the evidence
   checked, including the opening feedback review, without exposing private calendar
   details.
-- Otherwise stop at the idea summary and wait for approval, then create and schedule
-  only the approved drafts.
-- Report created draft links or IDs, scheduled times, blocked actions,
+- Otherwise stop at the idea summary and wait for approval, then create only the
+  approved drafts and schedule only the media-ready subset.
+- Report created draft links or IDs, scheduled times, pending-media drafts and their
+  required attachments, blocked actions,
   needs-your-take items, testing-window candidates, portfolio candidates,
   point-of-view capture candidates, semantic published-social-context updates to
   record, the course-correction decision, and any KB rule realignment candidates.
