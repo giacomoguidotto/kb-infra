@@ -50,8 +50,10 @@ Startup:
 Goal:
 - Run the career-system discovery-to-evaluation loop:
   1. Run the career-system's health check first.
-  2. Retry or process existing pending/failed work before scanning.
-  3. Scan a bounded batch of new postings only when the queue is drained.
+  2. Process up to 30 existing pending/failed items, priority-first; leave the
+     remainder queued.
+  3. Only when the queue is drained, run
+     `node scan.mjs --verify --throttle --max-new=30 --max-per-company=3`.
   4. Evaluate live postings.
   5. Generate the expected reports, artifacts, and tracker rows.
   6. Verify the pipeline.
@@ -70,7 +72,6 @@ Boundary:
 - This is discovery and evaluation only, not advancement or application work.
 - Do not submit applications, send messages, click final apply/submit buttons, or
   prefill forms in a hidden or unattended browser.
-- Process existing queue work before adding new scan work.
 
 End state:
 - Report scan/evaluation results, generated reports and tracker rows, pipeline

@@ -122,6 +122,12 @@ if git grep -nIE 'gpt-[0-9]|claude-[0-9]|gemini-[0-9]' -- ':!local/*.yml' ':!scr
   fail=1
 fi
 
+EVALUATE_SPEC='docs/automations/job-hunt-evaluate-audit.md'
+grep -Fq 'node scan.mjs --verify --throttle --max-new=30 --max-per-company=3' "$EVALUATE_SPEC" || \
+  err "$EVALUATE_SPEC does not pin the bounded scan command"
+grep -q 'Process up to 30 existing pending/failed items' "$EVALUATE_SPEC" || \
+  err "$EVALUATE_SPEC does not bound existing queue processing"
+
 # 9. Social Draft Pulse consumes provider-neutral social and availability sources,
 # with every required read operation expressed as a source capability that setup can
 # resolve into the materialized prompt.
