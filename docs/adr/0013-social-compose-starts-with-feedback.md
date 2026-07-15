@@ -2,11 +2,11 @@
 status: accepted
 ---
 
-# ADR 0013: Social Draft Pulse starts with a performance feedback loop
+# ADR 0013: Social Compose starts with a performance feedback loop
 
 ## Context
 
-Social Draft Pulse could read account analytics, but the workflow used them mainly
+Social Compose could read account analytics, but the workflow used them mainly
 to justify optional posting-window tests later in a run. It did not require each run
 to begin by asking what worked, what did not, and whether recent evidence should
 change the next candidate set.
@@ -18,7 +18,7 @@ spike would overfit noise.
 
 ## Decision
 
-- Every Social Draft Pulse run begins with publication history and account analytics
+- Every Social Compose run begins with publication history and account analytics
   for posts since the previous pulse, supplemented by a comparable trailing baseline
   when the recent sample is too small or immature.
 - The review classifies evidence as worked, did not work, or inconclusive across

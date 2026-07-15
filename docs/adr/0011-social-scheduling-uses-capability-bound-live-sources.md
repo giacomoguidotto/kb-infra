@@ -4,7 +4,7 @@ status: accepted
 
 # Social scheduling uses capability-bound live sources
 
-Social Draft Pulse derives coverage from a provider-neutral social publishing
+Social Compose derives coverage from a provider-neutral social publishing
 source and a private availability calendar source. The committed automation declares
 the read capabilities it needs; setup binds those roles to concrete local tools and
 accounts. Published Social Context remains a semantic KB ledger, not a mirror of
@@ -50,7 +50,7 @@ and how the user's broader public arguments have progressed.
   private scheduling inputs and may not become post ideas, evidence, or public copy.
 - Use account analytics to propose controlled testing windows with a hypothesis,
   comparable baseline, repeated observation window, and success measure. An approved
-  test uses an explicit scheduled time. Social Draft Pulse never changes the
+  test uses an explicit scheduled time. Social Compose never changes the
   recurring schedule autonomously.
 - Keep Published Social Context as a per-platform semantic audience and argument
   ledger with canonical-owner links. After posts go live, batch the semantic delta

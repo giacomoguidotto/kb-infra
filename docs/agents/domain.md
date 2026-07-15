@@ -12,8 +12,8 @@ provider-backed knowledge system.
 - Use `docs/automations/_preamble.md` for the shared automation preamble, endpoint
   vocabulary, and sink vocabulary.
 - Use `docs/automations/*.md` for each accepted scheduled automation prompt:
-  `knowledge-harvest`, `social-draft-pulse`, `portfolio-surface-sweep`,
-  `job-hunt-evaluate-audit`, `job-hunt-advance-audit`.
+  `kb-reconcile`, `social-compose`, `portfolio-refresh`,
+  `job-scout`, `job-pursue`.
 
 When writing issue titles, test names, docs, or refactor proposals, prefer terms
 from `CONTEXT.md`.

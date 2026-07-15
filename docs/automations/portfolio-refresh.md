@@ -1,4 +1,4 @@
-# Portfolio Surface Sweep Automation
+# Portfolio Refresh Automation
 
 Prompt source for the scheduled automation that compares recent KB context with
 the `portfolio` sink and proposes approval-gated branch/PR updates. Include
@@ -6,7 +6,7 @@ the `portfolio` sink and proposes approval-gated branch/PR updates. Include
 
 ## Design
 
-Portfolio Surface Sweep is a lookup-to-portfolio-proposal workflow.
+Portfolio Refresh is a lookup-to-portfolio-proposal workflow.
 
 - lookup branch: context, once per run.
 - Endpoints: `public-safe-claim-source`, `network`, `selected-projects`,
@@ -18,7 +18,7 @@ Portfolio Surface Sweep is a lookup-to-portfolio-proposal workflow.
 - Mandate: no KB capture. This is a pure consumer of public-safe claims that writes
   only to the portfolio sink; it originates no durable KB knowledge, so it captures
   nothing. Unsupported claims are surfaced as gaps, not captures, and stale KB claims
-  are Knowledge Harvest's drift job.
+  are KB Reconcile's drift job.
 - Approval gate: return a surface summary first. After approval, prepare branch/PR
   work for approved changes.
 - Empty result: acceptable.
@@ -26,7 +26,7 @@ Portfolio Surface Sweep is a lookup-to-portfolio-proposal workflow.
 ## Prompt
 
 ```md
-You are running Portfolio Surface Sweep.
+You are running Portfolio Refresh.
 
 Read first:
 - The portfolio sink's own AGENTS.md and content/docs entry points.
@@ -57,7 +57,7 @@ Surface summary gate:
   current portfolio state checked, KB/source evidence checked, proposed
   candidates, affected surfaces/files, what changes and what stays stable,
   public-safety notes, validation plan, and announcement candidates for Social
-  Draft Pulse if any.
+  Compose if any.
 - Ask the user to approve, reject, or edit the set. Do not create branch work
   until approved.
 
@@ -71,7 +71,7 @@ Branch/PR work:
 - Do not merge, deploy, or publish without approval.
 
 Social boundary:
-- Flag announcement candidates as a handoff to Social Draft Pulse; do not create
+- Flag announcement candidates as a handoff to Social Compose; do not create
   social drafts here.
 
 End state:

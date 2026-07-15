@@ -1,4 +1,4 @@
-# Knowledge Harvest Automation
+# KB Reconcile Automation
 
 Prompt source for the scheduled automation that harvests **signals** from the user's
 activity and populates the KB through `/capture`. Include [the preamble](_preamble.md)
@@ -7,7 +7,7 @@ is copied into the harness automation settings.
 
 ## Design
 
-Knowledge Harvest is an observe-to-capture loop and the **reconciler** of first-party
+KB Reconcile is an observe-to-capture loop and the **reconciler** of first-party
 captures, not a report-only audit. It runs one pattern —
 `observe(source) → generate candidates → rank/dedup → reconcile → clarify → capture` —
 over many sources.
@@ -33,7 +33,7 @@ over many sources.
   signal to propose; **conflict**: it walks back or contradicts what the KB records,
   surfaced as drift for the user to adjudicate, never a silent overwrite. When a
   conflicting or updated endpoint has a mirror sink, note that its owning automation
-  must realign the mirror — Harvest flags mirror drift but never writes a sink.
+  must realign the mirror — KB Reconcile flags mirror drift but never writes a sink.
 - Ranking rubric: read `signal-preferences` to rank candidates. It is an emergent
   rubric — a seed of registers plus a permanent open "surprising/uncategorised"
   bucket — so novel signal types can still surface.
@@ -66,7 +66,7 @@ over many sources.
 ## Prompt
 
 ```md
-You are running Knowledge Harvest.
+You are running KB Reconcile.
 
 Goal:
 - Observe the user's recent activity across sources, surface candidate signals,

@@ -24,12 +24,12 @@ endpoints:
   signal-preferences: ""
 
 # External read sources automations observe (never write).
-# Knowledge Harvest mines these for signals; blank/empty = none.
+# KB Reconcile mines these for signals; blank/empty = none.
 sources:
   transcript-source: [] # list of agent transcript locations on this machine
-  # Your own public profiles, one per platform. Knowledge Harvest reads them
+  # Your own public profiles, one per platform. KB Reconcile reads them
   # best-effort to reconcile published-social-context. Blank = skip that platform
-  # (Harvest falls back to asking you what went out).
+  # (KB Reconcile falls back to asking you what went out).
   social-profile-source:
     x: "" # e.g. https://x.com/<handle>
     linkedin: "" # e.g. https://www.linkedin.com/in/<handle>/recent-activity/all/
@@ -80,30 +80,30 @@ sinks:
 
 # Concrete harness choices resolved from the provider-agnostic execution profiles.
 models:
-  knowledge-harvest:
+  kb-reconcile:
     model: ""
     reasoning_effort: ""
-  social-draft-pulse:
+  social-compose:
     model: ""
     reasoning_effort: ""
-  portfolio-surface-sweep:
+  portfolio-refresh:
     model: ""
     reasoning_effort: ""
-  job-hunt-evaluate-audit:
+  job-scout:
     model: ""
     reasoning_effort: ""
-  job-hunt-advance-audit:
+  job-pursue:
     model: ""
     reasoning_effort: ""
 
 # Automation cadences (local timezone).
 cadences:
   timezone: ""
-  knowledge-harvest: ""
-  social-draft-pulse: ""
-  portfolio-surface-sweep: ""
-  job-hunt-evaluate-audit: ""
-  job-hunt-advance-audit: ""
+  kb-reconcile: ""
+  social-compose: ""
+  portfolio-refresh: ""
+  job-scout: ""
+  job-pursue: ""
 
 # Overrides for repo defaults (optional; blank = use repo default).
 overrides:

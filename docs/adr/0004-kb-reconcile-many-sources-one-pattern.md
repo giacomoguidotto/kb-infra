@@ -2,10 +2,10 @@
 status: accepted
 ---
 
-# Knowledge Harvest observes many sources through one pattern
+# KB Reconcile observes many sources through one pattern
 
 The automation previously scoped as Knowledge Bank Drift Realignment is renamed and
-re-scoped to **Knowledge Harvest**. Its mandate is not to reconcile stale facts but
+re-scoped to **KB Reconcile**. Its mandate is not to reconcile stale facts but
 to **observe the user's activity, surface candidate signals, and populate the KB**
 through approved capture. A **signal** is a candidate piece of durable knowledge
 worth remembering — a fact, a decision, a stated opinion, a recurring theme, a
@@ -13,7 +13,7 @@ project-state change, a working-style pattern. Reconciling KB-internal staleness
 (the old "drift" behavior) becomes **one source** among several, alongside git
 history and agent transcripts.
 
-Knowledge Harvest is one **pattern** — `observe(source) → generate candidates →
+KB Reconcile is one **pattern** — `observe(source) → generate candidates →
 rank/dedup → clarify → capture` — instantiated over many pluggable sources. The
 orchestrator fans out **one subagent per source**; each generates ranked candidates
 autonomously. The orchestrator merges them with cross-source convergence ranking,
@@ -60,7 +60,7 @@ so a fixed taxonomy of signal types would gate discovery to what is already know
 ## Consequences
 
 - The rename propagates to the glossary, the preamble endpoint vocabulary, and the
-  automation spec (`kb-drift-realignment.md` becomes `knowledge-harvest.md`).
+  automation spec (`kb-drift-realignment.md` becomes `kb-reconcile.md`).
   KB-internal staleness is documented as one source.
 - The endpoint vocabulary gains `signal-preferences`, framed user-facing as "my
   criteria for what is worth remembering." It grows only through approved rubric

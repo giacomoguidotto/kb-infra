@@ -1,4 +1,4 @@
-# Job Hunt Evaluate Audit Automation
+# Job Scout Automation
 
 Prompt source for the scheduled automation that runs the `career-system`
 discovery-to-evaluation loop and stops before advancement. Include
@@ -6,7 +6,7 @@ discovery-to-evaluation loop and stops before advancement. Include
 
 ## Design
 
-Job Hunt Evaluate Audit is a discovery-to-evaluation workflow that runs inside the
+Job Scout is a discovery-to-evaluation workflow that runs inside the
 `career-system` sink.
 
 - KB lookup: narrow. Read `job-search-strategy` to realign the career-system mirror;
@@ -23,14 +23,14 @@ Job Hunt Evaluate Audit is a discovery-to-evaluation workflow that runs inside t
   one (scoring producing weak leads, a drift in target role/seniority/domain/market),
   then realign the mirror. Signal-triggered — most runs capture nothing.
 - Absorbs the retired Job Hunt Tune Audit; see
-  [ADR 0007](../adr/0007-job-hunt-evaluate-absorbs-tuning.md).
-- Upstream of: Job Hunt Advance Audit.
+  [ADR 0007](../adr/0007-job-scout-absorbs-tuning.md).
+- Upstream of: Job Pursue.
 - Posture: autonomous evaluation output; no application or outreach work.
 
 ## Prompt
 
 ```md
-You are running Job Hunt Evaluate Audit.
+You are running Job Scout.
 
 Read first:
 - The career-system sink's own AGENTS.md and data contract.
@@ -66,7 +66,7 @@ Strategy signals (first-party capture):
   the career-system copy. This is signal-triggered — if nothing surfaces, capture
   nothing.
 - Capture only what this run surfaced explicitly; do not infer across runs, that is
-  Knowledge Harvest's job.
+  KB Reconcile's job.
 
 Boundary:
 - This is discovery and evaluation only, not advancement or application work.
@@ -77,5 +77,5 @@ End state:
 - Report scan/evaluation results, generated reports and tracker rows, pipeline
   verification status, the mirror realignment, any job-search-strategy captures
   proposed, and blocked actions.
-- Hand off advancement to Job Hunt Advance Audit.
+- Hand off advancement to Job Pursue.
 ```

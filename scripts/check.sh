@@ -19,7 +19,17 @@ if git grep -nI -e '/Users/' -e '/home/' -- "$self" >/dev/null 2>&1; then
 fi
 
 # 2. No retired terms (catch renames regressing).
-for pat in '/recall' '/remember' 'Eval Pulse' 'Tuning Audit' 'Advancement Pulse'; do
+for pat in \
+  '/recall' \
+  '/remember' \
+  'Eval Pulse' \
+  'Tuning Audit' \
+  'Advancement Pulse' \
+  'Knowledge Harvest' \
+  'Social Draft Pulse' \
+  'Portfolio Surface Sweep' \
+  'Job Hunt Evaluate Audit' \
+  'Job Hunt Advance Audit'; do
   if git grep -nI -e "$pat" -- "$self" >/dev/null 2>&1; then
     echo "Retired term '$pat':"
     git grep -nI -e "$pat" -- "$self"
@@ -73,7 +83,7 @@ if [ -s "$TMP_BROKEN" ]; then fail=1; fi
 
 # 7. Job-hunt advancement stays sink-agnostic while declaring the concrete
 # capabilities setup must bind into a self-contained materialization.
-ADVANCE_SPEC='docs/automations/job-hunt-advance-audit.md'
+ADVANCE_SPEC='docs/automations/job-pursue.md'
 DECLARED_CAPABILITIES=$(sed -n 's/^- Sink capabilities: //p' "$ADVANCE_SPEC" | grep -oE '`[a-z0-9-]+`' | tr -d '`')
 if [ -z "$DECLARED_CAPABILITIES" ]; then
   err "$ADVANCE_SPEC declares no sink capabilities"
@@ -94,11 +104,11 @@ grep -q 'automation body explicitly classifies a narrow in-mandate write' docs/a
 # 8. Every automation declares a provider-agnostic execution profile, and setup has
 # a concrete local model binding slot without committing provider model ids.
 AUTOMATION_SPECS=(
-  docs/automations/knowledge-harvest.md
-  docs/automations/social-draft-pulse.md
-  docs/automations/portfolio-surface-sweep.md
-  docs/automations/job-hunt-evaluate-audit.md
-  docs/automations/job-hunt-advance-audit.md
+  docs/automations/kb-reconcile.md
+  docs/automations/social-compose.md
+  docs/automations/portfolio-refresh.md
+  docs/automations/job-scout.md
+  docs/automations/job-pursue.md
 )
 MODEL_EXAMPLE=$(sed -n '/^models:/,/^[a-z][a-z_-]*:/p' local/bindings.example.yml)
 for spec in "${AUTOMATION_SPECS[@]}"; do
@@ -122,16 +132,16 @@ if git grep -nIE 'gpt-[0-9]|claude-[0-9]|gemini-[0-9]' -- ':!local/*.yml' ':!scr
   fail=1
 fi
 
-EVALUATE_SPEC='docs/automations/job-hunt-evaluate-audit.md'
+EVALUATE_SPEC='docs/automations/job-scout.md'
 grep -Fq 'node scan.mjs --verify --throttle --max-new=30 --max-per-company=3' "$EVALUATE_SPEC" || \
   err "$EVALUATE_SPEC does not pin the bounded scan command"
 grep -q 'Process up to 30 existing pending/failed items' "$EVALUATE_SPEC" || \
   err "$EVALUATE_SPEC does not bound existing queue processing"
 
-# 9. Social Draft Pulse consumes provider-neutral social and availability sources,
+# 9. Social Compose consumes provider-neutral social and availability sources,
 # with every required read operation expressed as a source capability that setup can
 # resolve into the materialized prompt.
-SOCIAL_SPEC='docs/automations/social-draft-pulse.md'
+SOCIAL_SPEC='docs/automations/social-compose.md'
 for source in social-publishing-source availability-calendar-source external-signal-source; do
   grep -q "<${source}>" "$SOCIAL_SPEC" || err "$SOCIAL_SPEC missing source '${source}'"
   grep -q "<${source}>" docs/automations/_preamble.md || err "_preamble.md missing source '${source}'"
@@ -257,7 +267,7 @@ if grep -q 'its local state path' skills/setup-kb-infra/SKILL.md; then
 fi
 grep -q 'preserve its existing `last_completed_at` value' skills/setup-kb-infra/SKILL.md || \
   err 'setup skill may erase completion history during reconcile'
-for spec in docs/automations/knowledge-harvest.md docs/automations/job-hunt-advance-audit.md; do
+for spec in docs/automations/kb-reconcile.md docs/automations/job-pursue.md; do
   grep -q '^End state:' "$spec" || \
     err "$spec has no explicit end state for last_completed_at"
 done

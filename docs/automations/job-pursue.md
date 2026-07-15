@@ -1,4 +1,4 @@
-# Job Hunt Advance Audit Automation
+# Job Pursue Automation
 
 Prompt source for the scheduled automation that advances existing `career-system`
 opportunities after evaluation, using draft-oriented packs and optional KB
@@ -6,9 +6,9 @@ lookup. Include [the preamble](_preamble.md) when materializing this automation.
 
 ## Design
 
-Job Hunt Advance Audit is a tracker-to-next-plan and wait-review workflow.
+Job Pursue is a tracker-to-next-plan and wait-review workflow.
 
-- Upstream producer: Job Hunt Evaluate Audit.
+- Upstream producer: Job Scout.
 - Idle rule: if evaluation, batch, or pipeline work is still active, stop rather
   than competing for repo state.
 - lookup branch: context, required for the current job-application throughput
@@ -42,11 +42,11 @@ Job Hunt Advance Audit is a tracker-to-next-plan and wait-review workflow.
 ## Prompt
 
 ```md
-You are running Job Hunt Advance Audit.
+You are running Job Pursue.
 
 Read first:
 - The career-system sink's own AGENTS.md, data contract, mode files, and templates.
-- The upstream producer is Job Hunt Evaluate Audit.
+- The upstream producer is Job Scout.
 
 Startup:
 - Run the career-system's health check; if onboarding is incomplete or required
@@ -56,7 +56,7 @@ Startup:
 
 Idle rule:
 - If the pipeline has unchecked pending work, the batch has failed/pending/
-  processing rows, or a batch runner is still active, assume Evaluate Audit has
+  processing rows, or a batch runner is still active, assume Job Scout has
   unfinished work. Do not advance this run; report the concrete blocker and stop.
 
 Goal:
@@ -162,7 +162,7 @@ First-party capture:
   targeting preference you state in-context, propose a /capture to its owning endpoint
   (personal-constraints or job-search-strategy), then realign the career-system copy.
 - Signal-triggered — capture only what this run surfaced explicitly; do not infer
-  across runs, that is Knowledge Harvest's job.
+  across runs, that is KB Reconcile's job.
 
 End state:
 - Report selected opportunities and why, plans and packs produced, waits reviewed,

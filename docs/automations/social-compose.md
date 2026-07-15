@@ -1,4 +1,4 @@
-# Social Draft Pulse Automation
+# Social Compose Automation
 
 Prompt source for the scheduled automation that turns performance feedback,
 external signals, and recent KB context into approval-gated drafts in the
@@ -7,7 +7,7 @@ external signals, and recent KB context into approval-gated drafts in the
 
 ## Design
 
-Social Draft Pulse is a feedback-to-social-draft workflow.
+Social Compose is a feedback-to-social-draft workflow.
 
 - Lookup branch: context, once per run.
 - Endpoints: `public-safe-claim-source`, `network`, `social-rules-of-engagement`,
@@ -49,7 +49,7 @@ Social Draft Pulse is a feedback-to-social-draft workflow.
   checks current external signals, and makes an explicit course-correction decision
   before mining new candidates. The review uses a comparable trailing baseline and
   treats sparse evidence as inconclusive rather than forcing a change. See
-  [ADR 0013](../adr/0013-social-draft-pulse-starts-with-feedback.md).
+  [ADR 0013](../adr/0013-social-compose-starts-with-feedback.md).
 - Testing windows: account-specific analytics may justify a controlled candidate
   slot outside the recurring schedule. Propose the hypothesis, comparison window,
   and success measure at the gate. Never mutate the recurring schedule
@@ -71,7 +71,7 @@ Social Draft Pulse is a feedback-to-social-draft workflow.
 ## Prompt
 
 ```md
-You are running Social Draft Pulse.
+You are running Social Compose.
 
 Goal:
 - Start with an evidence review of recent social performance and relevant external
@@ -249,15 +249,14 @@ Drafting and scheduling:
 
 Persona and continuity persistence:
 - When the user gives a new take at the gate, propose a /capture to point-of-view
-  directly as a distinct explicit-consent block. Do not defer it to Knowledge
-  Harvest.
+  directly as a distinct explicit-consent block. Do not defer it to KB Reconcile.
 - After posts go live, batch the run's semantic published-social-context delta into
   one /capture proposal. Record audience knowledge, argument progression, and
   canonical-owner links only; do not copy post bodies, publication records, or
-  analytics. Knowledge Harvest still backstops missed live-post reconciliation.
+  analytics. KB Reconcile still backstops missed live-post reconciliation.
 
 Portfolio boundary:
-- Flag portfolio candidates as a handoff to Portfolio Surface Sweep; do not do
+- Flag portfolio candidates as a handoff to Portfolio Refresh; do not do
   portfolio branch work here.
 
 End state:

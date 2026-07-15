@@ -23,8 +23,8 @@ Injected into every composed prompt:
 - Write within your mandate: when a run surfaces a real signal worth storing, propose
   a `/capture` and reconcile it into your mandate surfaces while the context is hot.
   No run is forced to capture — an empty result is fine. Do not chase knowledge
-  outside your mandate, and never infer across runs; that is Knowledge Harvest's job.
-- Knowledge Harvest is the reconciler, not the primary author of KB knowledge: it
+  outside your mandate, and never infer across runs; that is KB Reconcile's job.
+- KB Reconcile is the reconciler, not the primary author of KB knowledge: it
   dedups first-party captures against current KB state, proposes what a run should
   have captured but did not, and surfaces conflicts. Do not defer an in-mandate
   capture to a later harvest.
@@ -88,7 +88,7 @@ Data surfaces and rule-sets automations read from the KB:
 - `personal-constraints`: relocation, compensation, work authorization, references,
   availability, and side-project/IP freedom.
 - `signal-preferences`: the user's criteria for what is worth remembering — the
-  emergent rubric Knowledge Harvest ranks candidates against; grows only through
+  emergent rubric KB Reconcile ranks candidates against; grows only through
   approved rubric updates.
 
 ### Sinks
@@ -129,27 +129,27 @@ External systems an automation observes (reads, never writes); each resolves fro
 binding, referenced by role:
 
 - `<transcript-source>`: agent conversation transcripts on the local machine that
-  Knowledge Harvest mines for signals. Read-only, forward-only by cursor, and private
+  KB Reconcile mines for signals. Read-only, forward-only by cursor, and private
   by default — derived signals never auto-flow to public-safe or social surfaces.
 - `<social-profile-source>`: the user's own public social profiles, one per platform
-  (currently X and LinkedIn), that Knowledge Harvest reads **best-effort** to reconcile
+  (currently X and LinkedIn), that KB Reconcile reads **best-effort** to reconcile
   `published-social-context` when the social sink cannot carry a post-live trigger.
   Read-only and public; a public source reconciling a public-facing ledger, so it does
   not touch the private-by-default rule. Best-effort: a platform that cannot be read
   degrades to a clarification question, never a fabricated ledger entry.
 - `<social-publishing-source>`: the bound social publishing system's queue, recurring
-  schedule, published history, and account analytics. Social Draft Pulse reads it
+  schedule, published history, and account analytics. Social Compose reads it
   before drafting or scheduling to avoid duplicates, find eligible open slots, and
   reconcile semantic continuity after posts go live. Read-only as a source; actual
   draft creation and scheduling happen through `<social-draft-queue>` after approval.
 - `<availability-calendar-source>`: the user's upcoming calendar availability and
-  free/busy evidence for the coverage window. Social Draft Pulse uses it only to apply
+  free/busy evidence for the coverage window. Social Compose uses it only to apply
   the KB's day-eligibility and recovery rules. Event details are private scheduling
   evidence and never become post ideas, claims, or public copy.
 - `<external-signal-source>`: a bounded public research surface for current discourse
   and ecosystem changes relevant to the user's active field and projects. Social
-  Draft Pulse reads it before candidate generation. It supplies timely evidence, not
-  a user stance, a verified personal claim, or a durable KB record.
+  Compose reads it before candidate generation. It supplies timely evidence, not a
+  user stance, a verified personal claim, or a durable KB record.
 
 ### Source Capabilities
 
@@ -177,8 +177,8 @@ prompt.
 
 ## Follow-up Marker Policy
 
-Automations that declare a dependency on deferred-knowledge markers (Knowledge
-Harvest) use the follow-up and final-form marker formats in
+Automations that declare a dependency on deferred-knowledge markers (KB Reconcile)
+use the follow-up and final-form marker formats in
 [knowledge-bank-conventions.md](../knowledge-bank-conventions.md). Those formats are
 **inlined** into the composed prompt at materialize time, not left as a file path for
 the run to open. This ships as the repo default; `setup-kb-infra` offers to override it

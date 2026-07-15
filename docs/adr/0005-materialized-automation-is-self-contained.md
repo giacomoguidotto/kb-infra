@@ -17,8 +17,7 @@ elsewhere. This ADR pins down *where* "elsewhere" is and what the running agent 
 assume about its surroundings.
 
 A materialized automation runs with its **sink checkout as the working directory**
-— Job Hunt Advance Audit runs inside the `career-system` clone, Portfolio Surface
-Sweep inside the `portfolio` clone. The kb-infra repository is **not** checked out
+— Job Pursue runs inside the `career-system` clone, Portfolio Refresh inside the `portfolio` clone. The kb-infra repository is **not** checked out
 next to it. Therefore the composed prompt is the agent's entire world: it must carry
 every rule and context surface the run needs, and it must never instruct the agent
 to read a kb-infra spec file by a working-directory-relative path.
@@ -69,7 +68,7 @@ rather than as the raw material for a single self-contained artifact.
   choice and drift boundary.
 - Automation bodies reference the sink by role as the working directory and read only
   the sink's own docs; they never read kb-infra spec files at runtime.
-- A runtime dependency on a kb-infra convention (for example Knowledge Harvest's
+- A runtime dependency on a kb-infra convention (for example KB Reconcile's
   follow-up marker formats) is **inlined** into the composed prompt at materialize
   time, not left as a path the agent is told to open.
 - Sink-native commands and workflow names are capability bindings. The generic

@@ -31,7 +31,7 @@ cadence, writers, and UI. It must provide complete research-backed defaults when
 personal strategy is supplied. User-layer voice material may keep unique examples
 or explicit overrides, but should point to the canonical strategy for shared rules.
 
-Job Hunt Advance Audit consumes two sink-native capabilities:
+Job Pursue consumes two sink-native capabilities:
 
 - `advance-workflow` for user-owned next-work planning and safe projection writes.
 - `wait-review` for read-only review of externally owned waits and next-route
@@ -54,4 +54,4 @@ and other factual external events require user confirmation.
 - Wait review can evolve with the sink's state model while the automation retains a
   small, stable capability contract.
 - Setup gains one optional endpoint binding and one required capability binding for
-  enabled Job Hunt Advance Audit materialization.
+  enabled Job Pursue materialization.

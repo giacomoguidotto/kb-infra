@@ -4,14 +4,13 @@ status: accepted
 
 # Media-dependent social drafts wait for user readiness
 
-Social Draft Pulse creates approved media-dependent posts as unscheduled drafts. It
+Social Compose creates approved media-dependent posts as unscheduled drafts. It
 schedules them only after the user confirms the required attachment is ready, or
 after the user approves replacement copy that works without the attachment.
 
 ## Context
 
-[ADR 0010](0010-typefully-schedules-approved-social-drafts.md) lets Social Draft
-Pulse schedule approved drafts so routine queue management does not become manual
+[ADR 0010](0010-typefully-schedules-approved-social-drafts.md) lets Social Compose schedule approved drafts so routine queue management does not become manual
 work. That default is unsafe for a post whose meaning or evidence depends on a photo,
 screenshot, or other attachment that only the user can supply. Scheduling such a
 draft can publish incomplete copy before the user has added the media.
@@ -29,10 +28,10 @@ a separate scheduling precondition, not a reason to discard the candidate.
   drafts normally. Leave media-dependent drafts unscheduled and report the draft link
   or ID plus the exact attachment required in the conversation.
 - The user can reply in the same conversation after attaching the media. That reply
-  clears the media-readiness precondition. Social Draft Pulse re-reads the live queue
+  clears the media-readiness precondition. Social Compose re-reads the live queue
   and schedules the existing draft at its approved time when that slot remains
   eligible and open, otherwise using the next approved, eligible open slot.
-- If the user cannot supply the attachment, Social Draft Pulse proposes
+- If the user cannot supply the attachment, Social Compose proposes
   media-independent replacement copy in the conversation. It waits for approval
   before replacing the draft copy and scheduling it.
 - Missing-media instructions stay in the conversation, not in public post copy. No

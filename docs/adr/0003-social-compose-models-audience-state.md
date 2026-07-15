@@ -2,12 +2,12 @@
 status: accepted
 ---
 
-# Social Draft Pulse models audience state, not platform reads
+# Social Compose models audience state, not platform reads
 
 > **Superseded in part** by [ADR 0006](0006-write-authority-is-mandate-scoped.md) and
 > [ADR 0008](0008-social-and-portfolio-sweeps-under-mandate-scoped-capture.md): the
 > "stays draft-only" claim below holds only for the sink-publish half (draft only; do
-> not post). Social Draft Pulse now first-party-captures `point-of-view` and
+> not post). Social Compose now first-party-captures `point-of-view` and
 > `published-social-context` within its mandate, through `/capture` approval.
 >
 > **Superseded in part** by
@@ -16,7 +16,7 @@ status: accepted
 > than a publication mirror, and live eligible slots replace the per-run volume
 > target as the capacity authority.
 
-Social Draft Pulse keeps a model of what a public audience already knows and of the
+Social Compose keeps a model of what a public audience already knows and of the
 user's persona **in the KB**, and drafts a content mix of project/proof and topical
 posts. Two new endpoints carry this: `published-social-context` (a per-platform
 ledger of what has been published and which concepts and projects have been publicly
@@ -60,10 +60,10 @@ model of audience state, and no source for topical, non-project content.
 - `social-rules-of-engagement` owns the per-run volume target, the project/topical
   content mix, and the self-contained / introduce-on-first-use rule as tunable
   dials.
-- Social Draft Pulse stays draft-only: new takes given at the gate become
+- Social Compose stays draft-only: new takes given at the gate become
   `point-of-view` capture candidates handed to `/capture`, and post-publication
   ledger updates are `/capture` handoffs too, preserving "write to the KB only
-  through capture approval." (Reframed by ADR 0006/0008: these are now SDP's own
+  through capture approval." (Reframed by ADR 0006/0008: these are now Social Compose's own
   first-party-capture mandate, not deferred handoffs; the `/capture`-approval
   invariant is unchanged.)
 - The persona and the audience ledger fill in over time, so drafts grow more
