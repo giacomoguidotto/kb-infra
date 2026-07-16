@@ -135,8 +135,14 @@ fi
 EVALUATE_SPEC='docs/automations/job-scout.md'
 grep -Fq 'node scan.mjs --verify --throttle --max-new=30 --max-per-company=3' "$EVALUATE_SPEC" || \
   err "$EVALUATE_SPEC does not pin the bounded scan command"
-grep -q 'Process up to 30 existing pending/failed items' "$EVALUATE_SPEC" || \
-  err "$EVALUATE_SPEC does not bound existing queue processing"
+grep -q 'Drain the first 30 existing pending/failed items to terminal evaluation states' "$EVALUATE_SPEC" || \
+  err "$EVALUATE_SPEC does not drain the selected queue batch to terminal states"
+grep -q 'If later existing items remain queued, skip scanning; otherwise run' "$EVALUATE_SPEC" || \
+  err "$EVALUATE_SPEC does not skip scanning while existing queue work remains"
+grep -q 'Drain every posting selected by the scan to a terminal evaluation state before ending' "$EVALUATE_SPEC" || \
+  err "$EVALUATE_SPEC does not drain every selected scan result to a terminal state"
+grep -q 'Stop early only for a concrete blocker' "$EVALUATE_SPEC" || \
+  err "$EVALUATE_SPEC does not define the sole early-stop condition"
 
 # 9. Social Compose consumes provider-neutral social and availability sources,
 # with every required read operation expressed as a source capability that setup can

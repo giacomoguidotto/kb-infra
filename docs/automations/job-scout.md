@@ -50,13 +50,14 @@ Startup:
 Goal:
 - Run the career-system discovery-to-evaluation loop:
   1. Run the career-system's health check first.
-  2. Process up to 30 existing pending/failed items, priority-first; leave the
-     remainder queued.
-  3. Only when the queue is drained, run
+  2. Drain the first 30 existing pending/failed items to terminal evaluation states,
+     priority-first; leave later items queued.
+  3. If later existing items remain queued, skip scanning; otherwise run
      `node scan.mjs --verify --throttle --max-new=30 --max-per-company=3`.
-  4. Evaluate live postings.
-  5. Generate the expected reports, artifacts, and tracker rows.
-  6. Verify the pipeline.
+  4. Drain every posting selected by the scan to a terminal evaluation state before ending.
+  5. Stop early only for a concrete blocker.
+  6. Generate the expected reports, artifacts, and tracker rows.
+  7. Verify the pipeline.
 
 Strategy signals (first-party capture):
 - While evaluating, watch for signals that the strategy itself should change: scoring
