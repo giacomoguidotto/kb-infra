@@ -58,10 +58,11 @@ Social Compose is a feedback-to-social-draft workflow.
 - Two candidate branches: project/proof candidates mined from the KB, and topical
   candidates hooked to current public discourse. Topical angles come from
   `point-of-view` and `identity`; the automation never fabricates a stance.
-- Continuity: `published-social-context` owns semantic audience and argument state;
-  the social publishing source owns raw posts, metrics, queue state, and schedule.
-  Reconcile the live delta before drafting without copying source records into the
-  KB or duplicating concepts owned elsewhere.
+- Continuity: `published-social-context` is the durable semantic checkpoint; the
+  social publishing source owns raw posts, metrics, queue state, and schedule.
+  Build working continuity from the checkpoint plus the live publication delta. A
+  stale or missing checkpoint never blocks drafting when source history can safely
+  reconstruct it.
 - Approval gate: return an idea summary first. Surface topical hooks that need the
   user's take, any proposed testing window, and whether each candidate requires a
   manual media attachment. After approval, create drafts only within the approved
@@ -134,6 +135,9 @@ Live social reconciliation:
 - Compare that delta with published-social-context before drafting. Carry forward
   the semantic effect on audience knowledge and broader arguments; do not mirror raw
   source records into the KB.
+- If published-social-context is stale or missing, reconstruct the semantic state
+  needed for this run from bounded available history and continue. If that history
+  is incomplete, report the gap and ask narrowly rather than inventing continuity.
 - Use queue-timeline to detect duplicates, occupied timestamps, and already-covered
   ideas.
 - Use queue-schedule to read the timezone and recurring enabled slots. Derive
@@ -253,7 +257,8 @@ Persona and continuity persistence:
 - After posts go live, batch the run's semantic published-social-context delta into
   one /capture proposal. Record audience knowledge, argument progression, and
   canonical-owner links only; do not copy post bodies, publication records, or
-  analytics. KB Reconcile still backstops missed live-post reconciliation.
+  analytics. A missed or declined capture leaves retryable persistence debt; it does
+  not invalidate the run. The next Social Compose run or KB Reconcile retries it.
 
 Portfolio boundary:
 - Flag portfolio candidates as a handoff to Portfolio Refresh; do not do
