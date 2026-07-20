@@ -27,9 +27,11 @@ status: repository layout locked
 │   │   ├── domain-reconnaissance/
 │   │   ├── post/
 │   │   ├── tweet/                     # small preset over /post
-│   │   └── <integration-skill>/       # exact name deferred to its contract
+│   │   └── career-integration/
 │   │       ├── SKILL.md
-│   │       └── resources/             # mapper and cross-system contract
+│   │       └── resources/
+│   │           ├── mapper/            # Knowledge to Career Profile Snapshot
+│   │           └── schemas/           # scout and pursue run results
 │   └── internal/                      # committed, public-safe, not distributed
 │       └── setup-project/
 ├── automations/

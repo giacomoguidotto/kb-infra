@@ -34,8 +34,11 @@ automation tree. `/setup-agentic-os` owns the fixed repository contract and the
 automation definitions it materializes. Each automation keeps its definition,
 minimal Knowledge Request, and Knowledge Mandate together. Public integration
 skills keep their mapper and cross-system procedure inside their own release
-module. Internal automations remain under `automations/internal/` for explicit
-repo-native installation.
+module. The resolved Career Integration module is
+`skills/public/career-integration/`; it owns the Knowledge System to
+`career-profile-snapshot/v1` mapper and the `career-scout-run/v1` and
+`career-pursuit-run/v1` result schemas. Internal automations remain under
+`automations/internal/` for explicit repo-native installation.
 
 The release contract follows the canonical `build` KB convention. Every commit
 uses Conventional Commits. In a release-enabled repository, `fix:` triggers a
