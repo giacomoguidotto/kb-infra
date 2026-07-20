@@ -1,0 +1,120 @@
+# PROTOTYPE: default-branch workflow for the future giacomoguidotto/skills repo.
+name: Reconcile Distribution Bundle
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Reconcile latest releases or restore a prior bundle commit
+        required: true
+        default: reconcile
+        type: choice
+        options: [reconcile, rollback]
+      source_repository:
+        description: Audit-only wake-up hint; never used to select content
+        required: false
+        type: string
+      source_release_id:
+        description: Audit-only wake-up hint; never used to select content
+        required: false
+        type: string
+      source_tag:
+        description: Audit-only wake-up hint; never used to select content
+        required: false
+        type: string
+      rollback_commit:
+        description: Prior generated bundle commit to restore; blank means rebuild latest
+        required: false
+        type: string
+
+concurrency:
+  group: distribution-bundle-publication
+  cancel-in-progress: false
+  queue: single
+
+permissions:
+  contents: read
+
+jobs:
+  reconcile:
+    if: >-
+      github.event_name == 'schedule' ||
+      (inputs.mode == 'reconcile' &&
+      (github.actor == 'agentic-os-distribution-trigger[bot]' ||
+      github.actor == github.repository_owner))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint single-writer installation token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.DISTRIBUTION_PUBLISHER_APP_ID }}
+          private-key: ${{ secrets.DISTRIBUTION_PUBLISHER_APP_PRIVATE_KEY }}
+          owner: giacomoguidotto
+          repositories: skills
+          permission-contents: write
+
+      - name: Check out the current install channel
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Build and validate complete candidate tree
+        run: >-
+          python3 scripts/rebuild_bundle.py
+          --registry .github/distribution-exports.json
+          --output skills
+          --provenance provenance.lock.json
+
+      - name: Publish one forward commit or no-op
+        run: |
+          git diff --exit-code -- skills provenance.lock.json && exit 0
+          git config user.name "agentic-os-distributor[bot]"
+          git config user.email "agentic-os-distributor[bot]@users.noreply.github.com"
+          git add -- skills provenance.lock.json
+          git commit -m "chore: publish generated distribution bundle"
+          git push origin HEAD:main
+
+  rollback:
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.mode == 'rollback' &&
+      inputs.rollback_commit != '' &&
+      github.actor == github.repository_owner
+    environment: distribution-rollback
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint single-writer installation token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.DISTRIBUTION_PUBLISHER_APP_ID }}
+          private-key: ${{ secrets.DISTRIBUTION_PUBLISHER_APP_PRIVATE_KEY }}
+          owner: giacomoguidotto
+          repositories: skills
+          permission-contents: write
+
+      - name: Check out the current install channel
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Restore a prior generated snapshot
+        env:
+          ROLLBACK_COMMIT: ${{ inputs.rollback_commit }}
+        run: scripts/restore_bundle.sh "$ROLLBACK_COMMIT"
+
+      - name: Publish rollback as a forward commit
+        env:
+          ROLLBACK_COMMIT: ${{ inputs.rollback_commit }}
+        run: |
+          git diff --exit-code -- skills provenance.lock.json && exit 0
+          git config user.name "agentic-os-distributor[bot]"
+          git config user.email "agentic-os-distributor[bot]@users.noreply.github.com"
+          git add -- skills provenance.lock.json
+          git commit -m "chore: restore distribution bundle from $ROLLBACK_COMMIT"
+          git push origin HEAD:main

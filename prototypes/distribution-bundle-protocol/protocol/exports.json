@@ -1,0 +1,22 @@
+{
+  "schema": "distribution-exports/v1",
+  "sources": [
+    {
+      "repository": "giacomoguidotto/agentic-os",
+      "exports": ["skills/public/*"]
+    },
+    {
+      "repository": "giacomoguidotto/knowledge-system",
+      "exports": ["skills/public/*"]
+    },
+    {
+      "repository": "giacomoguidotto/mastery-system",
+      "exports": ["skills/public/*"]
+    },
+    {
+      "repository": "giacomoguidotto/career-ops",
+      "exports": ["skills/public/setup-career-system"]
+    }
+  ]
+}
+

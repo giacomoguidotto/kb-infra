@@ -1,0 +1,39 @@
+# PROTOTYPE: copy this shape into each release-enabled owned source repository.
+name: Notify Distribution Bundle
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    if: ${{ !github.event.release.prerelease && github.event.release.immutable }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint target-scoped installation token
+        id: app-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.DISTRIBUTION_TRIGGER_APP_ID }}
+          private-key: ${{ secrets.DISTRIBUTION_TRIGGER_APP_PRIVATE_KEY }}
+          owner: giacomoguidotto
+          repositories: skills
+          permission-actions: write
+
+      - name: Send wake-up hint
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          SOURCE_RELEASE_ID: ${{ github.event.release.id }}
+          SOURCE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          gh api --method POST \
+            repos/giacomoguidotto/skills/actions/workflows/reconcile.yml/dispatches \
+            --field ref=main \
+            --field inputs[mode]=reconcile \
+            --field inputs[source_repository]="$SOURCE_REPOSITORY" \
+            --field inputs[source_release_id]="$SOURCE_RELEASE_ID" \
+            --field inputs[source_tag]="$SOURCE_TAG"
