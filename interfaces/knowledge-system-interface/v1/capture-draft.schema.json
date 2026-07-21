@@ -26,9 +26,8 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["order", "action", "target", "placement", "before", "after", "removed", "deletion_consequences", "reason", "sources", "uncertainty", "read_back"],
+        "required": ["action", "target", "placement", "before", "after", "removed", "deletion_consequences", "reason", "sources", "uncertainty", "read_back"],
         "properties": {
-          "order": { "type": "integer", "minimum": 1 },
           "action": { "enum": ["create", "update", "move", "archive", "delete"] },
           "target": { "type": "string", "minLength": 1 },
           "placement": { "type": "string", "minLength": 1 },

@@ -10,12 +10,17 @@
   },
   "operations": [
     {
-      "order": 1,
       "action": "update",
       "target": "Canonical job search strategy owner",
       "placement": "Preferences section",
-      "before": "Current complete preferences section",
-      "after": "Complete preferences section with the example durable preference reconciled once",
+      "before": {
+        "heading": "Preferences",
+        "items": ["Prefer example role family"]
+      },
+      "after": {
+        "heading": "Preferences",
+        "items": ["Prefer example role family", "Example durable preference"]
+      },
       "removed": null,
       "deletion_consequences": "",
       "reason": "The user explicitly stated a durable preference that changes future evaluation.",

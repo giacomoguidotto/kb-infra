@@ -7,7 +7,8 @@ fail=0
 err() { printf 'FAIL: %s\n' "$*"; fail=1; }
 
 TMP_BROKEN=$(mktemp)
-trap 'rm -f "$TMP_BROKEN"' EXIT
+TMP_INTERFACE_DEPS=$(mktemp -d)
+trap 'rm -f "$TMP_BROKEN"; rm -rf "$TMP_INTERFACE_DEPS"' EXIT
 
 self=':!scripts/check.sh'
 
@@ -54,7 +55,13 @@ for f in skills/*/SKILL.md; do
 done
 
 # 4a. The provider-blind Knowledge System interface package is internally coherent.
-python3 scripts/check-interface.py || fail=1
+if ! python3 -m pip install --quiet --disable-pip-version-check \
+  --target "$TMP_INTERFACE_DEPS" 'jsonschema==4.25.1'; then
+  err 'could not install the pinned interface schema validator'
+elif ! PYTHONPATH="$TMP_INTERFACE_DEPS${PYTHONPATH:+:$PYTHONPATH}" \
+  python3 scripts/check-interface.py; then
+  fail=1
+fi
 
 # 5. Preamble exists and every automation references it.
 if [ ! -f docs/automations/_preamble.md ]; then

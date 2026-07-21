@@ -8,35 +8,6 @@ description: Look up scoped live Knowledge Bank context without writing. Use whe
 Lookup is live, narrow, and read-only. The caller supplies the objective; the KB
 supplies the knowledge.
 
-## Interface Modes
-
-Interactive calls accept an ad hoc objective and return the concise Markdown shape
-below. Automation calls must use the installed
-`knowledge-system-interface/v1/request.schema.json` package and return a Knowledge
-Context Snapshot matching `snapshot.schema.json`.
-
-For an automation request:
-
-1. Reject fields outside the schema and roles absent or inactive in the installed
-   Endpoint Registry.
-2. Resolve roles by their registry meaning. Never accept or expose provider names,
-   page locations, traversal instructions, cached facts, or project inventories.
-3. Follow only the registry's canonical-owner and evidence traversal, stopping when
-   the objective is satisfied or a declared stopping condition applies.
-4. Return `value` only from a current canonical owner, `absent` only when that owner
-   establishes no applicable value, and `unresolved` for ownership, evidence,
-   freshness, access, or revision uncertainty. A search miss is never absence.
-5. Attach evidence and provenance to every claim or established absence. Keep
-   visibility independent from result state.
-6. Cover the exact registry revision, owners, relations, evidence revisions, and
-   results with an opaque Snapshot Token. Consumers may return but never interpret
-   the token.
-
-If covered state drifts during traversal, discard the partial result and rebuild
-once. Persistent drift returns the affected role as `unresolved` and blocks only
-the request's dependent capability. Never mix revisions, guess, widen retrieval, or
-disable an unrelated capability.
-
 ## 1. Set Scope
 
 Identify the caller's objective, named context surfaces, and branch:
@@ -61,8 +32,7 @@ every source is relevant to the caller.
 
 ## 3. Return Context
 
-For an interactive `context` branch, return only what changes the caller's next
-step:
+For the `context` branch, return only what changes the caller's next step:
 
 ```md
 Sources:

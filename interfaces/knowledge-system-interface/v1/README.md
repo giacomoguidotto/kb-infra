@@ -77,11 +77,18 @@ An automation proposes durable meaning with a document matching
 target role, meaning, visibility, evidence, optional source snapshot token, and
 rationale. It never supplies a provider write or concrete target location.
 
-The Knowledge System resolves the canonical owner, deduplicates, rereads, and
-returns `blocked` or an exact draft matching
+The Knowledge System resolves the canonical owner, deduplicates, and rereads. A
+safe proposal returns an exact draft matching
 [`capture-draft.schema.json`](capture-draft.schema.json). Every draft names its
-complete ordered writes, exact before and after state, removal consequences,
-sources, reasons, uncertainty, and read-back checks.
+complete writes in application order, exact before and after state, removal
+consequences, sources, reasons, uncertainty, and read-back checks. Array position is
+the sole operation order.
+
+When mandate, ownership, evidence, freshness, access, or revision state prevents a
+safe draft, return a response matching
+[`capture-blocked.schema.json`](capture-blocked.schema.json). A blocked response has
+no operations or approval prompt. See
+[`examples/capture-blocked.json`](examples/capture-blocked.json).
 
 `drafted` is not write authority. Applying a draft requires the exact `/capture`
 approval prompt in the schema and an explicit approval of the latest draft. The
