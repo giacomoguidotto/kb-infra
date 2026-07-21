@@ -44,7 +44,7 @@ This connects your Knowledge Bank provider, preserves your personal **bindings**
 
 - **`/lookup`** — read-only retrieval from your Knowledge Bank.
 - **`/capture`** — writes, always behind an approval draft (below).
-- **`/setup-knowledge-system check|reconcile`** — checks or reconciles the standalone System.
+- **`/setup-knowledge-system check|reconcile`**: checks or reconciles the standalone System.
 
 **Interfaces**: provider-blind data packages installed once per harness:
 
