@@ -17,6 +17,11 @@ def load(relative: str):
         return json.load(source)
 
 
+def require(condition: bool, message: str):
+    if not condition:
+        raise AssertionError(message)
+
+
 registry = load("endpoint-registry.json")
 request_schema = load("request.schema.json")
 snapshot_schema = load("snapshot.schema.json")
@@ -43,55 +48,89 @@ for schema, example in schema_examples:
 preamble = (ROOT / "docs/automations/_preamble.md").read_text(encoding="utf-8")
 endpoint_section = preamble.split("### Endpoints", 1)[1].split("### Sinks", 1)[0]
 declared_roles = set(re.findall(r"^- `([a-z0-9-]+)`:", endpoint_section, re.MULTILINE))
-assert set(registry["roles"]) == declared_roles, "Endpoint Registry differs from the endpoint vocabulary"
-assert registry["interface"] == "knowledge-system-interface/v1"
-assert registry["revision"]
+require(set(registry["roles"]) == declared_roles, "Endpoint Registry differs from the endpoint vocabulary")
+require(registry["interface"] == "knowledge-system-interface/v1", "registry interface is invalid")
+require(bool(registry["revision"]), "registry revision is empty")
 
 for role, entry in registry["roles"].items():
-    assert entry["compatibility"] in {"active", "deprecated"}, role
+    require(entry["compatibility"] in {"active", "deprecated"}, f"{role} has invalid compatibility")
     for field in ("meaning", "result_shape", "visibility", "intended_use", "traversal", "provenance", "stopping_conditions"):
-        assert entry[field], f"{role} lacks {field}"
-    assert {"owner", "source", "observed_at", "revision"} <= set(entry["provenance"]), role
+        require(bool(entry[field]), f"{role} lacks {field}")
+    require(
+        {"owner", "source", "observed_at", "revision"} <= set(entry["provenance"]),
+        f"{role} lacks required provenance",
+    )
 
 for schema in (request_schema, snapshot_schema, capture_request_schema, capture_draft_schema, capture_blocked_schema):
-    assert schema["additionalProperties"] is False
-    assert schema["properties"]["interface"]["const"] == "knowledge-system-interface/v1"
+    require(schema["additionalProperties"] is False, f"{schema['title']} permits undeclared fields")
+    require(
+        schema["properties"]["interface"]["const"] == "knowledge-system-interface/v1",
+        f"{schema['title']} has the wrong interface",
+    )
 
 for document in (request, snapshot, capture_request, capture_draft, capture_blocked):
-    assert document["interface"] == "knowledge-system-interface/v1"
+    require(document["interface"] == "knowledge-system-interface/v1", "example has the wrong interface")
 
 for forbidden in ("provider", "page", "location", "traversal", "facts", "projects"):
-    assert forbidden not in request_schema["properties"], f"provider detail leaked into request: {forbidden}"
-    assert forbidden not in request, f"provider detail leaked into example request: {forbidden}"
+    require(forbidden not in request_schema["properties"], f"provider detail leaked into request: {forbidden}")
+    require(forbidden not in request, f"provider detail leaked into example request: {forbidden}")
 
 active_roles = {role for role, entry in registry["roles"].items() if entry["compatibility"] == "active"}
 requested_roles = set(request["roles"]["required"] + request["roles"]["optional"])
-assert requested_roles <= active_roles
-assert set(request["mandate"]["read_roles"]) == requested_roles
-assert request["requirements"]["claim_provenance"] is True
-assert request["intended_use"]["mode"] in {"private-context", "named-sink", "public-draft"}
+require(requested_roles <= active_roles, "request includes a role that is not active")
+require(set(request["mandate"]["read_roles"]) == requested_roles, "request roles differ from mandate roles")
+require(request["requirements"]["claim_provenance"] is True, "request does not require claim provenance")
+require(
+    request["intended_use"]["mode"] in {"private-context", "named-sink", "public-draft"},
+    "request has an invalid intended-use mode",
+)
 
 result_variants = snapshot_schema["$defs"]["result"]["oneOf"]
-assert {variant["properties"]["state"]["const"] for variant in result_variants} == {"value", "absent", "unresolved"}
-assert {result["state"] for result in snapshot["results"].values()} == {"value", "absent", "unresolved"}
-assert len(snapshot["snapshot_token"]) >= 16
-assert snapshot["capability_status"]["state"] == "blocked"
-assert snapshot["capability_status"]["blocking_roles"] == ["personal-constraints"]
-assert snapshot["results"]["personal-constraints"]["reason"] == "persistent_drift"
+require(
+    {variant["properties"]["state"]["const"] for variant in result_variants}
+    == {"value", "absent", "unresolved"},
+    "snapshot schema does not define the exact result states",
+)
+require(
+    {result["state"] for result in snapshot["results"].values()} == {"value", "absent", "unresolved"},
+    "snapshot example does not cover every result state",
+)
+require(len(snapshot["snapshot_token"]) >= 16, "snapshot token is too short")
+require(snapshot["capability_status"]["state"] == "blocked", "drift example capability is not blocked")
+require(
+    snapshot["capability_status"]["blocking_roles"] == ["personal-constraints"],
+    "drift example blocks the wrong roles",
+)
+require(
+    snapshot["results"]["personal-constraints"]["reason"] == "persistent_drift",
+    "drift example has the wrong unresolved reason",
+)
 for result in snapshot["results"].values():
     if result["state"] == "value":
         for claim in result["claims"]:
-            assert claim["evidence"] and claim["provenance"]
+            require(bool(claim["evidence"] and claim["provenance"]), "value claim lacks evidence or provenance")
     if result["state"] == "absent":
-        assert result["evidence"] and result["provenance"]
+        require(bool(result["evidence"] and result["provenance"]), "absence lacks evidence or provenance")
 
-assert capture_request["target_role"] in active_roles
-assert capture_request["target_role"] in capture_request["mandate"]["capture_roles"]
-assert capture_draft["status"] == "drafted"
-assert capture_draft["operations"]
-assert capture_draft["approval_prompt"] == "Should I apply these exact KB writes now?"
-assert capture_draft_schema["properties"]["approval_prompt"]["const"] == capture_draft["approval_prompt"]
-assert capture_blocked["status"] == "blocked"
-assert "operations" not in capture_blocked and "approval_prompt" not in capture_blocked
+require(capture_request["target_role"] in active_roles, "capture target role is not active")
+require(
+    capture_request["target_role"] in capture_request["mandate"]["capture_roles"],
+    "capture target role is outside the mandate",
+)
+require(capture_draft["status"] == "drafted", "capture draft has the wrong status")
+require(bool(capture_draft["operations"]), "capture draft has no operations")
+require(
+    capture_draft["approval_prompt"] == "Should I apply these exact KB writes now?",
+    "capture draft has the wrong approval prompt",
+)
+require(
+    capture_draft_schema["properties"]["approval_prompt"]["const"] == capture_draft["approval_prompt"],
+    "capture schema and example approval prompts differ",
+)
+require(capture_blocked["status"] == "blocked", "blocked capture example has the wrong status")
+require(
+    "operations" not in capture_blocked and "approval_prompt" not in capture_blocked,
+    "blocked capture includes write authority",
+)
 
 print("knowledge-system-interface/v1: OK")
