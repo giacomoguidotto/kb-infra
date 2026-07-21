@@ -232,6 +232,10 @@ grep -q 'class="invalidation"' "$EXAMPLE_DRAFT" || \
   err "$EXAMPLE_DRAFT does not demonstrate the invalidation component"
 grep -q '>Previous Draft Invalidated<' "$EXAMPLE_DRAFT" || \
   err "$EXAMPLE_DRAFT is missing the exact invalidation heading"
+grep -q 'No interpolated value may render as' "$CAPTURE_DRAFT" || \
+  err "$CAPTURE_DRAFT does not require escaped text-only interpolation"
+grep -q 'Contextually HTML-escape' "$CAPTURE_SKILL" || \
+  err "$CAPTURE_SKILL does not require contextual HTML escaping"
 grep -q 'invalidation>div { min-width:0; }' "$CAPTURE_DRAFT" || \
   err "$CAPTURE_DRAFT does not let invalidation content shrink on narrow screens"
 grep -q 'grid-template-columns:minmax(0,1fr)' "$CAPTURE_DRAFT" || \

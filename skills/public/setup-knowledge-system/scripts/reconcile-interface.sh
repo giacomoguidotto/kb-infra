@@ -24,9 +24,17 @@ source_tree=$(cd "$script_dir/../resources/knowledge-system-interface/v1" && pwd
 interface_parent="$harness_root/knowledge-system-interface"
 target_tree="$interface_parent/v1"
 
-if [ -d "$target_tree" ] && diff -qr "$source_tree" "$target_tree" >/dev/null; then
-  printf 'state=converged writes=0 target=%s\n' "$target_tree"
-  exit 0
+if [ -d "$target_tree" ]; then
+  if diff -qr "$source_tree" "$target_tree" >/dev/null; then
+    printf 'state=converged writes=0 target=%s\n' "$target_tree"
+    exit 0
+  else
+    diff_status=$?
+    if [ "$diff_status" -ne 1 ]; then
+      printf 'cannot compare interface target: %s\n' "$target_tree" >&2
+      exit 68
+    fi
+  fi
 fi
 
 if [ "$mode" = check ]; then
@@ -50,7 +58,10 @@ if find "$candidate" -name SKILL.md -print -quit | grep -q .; then
   printf 'candidate interface contains SKILL.md\n' >&2
   exit 66
 fi
-diff -qr "$source_tree" "$candidate" >/dev/null
+if ! diff -qr "$source_tree" "$candidate" >/dev/null; then
+  printf 'candidate interface copy failed validation\n' >&2
+  exit 69
+fi
 
 if [ -e "$target_tree" ]; then
   backup="$interface_parent/.v1-backup.$$"

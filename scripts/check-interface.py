@@ -3,9 +3,10 @@
 
 import json
 import re
+from copy import deepcopy
 from pathlib import Path
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, ValidationError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -101,6 +102,19 @@ require(
     snapshot["capability_status"]["blocking_roles"] == ["personal-constraints"],
     "drift example blocks the wrong roles",
 )
+
+snapshot_validator = Draft202012Validator(snapshot_schema)
+for state, blocking_roles in (("ready", ["identity"]), ("blocked", [])):
+    invalid_snapshot = deepcopy(snapshot)
+    invalid_snapshot["capability_status"]["state"] = state
+    invalid_snapshot["capability_status"]["blocking_roles"] = blocking_roles
+    try:
+        snapshot_validator.validate(invalid_snapshot)
+    except ValidationError:
+        pass
+    else:
+        raise AssertionError(f"snapshot permits inconsistent {state} capability state")
+
 require(
     snapshot["results"]["personal-constraints"]["reason"] == "persistent_drift",
     "drift example has the wrong unresolved reason",

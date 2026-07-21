@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Semantic-version tagger for Knowledge System. Reads conventional commits since the last
+# Semantic-version tagger for kb-infra. Reads conventional commits since the last
 # tag, computes the next semver, and creates an annotated `vX.Y.Z` tag. Git tags
 # are the source of truth for the spec version; setup reads them for reference.
 set -euo pipefail

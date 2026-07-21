@@ -129,6 +129,13 @@ mutations. For each primary write show:
 Keep raw provider IDs and request payloads collapsed unless the user needs them to
 decide. Treat the HTML draft as the complete approval record.
 
+Render every provider-derived or user-derived value as text, never raw markup.
+Contextually HTML-escape element text and attribute values, including content inside
+`pre` and `code`. Do not emit active markup, event-handler attributes, executable
+styles, or scriptable URL schemes such as `javascript:` or active `data:` content.
+Use text nodes when the renderer supports them. These rules also apply to collapsed
+technical payloads and identifiers.
+
 If a blocker remains, label the draft blocked and ask only for the missing decision
 or evidence. Otherwise open the file, report its absolute path, and ask exactly:
 "Should I apply these exact KB writes now?"

@@ -36,4 +36,16 @@ esac
 [ ! -e "$fixture/local/installed.yml" ] || { printf 'FAIL: setup receipt created\n' >&2; exit 1; }
 [ ! -e "$fixture/local/automations" ] || { printf 'FAIL: prompt snapshot created\n' >&2; exit 1; }
 
+printf 'unexpected installed content\n' > "$harness_root/knowledge-system-interface/v1/drift.txt"
+fake_bin="$fixture/fake-bin"
+mkdir -p "$fake_bin"
+printf '#!/usr/bin/env bash\nexit 2\n' > "$fake_bin/diff"
+chmod +x "$fake_bin/diff"
+set +e
+PATH="$fake_bin:$PATH" bash "$installer" reconcile "$harness_root" >/dev/null 2>&1
+failure_status=$?
+set -e
+[ "$failure_status" -eq 68 ] || { printf 'FAIL: comparison I/O failure was not reported\n' >&2; exit 1; }
+[ -f "$harness_root/knowledge-system-interface/v1/drift.txt" ] || { printf 'FAIL: comparison failure mutated target\n' >&2; exit 1; }
+
 printf 'setup reconcile idempotency: OK\n'

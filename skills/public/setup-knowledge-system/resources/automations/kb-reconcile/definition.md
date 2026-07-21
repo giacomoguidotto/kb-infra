@@ -144,13 +144,14 @@ Question style:
   formats given under "Marker formats" in this prompt.
 
 Capture:
-- Feed answered updates, marker candidates, discarded findings, and unresolved
-  questions into /capture.
+- Feed answered updates and approved marker candidates into /capture. A normal
+  discarded finding produces no write. An unresolved question enters /capture only
+  when the user chooses a follow-up or final-form marker for it.
 - Reconciliation outcomes route through the same draft: a candidate already present in
   the KB produces no write; a miss becomes an ordinary signal write; a confirmed
   conflict becomes a write or marker only after the user adjudicates the walk-back, and
   a mirror-drift note names the owning automation without writing a sink.
-- When a discard or a pattern implies a change to what counts as a signal, propose
+- Only when a discard pattern warrants changing what counts as a signal, propose
   a signal-preferences rubric update as a distinct block in the capture draft,
   clearly separated from the signal writes, so the user approves it deliberately.
 - Keep the signal-preferences rubric taste-only and evergreen: it records which
@@ -169,5 +170,8 @@ End state:
 - Do not stop after the candidate lists.
 - Transcript-derived signals stay private by default; never route them to
   public-safe or social surfaces.
-- After the run, advance each source cursor in local state.
+- Advance a source cursor only past candidates with a durable disposition: present,
+  explicitly discarded, captured after approval, or retained through an approved
+  follow-up or final-form marker. If an unresolved or blocked candidate has no
+  durable marker, leave that source cursor before it so a later run revisits it.
 ```

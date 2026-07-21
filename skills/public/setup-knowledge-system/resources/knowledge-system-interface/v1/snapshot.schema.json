@@ -18,7 +18,17 @@
         "state": { "enum": ["ready", "blocked"] },
         "depends_on_roles": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
         "blocking_roles": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
-      }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "const": "ready" } }, "required": ["state"] },
+          "then": { "properties": { "blocking_roles": { "maxItems": 0 } } }
+        },
+        {
+          "if": { "properties": { "state": { "const": "blocked" } }, "required": ["state"] },
+          "then": { "properties": { "blocking_roles": { "minItems": 1 } } }
+        }
+      ]
     },
     "results": {
       "type": "object",
