@@ -46,6 +46,11 @@ This connects your Knowledge Bank provider, collects your personal **bindings** 
 - **`/capture`** — writes, always behind an approval draft (below).
 - **`/setup-kb-infra`** — materializes the whole thing on your machine.
 
+**Interfaces**: provider-blind data packages installed once per harness:
+
+- **`knowledge-system-interface/v1`**: role-based requests, typed snapshots,
+  provenance, drift protection, and semantic capture drafts.
+
 **Automations** — generic prompts in [`docs/automations/`](docs/automations/), scheduled by your runtime and all rooted in `/lookup`: knowledge harvest, social drafts, portfolio sweeps, and job-hunt audits. Each proposes work; none writes without approval.
 
 Every write goes through a reviewable draft first — the exact property and body diffs, plus the evidence read — and waits for your explicit approval:

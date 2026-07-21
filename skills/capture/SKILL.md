@@ -13,6 +13,28 @@ user explicitly approves from the latest draft.
 The KB is canonical. Use its live provider connector and schema; keep personal and
 provider-specific bindings out of this skill.
 
+## Semantic Interface Requests
+
+Automation callers propose durable meaning through the installed
+`knowledge-system-interface/v1/capture-request.schema.json` contract. Validate the
+request and its declarative mandate before the normal loop:
+
+- accept only a registered target role included in the mandate;
+- accept meaning, visibility, evidence, optional source Snapshot Token, and
+  rationale, never provider writes or concrete target locations;
+- resolve ownership and placement live, then deduplicate and reconcile through the
+  same authoring rules as an interactive capture;
+- return `blocked` when mandate, ownership, evidence, freshness, access, or revision
+  state prevents a safe exact draft;
+- otherwise return `drafted` with the exact ordered operations represented in the
+  HTML approval draft and the installed `capture-draft.schema.json` contract.
+
+`drafted` is not write authority. `applied` is possible only after the user
+explicitly approves the latest exact `/capture` draft and the required fresh reread
+finds no drift. Return `failed` for an attempted approved write or verification that
+does not complete exactly. Automation and setup calls never bypass the approval
+gate.
+
 ## Authoring Rules
 
 Apply three rules to every draft:

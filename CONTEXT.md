@@ -17,6 +17,27 @@ materializes it as harness metadata rather than prompt text.
 
 **Endpoint**: A named context surface or rule-set an automation reads from the KB, such as selected projects, public-safe claim source, portfolio change rules, or social rules of engagement. Automations reference endpoints by role; setup binds each to a concrete KB location.
 
+**Endpoint Registry**: The declarative, provider-blind registry for
+`knowledge-system-interface/v1`. It gives each endpoint role a stable meaning,
+result shape, visibility and intended-use rules, bounded traversal, provenance,
+stopping conditions, and compatibility status.
+
+**Knowledge Request**: A provider-blind automation request naming an interface
+major, caller and dependent capability, objective, required and optional endpoint
+roles, intended-use boundary, evidence and provenance requirements, declarative
+mandate, and clarification permission. It never contains provider structure,
+locations, traversal instructions, cached facts, or project inventories.
+
+**Knowledge Context Snapshot**: The JSON-compatible automation result for a
+Knowledge Request. It contains the Endpoint Registry revision, strict `value`,
+`absent`, or `unresolved` role results, claim-level visibility, evidence and
+provenance, machine-readable gaps, capability-scoped status, and an opaque Snapshot
+Token.
+
+**Snapshot Token**: An opaque drift token covering the exact owners, relations,
+evidence revisions, and Endpoint Registry revision behind a Knowledge Context
+Snapshot. Consumers return it for validation but never interpret it.
+
 **Point-of-View Surface**: An incrementally-built KB endpoint holding the user's public persona — recorded stances, opinions, and recurring themes that topical social drafts draw from. It grows over time only through approved `/capture` writes; automations read it and never fabricate a stance.
 
 **Published Social Context**: A per-platform semantic audience and argument ledger. It records what an audience can be assumed to know, which concepts and projects were introduced, which broader arguments are in flight, and pointers to their canonical KB owners. It deliberately does not mirror post copy, publication history, queue state, analytics, or concepts already owned elsewhere in the KB. Automations read it for continuity and maintain semantic deltas through approved `/capture` writes after reconciling live publication evidence.

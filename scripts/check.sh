@@ -53,6 +53,9 @@ for f in skills/*/SKILL.md; do
   head -6 "$f" | grep -q '^description:' || err "$f missing 'description:' frontmatter"
 done
 
+# 4a. The provider-blind Knowledge System interface package is internally coherent.
+python3 scripts/check-interface.py || fail=1
+
 # 5. Preamble exists and every automation references it.
 if [ ! -f docs/automations/_preamble.md ]; then
   err "docs/automations/_preamble.md is missing"

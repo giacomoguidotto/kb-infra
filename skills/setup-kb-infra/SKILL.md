@@ -43,10 +43,11 @@ report before changing anything:
   vocabulary in
   [_preamble.md](../../docs/automations/_preamble.md), the endpoints, sinks, and
   sources plus their capabilities each **enabled** automation declares, the skills
-  under `skills/`, the automations and provider-agnostic execution profiles under
-  `docs/automations/`, one harness-owned automation-local state file or equivalent
-  state handle, and one cadence plus one concrete local model/reasoning selection per
-  enabled automation.
+  under `skills/`, one installed copy of
+  `interfaces/knowledge-system-interface/v1/` per harness, the automations and
+  provider-agnostic execution profiles under `docs/automations/`, one harness-owned
+  automation-local state file or equivalent state handle, and one cadence plus one
+  concrete local model/reasoning selection per enabled automation.
 - Actual: `local/bindings.yml` (a key present with a blank or placeholder value is
   **not** a binding), `local/installed.yml`, the snapshotted prompts under
   `local/automations/`, each automation's resolved harness-owned state, the live
@@ -73,6 +74,8 @@ report before changing anything:
   - bindings whose endpoint or sink is no longer in the spec (retired);
   - skills whose source differs from the installed copy (stale install) or is not
     installed;
+  - a missing interface package, stale package content, malformed Endpoint Registry,
+    or request roles that do not resolve to active registry entries;
   - automations new to the spec, or whose fresh compose differs from the snapshot in
     `local/automations/`, or removed from the spec;
   - an enabled automation whose harness-owned state location is missing or
@@ -179,7 +182,27 @@ Completion criterion: every enabled automation has an accepted model and reasoni
 selection supported by the local harness, or the exact unsupported profile is
 reported as a blocker.
 
-### 6. Reconcile the Installed Skills
+### 6. Reconcile the Interface Package
+
+Validate `interfaces/knowledge-system-interface/v1/` and materialize one complete
+copy into each harness's data directory under
+`interfaces/knowledge-system-interface/v1/`. Copy only when the installed package
+differs. Use a materialized copy, not a link, and replace the version directory as
+one unit so consumers never observe mixed revisions.
+
+The installed package is harness data, not a user-invocable skill and not a consumer
+dependency copied into every automation. Keep v1 beside any other supported major.
+Never write provider bindings, KB locations, cached facts, or resolved traversal
+into it.
+
+Validate every requested role against the installed Endpoint Registry. Registry
+reconciliation is explicit: `check` reports package or role drift, and reconcile
+applies only the package delta. A second unchanged reconcile performs no write.
+
+Completion criterion: each harness has one valid, source-identical v1 package and
+every declared role resolves to an active registry entry.
+
+### 7. Reconcile the Installed Skills
 
 Copy `lookup`, `capture`, and `setup-kb-infra` into the harness skill directory,
 re-copying only those whose source differs from the installed copy. Prefer
@@ -194,7 +217,7 @@ recorded.
 Completion criterion: each skill's installed copy matches its source, and the
 draft-style choice is recorded.
 
-### 7. Reconcile the Automations
+### 8. Reconcile the Automations
 
 For each enabled automation, compose a lean, **self-contained** paste-ready prompt —
 it is the running agent's entire world, since the run executes in the sink checkout
@@ -267,7 +290,7 @@ as a paste-ready prompt with its target, cadence, model, and reasoning effort, a
 its resolved state location, while `local/installed.yml` plus the `local/automations/`
 snapshots are current.
 
-### 8. Report
+### 9. Report
 
 Report the plan applied: what changed, every binding recorded or removed, every
 skill re-copied, every automation created, updated, retired, or handed over, and
