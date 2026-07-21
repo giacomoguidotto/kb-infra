@@ -1,9 +1,16 @@
-# Knowledge Bank Infrastructure
+# Knowledge System
 
 ## Glossary
 
-**Knowledge Bank Infrastructure**: The source-of-record for a provider-backed agent operating system. It holds the definitions — agent skills, automation prompts, and Knowledge Bank conventions — that materialize into live systems elsewhere. The provider is the memory, the harness runtime runs the automations, this repo is the spec.
-_Avoid_: second brain, source of truth, runtime, knowledge store
+**Knowledge System**: The independently usable domain capability that gives agents
+governed access to a provider-backed Knowledge Bank. It owns Knowledge semantics,
+provider bindings, lookup, approval-gated capture, internal elicitation, revision
+and drift rules, the provider-blind interface, and KB Reconcile. The provider is the
+memory, the harness runtime runs materializations, and this repo is the spec.
+_Avoid_: second brain, runtime, knowledge store, Knowledge Bank Infrastructure
+
+**KS**: Conversational shorthand for Knowledge System.
+_Avoid_: KB, which is reserved for the Knowledge Bank
 
 **Materialization**: The live system a repo definition becomes once it runs elsewhere: a scheduled automation, a KB page structure, or an agent-loaded skill. The repo owns the definition; the materialization runs outside it.
 
@@ -71,16 +78,18 @@ capability, endpoint, cadence, or runtime model selection, supplied or resolved 
 setup and stored in gitignored `local/`. Personal and provider-specific values are
 never committed.
 
-**Setup**: A user-invoked skill that materializes the infrastructure: it connects the KB provider, collects bindings through a grill, installs the lookup and capture skills, and bootstraps the automations.
+**Setup**: The `/setup-knowledge-system check|reconcile` skill. It checks live state
+or applies safe idempotent deltas for Knowledge bindings, the shared interface, and
+KB Reconcile without depending on another System.
 
-**kb-infra**: The repository and artifact slug for Knowledge Bank Infrastructure.
-_Use for_: GitHub URLs, CLI identifiers, generated artifact names, and other machine-facing handles
+**knowledge-system**: The repository and artifact slug for Knowledge System.
+_Use for_: GitHub URLs, CLI identifiers, and other machine-facing handles
 
 **Knowledge Bank**: The provider-backed personal knowledge system. It is not duplicated into this repo.
 
 **KB**: Conversational shorthand for the Knowledge Bank.
 _Use for_: agent conversations and user requests that refer to the provider-backed knowledge system
-_Avoid_: using `KB` for this repository; use `kb-infra` when referring to Knowledge Bank Infrastructure
+_Avoid_: using `KB` for this repository; use Knowledge System or `knowledge-system`
 
 **Capture**: A user-invoked skill that drafts durable session knowledge into the KB through `/capture`, behind an HTML approval gate. It is not an accepted workflow.
 
@@ -126,7 +135,7 @@ personal claim, or becomes a duplicate KB ledger.
 
 **Approval Draft**: A reviewable proposal showing exact KB writes before anything is applied.
 
-**Narrow Load**: Read only the Knowledge Bank Infrastructure docs or KB pages relevant to the current task.
+**Narrow Load**: Read only the Knowledge System docs or KB pages relevant to the current task.
 
 **Type, Ownership, Maturity, Kind**: The KB's four independent semantic axes: what
 a page represents; where meaning is owned; how editorially processed it is; and

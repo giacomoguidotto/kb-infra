@@ -1,7 +1,7 @@
 # Automation Preamble
 
 This file is the composer's reference material, **not** a block that is pasted
-verbatim into a prompt. When `setup-kb-infra` materializes an automation it composes a
+verbatim into a prompt. When the owning setup materializes an automation it composes a
 lean, self-contained prompt: it injects the [Operating Rules](#operating-rules), and
 for each surface the automation **declares** it emits a single resolved line —
 the role description from the [vocabulary](#vocabulary) joined with the binding hint
@@ -181,5 +181,5 @@ Automations that declare a dependency on deferred-knowledge markers (KB Reconcil
 use the follow-up and final-form marker formats in
 [knowledge-bank-conventions.md](../knowledge-bank-conventions.md). Those formats are
 **inlined** into the composed prompt at materialize time, not left as a file path for
-the run to open. This ships as the repo default; `setup-kb-infra` offers to override it
+the run to open. This ships as the repo default; the owning setup may override it
 as a binding.

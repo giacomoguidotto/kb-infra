@@ -1,9 +1,9 @@
 # Agent Instructions
 
-You are inside Knowledge Bank Infrastructure, the source-of-record for a
-provider-backed agent operating system. The KB is the memory, the harness runtime
-runs the automations, and this repo is the spec. The spec is provider-agnostic;
-the concrete provider and runtime are bindings.
+You are inside Knowledge System, the source-of-record for governed agent access to
+a provider-backed Knowledge Bank. The KB is the memory, the harness runtime runs
+KB Reconcile, and this repo is the spec. The spec is provider-agnostic; the
+concrete provider and runtime are bindings.
 
 The KB (my Knowledge Bank) is the source of truth for personal knowledge, tasks,
 projects, and portfolio facts. This repo never mirrors it. In agent conversations,
@@ -11,22 +11,23 @@ projects, and portfolio facts. This repo never mirrors it. In agent conversation
 
 ## First Run
 
-If asked to set up, install, bootstrap, or wire up this infra, load
-`skills/setup-kb-infra/SKILL.md` and follow it. It connects the KB provider, collects
-bindings into gitignored `local/bindings.yml`, installs the skills, and bootstraps
-the automations. Personal values are bindings and never get committed; see
+If asked to set up, install, bootstrap, or reconcile this System, load
+`skills/public/setup-knowledge-system/SKILL.md` and follow it. It preserves and
+validates gitignored `local/bindings.yml`, installs the shared interface, and
+materializes only KB Reconcile. Personal values are bindings and never get committed; see
 [ADR 0002](docs/adr/0002-personal-specifics-are-bindings.md).
 
 ## Tool Belt
 
-- `lookup` (`skills/lookup/`): read-only KB retrieval. Invoke as `/lookup`.
-- `capture` (`skills/capture/`): approval-gated KB writes. Invoke as `/capture`.
-- `setup-kb-infra` (`skills/setup-kb-infra/`): materialize the infra. Invoke as `/setup-kb-infra`.
+- `lookup` (`skills/public/lookup/`): read-only KB retrieval. Invoke as `/lookup`.
+- `capture` (`skills/public/capture/`): approval-gated KB writes. Invoke as `/capture`.
+- `setup-knowledge-system` (`skills/public/setup-knowledge-system/`): check or reconcile the standalone System. Invoke as `/setup-knowledge-system check|reconcile`.
+- Knowledge elicitation helpers live under `skills/internal/` and require explicit
+  repo-native installation.
 
-When a skill is edited, re-run `setup-kb-infra`'s install step to re-copy it into the
-harness skill directory, and commit the change in the workspace skills repo too.
-The installed copies are materialized copies, not symlinks, so both repos must be
-committed.
+Public skills are canonical here and exported from `skills/public/`; internal skills
+are canonical under `skills/internal/` and are excluded from normal distribution.
+Installed copies are materializations, never sources.
 
 ## Repo Docs
 

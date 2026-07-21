@@ -1,7 +1,7 @@
 # Domain Docs
 
-Knowledge Bank Infrastructure is a single-context infrastructure repo for a
-provider-backed knowledge system.
+Knowledge System is a single-context specification repo for governed access to a
+provider-backed Knowledge Bank.
 
 - Use root `CONTEXT.md` for vocabulary.
 - Use `docs/adr/` for policy decisions (the source-of-record framing and the
@@ -11,9 +11,9 @@ provider-backed knowledge system.
   drift-audit rules.
 - Use `docs/automations/_preamble.md` for the shared automation preamble, endpoint
   vocabulary, and sink vocabulary.
-- Use `docs/automations/*.md` for each accepted scheduled automation prompt:
-  `kb-reconcile`, `social-compose`, `portfolio-refresh`,
-  `job-scout`, `job-pursue`.
+- Use the setup module's KB Reconcile resource for the Knowledge-owned automation
+  definition. Remaining `docs/automations/*.md` files are migration sources for
+  their owning systems.
 
 When writing issue titles, test names, docs, or refactor proposals, prefer terms
 from `CONTEXT.md`.

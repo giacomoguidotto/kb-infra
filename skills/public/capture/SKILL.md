@@ -13,6 +13,27 @@ user explicitly approves from the latest draft.
 The KB is canonical. Use its live provider connector and schema; keep personal and
 provider-specific bindings out of this skill.
 
+## Semantic Interface Requests
+
+Automation callers use the shared package at
+`<harness-skill-root>/knowledge-system-interface/v1/`. Resolve it relative to this
+skill's harness root; a missing or incompatible package blocks only the dependent
+capability and must never trigger a hidden fetch.
+
+Validate `capture-request.schema.json` and its declarative mandate before the normal
+loop. Accept only a registered target role within that mandate and semantic meaning,
+visibility, evidence, optional Snapshot Token, and rationale. Never accept a
+provider write or concrete target location.
+
+Resolve ownership live, deduplicate, and return `blocked` when mandate, ownership,
+evidence, freshness, access, or revision prevents a safe proposal. Otherwise return
+`drafted` with the same exact ordered operations shown in the HTML approval draft
+and validated by `capture-draft.schema.json`.
+
+`drafted` is not authority to write. `applied` requires explicit approval of the
+latest exact `/capture` draft and a fresh reread with no drift. Automation and setup
+calls never bypass this gate.
+
 ## Authoring Rules
 
 Apply three rules to every draft:

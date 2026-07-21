@@ -1,9 +1,10 @@
 # KB Reconcile Automation
 
-Prompt source for the scheduled automation that harvests **signals** from the user's
-activity and populates the KB through `/capture`. Include [the preamble](_preamble.md)
-when materializing this automation. This file is a reviewable source prompt before it
-is copied into the harness automation settings.
+Canonical Knowledge System definition for the scheduled automation that harvests
+**signals** from the user's activity and populates the KB through `/capture`.
+`/setup-knowledge-system` materializes it with the Knowledge-only operating rules,
+bindings, marker formats, and harness state handle. The live harness definition is
+the materialization; setup keeps no composed-prompt snapshot.
 
 ## Design
 

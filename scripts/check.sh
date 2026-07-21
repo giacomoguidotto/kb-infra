@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Spec validator for kb-infra. Checks the source only; the live systems it
+# Spec validator for Knowledge System. Checks the source only; the live systems it
 # materializes into are out of scope by design (see docs/adr/0001).
 set -uo pipefail
 
@@ -48,7 +48,7 @@ for word in AnyPINN Ginevra Orray Scry; do
 done
 
 # 4. Each skill has name + description frontmatter.
-for f in skills/*/SKILL.md; do
+for f in skills/public/*/SKILL.md skills/internal/*/SKILL.md; do
   [ -f "$f" ] || continue
   head -6 "$f" | grep -q '^name:' || err "$f missing 'name:' frontmatter"
   head -6 "$f" | grep -q '^description:' || err "$f missing 'description:' frontmatter"
@@ -104,7 +104,6 @@ while IFS= read -r capability; do
   grep -q "${capability}" docs/automations/_preamble.md || err "_preamble.md missing sink capability '${capability}'"
   grep -q "${capability}" local/bindings.example.yml || err "bindings.example.yml missing sink capability '${capability}'"
 done <<< "$DECLARED_CAPABILITIES"
-grep -q '## Sink capabilities' skills/setup-kb-infra/SKILL.md || err 'setup skill does not compose declared sink capabilities'
 if grep -Eq 'candidacy-select\.mjs|modes/next\.md|career-ops next' "$ADVANCE_SPEC"; then
   err "$ADVANCE_SPEC hardcodes one career-system implementation instead of bound capabilities"
 fi
@@ -114,7 +113,7 @@ grep -q 'automation body explicitly classifies a narrow in-mandate write' docs/a
 # 8. Every automation declares a provider-agnostic execution profile, and setup has
 # a concrete local model binding slot without committing provider model ids.
 AUTOMATION_SPECS=(
-  docs/automations/kb-reconcile.md
+  skills/public/setup-knowledge-system/resources/automations/kb-reconcile/definition.md
   docs/automations/social-compose.md
   docs/automations/portfolio-refresh.md
   docs/automations/job-scout.md
@@ -128,14 +127,14 @@ for spec in "${AUTOMATION_SPECS[@]}"; do
     '') err "$spec declares no execution profile" ;;
     *) err "$spec declares unsupported execution profile '$profile'" ;;
   esac
-  automation=$(basename "$spec" .md)
+  if [ "$spec" = 'skills/public/setup-knowledge-system/resources/automations/kb-reconcile/definition.md' ]; then
+    automation='kb-reconcile'
+  else
+    automation=$(basename "$spec" .md)
+  fi
   grep -q "^  ${automation}:$" <<< "$MODEL_EXAMPLE" || \
     err "bindings.example.yml missing model slot for '${automation}'"
 done
-grep -q 'reasoning_effort:' local/installed.example.yml || \
-  err 'installed.example.yml does not record reasoning effort'
-grep -q 'Reconcile the Runtime Model Bindings' skills/setup-kb-infra/SKILL.md || \
-  err 'setup skill does not reconcile runtime model bindings'
 if git grep -nIE 'gpt-[0-9]|claude-[0-9]|gemini-[0-9]' -- ':!local/*.yml' ':!scripts/check.sh' >/dev/null 2>&1; then
   echo 'Provider-specific model identifier in committed spec:'
   git grep -nIE 'gpt-[0-9]|claude-[0-9]|gemini-[0-9]' -- ':!local/*.yml' ':!scripts/check.sh'
@@ -179,12 +178,8 @@ while IFS= read -r capability; do
   grep -q "${capability}" docs/automations/_preamble.md || err "_preamble.md missing source capability '${capability}'"
   grep -q "${capability}" local/bindings.example.yml || err "bindings.example.yml missing source capability '${capability}'"
 done <<< "$DECLARED_SOURCE_CAPABILITIES"
-grep -q '## Source capabilities' skills/setup-kb-infra/SKILL.md || \
-  err 'setup skill does not compose declared source capabilities'
 grep -q '^- Coverage cadence: required' "$SOCIAL_SPEC" || \
   err "$SOCIAL_SPEC does not declare required coverage cadence context"
-grep -q '## Coverage cadence' skills/setup-kb-infra/SKILL.md || \
-  err 'setup skill does not compose declared coverage cadence context'
 if grep -q '<typefully-published-source>' "$SOCIAL_SPEC" docs/automations/_preamble.md; then
   err 'provider-specific Typefully source leaked into the current automation contract'
 fi
@@ -226,8 +221,8 @@ grep -q 'External signals checked' "$SOCIAL_SPEC" || \
   err "$SOCIAL_SPEC does not expose external signals at the approval gate"
 
 # 10. Replacement capture drafts visibly invalidate an explicitly rejected draft.
-CAPTURE_SKILL='skills/capture/SKILL.md'
-CAPTURE_DRAFT='skills/capture/HTML-DRAFT.md'
+CAPTURE_SKILL='skills/public/capture/SKILL.md'
+CAPTURE_DRAFT='skills/public/capture/HTML-DRAFT.md'
 EXAMPLE_DRAFT='assets/example-draft.html'
 grep -q 'Every draft generated to replace that rejected draft' "$CAPTURE_SKILL" || \
   err "$CAPTURE_SKILL does not require rejected-draft replacement history"
@@ -269,24 +264,54 @@ grep -q 'waiting for required approval or clarification' docs/automations/_pream
   err '_preamble.md lets reply-gated runs advance the completion timestamp'
 grep -q 'blocked, stopped on an error' docs/automations/_preamble.md || \
   err '_preamble.md lets blocked or failed runs advance the completion timestamp'
-grep -q '## Local state' skills/setup-kb-infra/SKILL.md || \
-  err 'setup skill does not compose the automation-local state path'
-grep -q 'harness-owned automation-local state' skills/setup-kb-infra/SKILL.md || \
-  err 'setup skill does not define harness-owned runtime state'
-grep -q 'Never point runtime state into the kb-infra checkout' skills/setup-kb-infra/SKILL.md || \
-  err 'setup skill allows the spec checkout to become a runtime dependency'
-if grep -q 'local/state/<automation>.yml' skills/setup-kb-infra/SKILL.md; then
-  err 'setup skill stores runtime state inside the kb-infra checkout'
-fi
-if grep -q 'its local state path' skills/setup-kb-infra/SKILL.md; then
-  err 'setup skill completion criterion excludes structured harness state'
-fi
-grep -q 'preserve its existing `last_completed_at` value' skills/setup-kb-infra/SKILL.md || \
+SETUP_SKILL='skills/public/setup-knowledge-system/SKILL.md'
+grep -q 'harness-owned runtime history' "$SETUP_SKILL" || \
+  err 'setup skill does not preserve harness-owned runtime history'
+grep -q 'existing `last_completed_at` exactly' "$SETUP_SKILL" || \
   err 'setup skill may erase completion history during reconcile'
-for spec in docs/automations/kb-reconcile.md docs/automations/job-pursue.md; do
+for spec in skills/public/setup-knowledge-system/resources/automations/kb-reconcile/definition.md docs/automations/job-pursue.md; do
   grep -q '^End state:' "$spec" || \
     err "$spec has no explicit end state for last_completed_at"
 done
+
+# 12. Knowledge System owns a self-contained, stateless setup surface.
+PUBLIC_SKILLS=(capture lookup setup-knowledge-system)
+for skill in "${PUBLIC_SKILLS[@]}"; do
+  [ -f "skills/public/$skill/SKILL.md" ] || err "missing canonical public skill '$skill'"
+done
+for skill in get-knowledge grill-knowledge; do
+  [ -f "skills/internal/$skill/SKILL.md" ] || err "missing canonical internal skill '$skill'"
+done
+[ ! -e skills/setup-kb-infra ] || err 'retired setup-kb-infra source still exists'
+[ ! -e local/installed.example.yml ] || err 'retired installed receipt example still exists'
+[ ! -e docs/automations/kb-reconcile.md ] || err 'KB Reconcile still has a duplicate top-level definition'
+
+INTERFACE_PACKAGE='skills/public/setup-knowledge-system/resources/knowledge-system-interface/v1'
+[ -d "$INTERFACE_PACKAGE" ] || err 'setup module does not carry the v1 interface package'
+if find "$INTERFACE_PACKAGE" -name SKILL.md -print -quit | grep -q .; then
+  err 'installed interface package would become a fake invocable skill'
+fi
+grep -Fq '<harness-skill-root>/knowledge-system-interface/v1/' "$SETUP_SKILL" || \
+  err 'setup skill does not declare the shared installed interface path'
+grep -Fq '<harness-skill-root>/knowledge-system-interface/v1/' skills/public/lookup/SKILL.md || \
+  err 'lookup does not resolve the shared installed interface package'
+grep -Fq '<harness-skill-root>/knowledge-system-interface/v1/' "$CAPTURE_SKILL" || \
+  err 'capture does not resolve the shared installed interface package'
+
+grep -q '/setup-knowledge-system check' "$SETUP_SKILL" || err 'setup skill lacks check mode'
+grep -q '/setup-knowledge-system reconcile' "$SETUP_SKILL" || err 'setup skill lacks reconcile mode'
+grep -q 'Check is strictly read-only' "$SETUP_SKILL" || err 'setup check is not explicitly read-only'
+grep -q 'preserving every existing valid' "$SETUP_SKILL" || err 'setup does not preserve valid bindings'
+grep -q 'Only KB Reconcile belongs to this setup' "$SETUP_SKILL" || \
+  err 'setup ownership is not limited to KB Reconcile'
+grep -q 'zero writes' "$SETUP_SKILL" || err 'setup lacks an identical-second-run no-op contract'
+for retired in 'local/installed.yml' 'local/automations/'; do
+  grep -q "$retired" "$SETUP_SKILL" || err "setup does not explicitly prohibit $retired"
+done
+
+if ! bash scripts/check-setup-idempotency.sh; then
+  fail=1
+fi
 
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"

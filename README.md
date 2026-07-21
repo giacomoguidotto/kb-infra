@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/logo.svg" alt="Knowledge Bank Infrastructure logo" width="160">
+  <img src="assets/logo.svg" alt="Knowledge System logo" width="160">
 </p>
 
-<h1 align="center">Knowledge Bank Infrastructure</h1>
+<h1 align="center">Knowledge System</h1>
 
 <p align="center">
   <strong>Infrastructure-as-Code for a personal agent operating system.</strong><br>
@@ -10,14 +10,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/giacomoguidotto/kb-infra/actions"><img src="https://github.com/giacomoguidotto/kb-infra/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/giacomoguidotto/kb-infra/releases"><img src="https://img.shields.io/github/v/release/giacomoguidotto/kb-infra?sort=semver" alt="Release"></a>
-  <a href="https://github.com/giacomoguidotto/kb-infra/blob/main/LICENSE"><img src="https://img.shields.io/github/license/giacomoguidotto/kb-infra" alt="License"></a>
+  <a href="https://github.com/giacomoguidotto/knowledge-system/actions"><img src="https://github.com/giacomoguidotto/knowledge-system/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/giacomoguidotto/knowledge-system/releases"><img src="https://img.shields.io/github/v/release/giacomoguidotto/knowledge-system?sort=semver" alt="Release"></a>
+  <a href="https://github.com/giacomoguidotto/knowledge-system/blob/main/LICENSE"><img src="https://img.shields.io/github/license/giacomoguidotto/knowledge-system" alt="License"></a>
 </p>
 
 <br>
 
-AI agents are only as useful as the context they can reach — and every local copy of that context goes stale. **Knowledge Bank Infrastructure** keeps the boundary sharp: your knowledge stays in the provider you already use, and this repo holds only the *protocol* your agents follow to read it, write to it behind approval, and run scheduled work against it. Nothing here runs — like Terraform for a cloud, it's the declarative source that *materializes* into live systems. Fork it, run one command, and your agents are wired to your knowledge without ever mirroring it.
+AI agents are only as useful as the context they can reach, and every local copy of that context goes stale. **Knowledge System** keeps the boundary sharp: your knowledge stays in the provider you already use, and this repo holds only the protocol your agents follow to read it, write to it behind approval, and reconcile durable signals. Nothing here mirrors your Knowledge Bank.
 
 <p align="center">
   <img src="assets/diagram.png" alt="How Knowledge Bank Infrastructure fits together" width="820">
@@ -33,10 +33,10 @@ AI agents are only as useful as the context they can reach — and every local c
 2. Open your favorite agent in the repo and run:
 
 ```sh
-/setup-kb-infra
+/setup-knowledge-system reconcile
 ```
 
-This connects your Knowledge Bank provider, collects your personal **bindings** into a gitignored file, installs the skills, and stands up the automations. Your knowledge never enters the repo — only the generic spec does.
+This connects your Knowledge Bank provider, preserves your personal **bindings** in a gitignored file, installs the shared interface package, and materializes KB Reconcile. Your knowledge never enters the repo.
 
 ## What's Inside
 
@@ -44,14 +44,14 @@ This connects your Knowledge Bank provider, collects your personal **bindings** 
 
 - **`/lookup`** — read-only retrieval from your Knowledge Bank.
 - **`/capture`** — writes, always behind an approval draft (below).
-- **`/setup-kb-infra`** — materializes the whole thing on your machine.
+- **`/setup-knowledge-system check|reconcile`** — checks or reconciles the standalone System.
 
 **Interfaces**: provider-blind data packages installed once per harness:
 
 - **`knowledge-system-interface/v1`**: role-based requests, typed snapshots,
   provenance, drift protection, and semantic capture drafts.
 
-**Automations** — generic prompts in [`docs/automations/`](docs/automations/), scheduled by your runtime and all rooted in `/lookup`: knowledge harvest, social drafts, portfolio sweeps, and job-hunt audits. Each proposes work; none writes without approval.
+**Automation**: the self-contained setup module owns the canonical [KB Reconcile definition](skills/public/setup-knowledge-system/resources/automations/kb-reconcile/definition.md). Setup materializes it in place while preserving harness identity and runtime history.
 
 Every write goes through a reviewable draft first — the exact property and body diffs, plus the evidence read — and waits for your explicit approval:
 
