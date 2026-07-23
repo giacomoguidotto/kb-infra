@@ -89,5 +89,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: >-
           gh release create "${{ needs.version.outputs.tag }}"
+          --verify-tag
           --title "${{ needs.version.outputs.tag }}"
           --generate-notes

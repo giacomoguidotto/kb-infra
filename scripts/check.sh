@@ -317,6 +317,9 @@ if ! bash scripts/check-setup-idempotency.sh; then
   fail=1
 fi
 
+grep -Fq -- '--verify-tag' .github/workflows/ci.yml || \
+  err 'release workflow can publish without a verified source tag'
+
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
   exit 1
