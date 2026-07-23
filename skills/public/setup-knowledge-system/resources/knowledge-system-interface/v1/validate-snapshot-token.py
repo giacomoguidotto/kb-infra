@@ -29,11 +29,17 @@ def valid_text(value):
 
 
 def valid_token(value):
-    return (
+    if not (
         isinstance(value, str)
         and len(value) >= 16
         and not any(ord(character) < 32 for character in value)
-    )
+    ):
+        return False
+    try:
+        value.encode("utf-8")
+    except UnicodeEncodeError:
+        return False
+    return True
 
 
 def tokens_equal(left, right):

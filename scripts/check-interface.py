@@ -224,6 +224,11 @@ unicode_operation["observations"][0]["snapshot_token"] = "opaque-token-åäö-12
 _, unicode_result = run_token_validation(unicode_operation)
 require(unicode_result["status"] == "unchanged", "non-ASCII opaque token could not be validated")
 
+surrogate_operation = deepcopy(token_operation)
+surrogate_operation["request"]["snapshot_token"] = "opaque-token-\ud800-1234"
+_, surrogate_result = run_token_validation(surrogate_operation)
+require(surrogate_result["status"] == "malformed", "non-encodable token did not return malformed")
+
 changed_operation = deepcopy(token_operation)
 changed_operation["observations"][0]["snapshot_token"] = "opaque-changed-token-1234"
 _, changed = run_token_validation(changed_operation)
