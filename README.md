@@ -46,7 +46,7 @@ This connects your Knowledge Bank provider, preserves your personal **bindings**
 - **`/capture`** — writes, always behind an approval draft (below).
 - **`/setup-knowledge-system check|reconcile`**: checks or reconciles the standalone System.
 
-**Interfaces**: provider-blind data packages installed once per harness:
+**Interfaces**: provider-blind packages installed once per harness:
 
 - **`knowledge-system-interface/v1`**: role-based requests, typed snapshots,
   provenance, drift protection, and semantic capture drafts.

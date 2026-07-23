@@ -18,8 +18,14 @@ runtime_before=$(shasum -a 256 "$runtime_state" | cut -d' ' -f1)
 
 first=$(bash "$installer" reconcile "$harness_root")
 case "$first" in
-  *'state=converged writes=1'*) ;;
+  *'state=converged writes=1 capability=snapshot-token-validation capability_state=ready'*) ;;
   *) printf 'FAIL: first reconcile did not install the interface: %s\n' "$first" >&2; exit 1 ;;
+esac
+
+check=$(bash "$installer" check "$harness_root")
+case "$check" in
+  *'state=converged writes=0 capability=snapshot-token-validation capability_state=ready'*) ;;
+  *) printf 'FAIL: check did not report fresh token validation readiness: %s\n' "$check" >&2; exit 1 ;;
 esac
 
 tree_before=$(find "$harness_root" -type f -exec shasum -a 256 {} \; | LC_ALL=C sort)
@@ -27,7 +33,7 @@ second=$(bash "$installer" reconcile "$harness_root")
 tree_after=$(find "$harness_root" -type f -exec shasum -a 256 {} \; | LC_ALL=C sort)
 
 case "$second" in
-  *'state=converged writes=0'*) ;;
+  *'state=converged writes=0 capability=snapshot-token-validation capability_state=ready'*) ;;
   *) printf 'FAIL: second reconcile was not a zero-write no-op: %s\n' "$second" >&2; exit 1 ;;
 esac
 [ "$tree_before" = "$tree_after" ] || { printf 'FAIL: second reconcile changed installed content\n' >&2; exit 1; }
@@ -35,6 +41,18 @@ esac
 [ "$runtime_before" = "$(shasum -a 256 "$runtime_state" | cut -d' ' -f1)" ] || { printf 'FAIL: runtime history changed\n' >&2; exit 1; }
 [ ! -e "$fixture/local/installed.yml" ] || { printf 'FAIL: setup receipt created\n' >&2; exit 1; }
 [ ! -e "$fixture/local/automations" ] || { printf 'FAIL: prompt snapshot created\n' >&2; exit 1; }
+
+chmod -x "$harness_root/knowledge-system-interface/v1/validate-snapshot-token.py"
+blocked=$(bash "$installer" check "$harness_root")
+case "$blocked" in
+  *'state=drifted writes=0 capability=snapshot-token-validation capability_state=blocked reason=validator_missing'*) ;;
+  *) printf 'FAIL: check inferred readiness from content: %s\n' "$blocked" >&2; exit 1 ;;
+esac
+repaired=$(bash "$installer" reconcile "$harness_root")
+case "$repaired" in
+  *'state=converged writes=1 capability=snapshot-token-validation capability_state=ready'*) ;;
+  *) printf 'FAIL: reconcile did not repair token validation readiness: %s\n' "$repaired" >&2; exit 1 ;;
+esac
 
 printf 'unexpected installed content\n' > "$harness_root/knowledge-system-interface/v1/drift.txt"
 fake_bin="$fixture/fake-bin"
