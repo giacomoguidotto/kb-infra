@@ -9,6 +9,7 @@ from hashlib import sha256
 from pathlib import Path
 
 from jsonschema import Draft202012Validator, ValidationError
+from referencing import Registry, Resource
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,6 +35,9 @@ capture_blocked_schema = load("capture-blocked.schema.json")
 token_request_schema = load("snapshot-token-validation-request.schema.json")
 token_operation_schema = load("snapshot-token-validation-operation.schema.json")
 token_result_schema = load("snapshot-token-validation-result.schema.json")
+project_request_schema = load("project-snapshot-request.schema.json")
+project_snapshot_schema = load("project-snapshot.schema.json")
+project_operation_schema = load("project-snapshot-operation.schema.json")
 request = load("examples/request.json")
 snapshot = load("examples/snapshot.json")
 capture_request = load("examples/capture-request.json")
@@ -42,6 +46,21 @@ capture_blocked = load("examples/capture-blocked.json")
 token_request = load("examples/snapshot-token-validation-request.json")
 token_operation = load("examples/snapshot-token-validation-operation.json")
 token_result = load("examples/snapshot-token-validation-result.json")
+project_request = load("examples/project-snapshot-request.json")
+project_snapshot = load("examples/project-snapshot.json")
+project_operation = load("examples/project-snapshot-operation.json")
+
+schema_registry = Registry().with_resources(
+    (
+        schema["$id"],
+        Resource.from_contents(schema),
+    )
+    for schema in (
+        project_request_schema,
+        project_snapshot_schema,
+        project_operation_schema,
+    )
+)
 
 schema_examples = (
     (request_schema, request),
@@ -52,10 +71,13 @@ schema_examples = (
     (token_request_schema, token_request),
     (token_operation_schema, token_operation),
     (token_result_schema, token_result),
+    (project_request_schema, project_request),
+    (project_snapshot_schema, project_snapshot),
+    (project_operation_schema, project_operation),
 )
 for schema, example in schema_examples:
     Draft202012Validator.check_schema(schema)
-    Draft202012Validator(schema).validate(example)
+    Draft202012Validator(schema, registry=schema_registry).validate(example)
 
 preamble = (ROOT / "docs/automations/_preamble.md").read_text(encoding="utf-8")
 endpoint_section = preamble.split("### Endpoints", 1)[1].split("### Sinks", 1)[0]
@@ -73,19 +95,45 @@ for role, entry in registry["roles"].items():
         f"{role} lacks required provenance",
     )
 
-for schema in (request_schema, snapshot_schema, capture_request_schema, capture_draft_schema, capture_blocked_schema):
+for schema in (
+    request_schema,
+    snapshot_schema,
+    capture_request_schema,
+    capture_draft_schema,
+    capture_blocked_schema,
+    project_request_schema,
+    project_snapshot_schema,
+):
     require(schema["additionalProperties"] is False, f"{schema['title']} permits undeclared fields")
     require(
         schema["properties"]["interface"]["const"] == "knowledge-system-interface/v1",
         f"{schema['title']} has the wrong interface",
     )
 
-for document in (request, snapshot, capture_request, capture_draft, capture_blocked):
+for document in (
+    request,
+    snapshot,
+    capture_request,
+    capture_draft,
+    capture_blocked,
+    project_request,
+    project_snapshot,
+):
     require(document["interface"] == "knowledge-system-interface/v1", "example has the wrong interface")
 
 for forbidden in ("provider", "page", "location", "traversal", "facts", "projects"):
     require(forbidden not in request_schema["properties"], f"provider detail leaked into request: {forbidden}")
     require(forbidden not in request, f"provider detail leaked into example request: {forbidden}")
+
+for forbidden in ("provider", "page", "location", "traversal", "mappings"):
+    require(
+        forbidden not in project_request_schema["properties"],
+        f"provider detail or inferred mapping leaked into Project Snapshot request: {forbidden}",
+    )
+    require(
+        forbidden not in project_request,
+        f"provider detail or inferred mapping leaked into Project Snapshot example request: {forbidden}",
+    )
 
 active_roles = {role for role, entry in registry["roles"].items() if entry["compatibility"] == "active"}
 requested_roles = set(request["roles"]["required"] + request["roles"]["optional"])
@@ -179,6 +227,28 @@ require(
     "Snapshot Token result schema does not distinguish every required state",
 )
 
+project_producer_path = PACKAGE / "produce-project-snapshot.py"
+require(project_producer_path.stat().st_mode & 0o111, "Project Snapshot producer is not executable")
+project_snapshot_validator = Draft202012Validator(
+    project_snapshot_schema,
+    registry=schema_registry,
+)
+mastery_variants = project_snapshot_schema["$defs"]["mastery_enabled"]["oneOf"]
+require(
+    {variant["properties"]["state"]["const"] for variant in mastery_variants}
+    == {"value", "absent", "unresolved"},
+    "Project Snapshot does not define strict Mastery enablement states",
+)
+mapping_example = project_snapshot["projects"][0]["upskill_mappings"]["items"]
+require(
+    {mapping["status"] for mapping in mapping_example} == {"enabled", "disabled"},
+    "Project Snapshot example does not preserve enabled and disabled mappings",
+)
+require(
+    mapping_example[1]["prerequisite_mapping_keys"] == [mapping_example[0]["mapping_key"]],
+    "Project Snapshot example does not resolve a prerequisite mapping key",
+)
+
 
 def package_digest():
     digest = sha256()
@@ -208,6 +278,20 @@ def run_token_validation(operation):
     request_token = operation.get("request", {}).get("snapshot_token")
     if request_token is not None:
         require(request_token not in serialized, "Snapshot Token validator leaked the returned token")
+    return completed.stdout, result
+
+
+def run_project_snapshot(operation):
+    completed = subprocess.run(
+        [str(project_producer_path)],
+        input=json.dumps(operation),
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+    require(not completed.stderr, f"Project Snapshot producer wrote stderr: {completed.stderr}")
+    result = json.loads(completed.stdout)
+    project_snapshot_validator.validate(result)
     return completed.stdout, result
 
 
@@ -265,6 +349,85 @@ require(
     },
     "persistent validation drift did not block the dependent capability",
 )
-require(package_digest() == package_before, "Snapshot Token validation wrote interface content")
+
+project_output, produced_project = run_project_snapshot(project_operation)
+identical_project_output, identical_project = run_project_snapshot(project_operation)
+require(produced_project == project_snapshot, "Project Snapshot producer changed the canonical example")
+require(project_output == identical_project_output, "identical Project Snapshot rerun was not deterministic")
+require(produced_project == identical_project, "identical Project Snapshot rerun changed its result")
+require(produced_project["capability_status"]["state"] == "ready", "enabled Project Snapshot was not ready")
+require(
+    produced_project["projects"][0]["upskill_mappings"]["items"][1]["status"] == "disabled",
+    "disabled mapping was not resolvable",
+)
+
+disabled_operation = deepcopy(project_operation)
+disabled_project = disabled_operation["observations"][0]["projects"][0]
+disabled_project["mastery_enabled"]["value"] = False
+_, disabled_result = run_project_snapshot(disabled_operation)
+require(disabled_result["capability_status"]["state"] == "ready", "disabled Mastery blocked the capability")
+require(
+    disabled_result["projects"][0]["upskill_mappings"]["state"] == "value",
+    "disabled Mastery hid resolvable mappings",
+)
+
+absent_operation = deepcopy(project_operation)
+absent_project = absent_operation["observations"][0]["projects"][0]
+absent_project["mastery_enabled"] = {
+    "state": "absent",
+    "evidence": absent_project["mastery_enabled"]["evidence"],
+}
+_, absent_result = run_project_snapshot(absent_operation)
+require(absent_result["capability_status"]["state"] == "blocked", "absent Mastery state did not block")
+require(
+    absent_result["projects"][0]["mastery_enabled"]["state"] == "absent",
+    "explicit Mastery absence was inferred as false",
+)
+
+unresolved_operation = deepcopy(project_operation)
+unresolved_project = unresolved_operation["observations"][0]["projects"][0]
+unresolved_project["mastery_enabled"] = {
+    "state": "unresolved",
+    "reason": "identity_ambiguous",
+    "attempted_evidence": unresolved_project["mastery_enabled"]["evidence"],
+}
+_, unresolved_result = run_project_snapshot(unresolved_operation)
+require(unresolved_result["capability_status"]["state"] == "blocked", "unresolved Mastery did not block")
+require(
+    unresolved_result["projects"][0]["mastery_enabled"]["reason"] == "identity_ambiguous",
+    "ambiguous Mastery identity was not preserved as unresolved",
+)
+
+drift_operation = deepcopy(project_operation)
+rebuilt_observation = deepcopy(drift_operation["observations"][0])
+rebuilt_observation["revision_token"] = "opaque-project-revision-drifted"
+rebuilt_observation["observed_at"] = "2026-07-23T08:01:00Z"
+drift_operation["observations"].append(rebuilt_observation)
+_, drift_result = run_project_snapshot(drift_operation)
+require(drift_result["capability_status"]["state"] == "blocked", "persistent project drift did not block")
+require(
+    drift_result["projects"][0]["reason"] == "persistent_drift",
+    "persistent project drift exposed a stale project value",
+)
+
+prerequisite_operation = deepcopy(project_operation)
+prerequisite_mapping = prerequisite_operation["observations"][0]["projects"][0]["upskill_mappings"]["items"][1]
+prerequisite_mapping["prerequisite_mapping_keys"] = ["mapping-missing"]
+_, prerequisite_result = run_project_snapshot(prerequisite_operation)
+require(
+    prerequisite_result["gaps"] == [
+        {
+            "reference": "mapping-advanced",
+            "reason": "prerequisite_unresolved",
+            "blocks_capability": True,
+        }
+    ],
+    "missing prerequisite mapping did not block at the mapping seam",
+)
+
+require(
+    package_digest() == package_before,
+    "read-only interface operation wrote interface or Knowledge content",
+)
 
 print("knowledge-system-interface/v1: OK")
