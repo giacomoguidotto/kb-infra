@@ -61,6 +61,8 @@ descriptions below. It does not inject surfaces an automation does not declare.
 Data surfaces and rule-sets automations read from the KB:
 
 - `selected-projects`: the active/selected projects to consider this run.
+- `upskill-mappings`: Knowledge-owned project mappings from a Requisite to a
+  Capability, including disabled mappings and prerequisite mapping identities.
 - `public-safe-claim-source`: the adapter presenting recruiter/public-facing facts;
   also owns the public-safety boundary — what must not be published.
 - `proof-points`: compact, reusable evidence and metrics for generated artifacts.

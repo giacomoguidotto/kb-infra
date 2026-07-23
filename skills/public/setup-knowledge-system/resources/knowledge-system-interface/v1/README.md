@@ -99,6 +99,34 @@ Two different resolved observations mean `unresolved` with reason
 or write authority and never writes Knowledge Bank content. Identical input
 produces byte-identical output.
 
+## Knowledge Project Snapshot
+
+`knowledge.project.snapshot/v1` is the capability-scoped read model for canonical
+projects and their Knowledge-owned Upskill Mappings. A consumer sends a
+[`project-snapshot-request.schema.json`](project-snapshot-request.schema.json)
+document containing only opaque Knowledge project references. It never names or
+infers a provider, provider coordinate, mapping, or traversal.
+
+Knowledge resolves canonical owners and supplies one provider-neutral observation
+to [`produce-project-snapshot.py`](produce-project-snapshot.py), or a second
+complete observation after revision drift. The executable emits a document matching
+[`project-snapshot.schema.json`](project-snapshot.schema.json). `revision_token` is
+opaque and `observed_at` states when the returned revision was observed.
+
+Only a canonical Knowledge owner may establish `project_key` or `mapping_key`.
+Missing ownership and ambiguous identities are `unresolved`, never guessed. The
+`mastery_enabled` field has strict `value`, `absent`, and `unresolved` states, so
+absence is not interpreted as false. Each mapping carries its stable identity,
+enabled or disabled status, Requisite, Capability, project seam, rationale,
+evidence, and optional prerequisite mapping keys. Disabled mappings stay in the
+snapshot and remain resolvable.
+
+The producer validates project and mapping identity uniqueness, project seams, and
+prerequisite mapping keys. Missing prerequisites, unresolved required values, and
+persistent drift block only the named capability. An identical operation produces
+byte-identical output. The producer reads standard input, writes standard output,
+and has no Knowledge capture or write authority.
+
 ## Semantic Capture
 
 An automation proposes durable meaning with a document matching

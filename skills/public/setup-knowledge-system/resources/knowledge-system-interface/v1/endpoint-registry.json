@@ -1,6 +1,6 @@
 {
   "interface": "knowledge-system-interface/v1",
-  "revision": "1",
+  "revision": "2",
   "roles": {
     "selected-projects": {
       "meaning": "Active or selected projects relevant to the stated objective.",
@@ -10,6 +10,16 @@
       "traversal": ["canonical-owner", "direct-evidence"],
       "provenance": ["owner", "source", "observed_at", "revision"],
       "stopping_conditions": ["objective-satisfied", "owner-exhausted", "access-blocked", "revision-drift"],
+      "compatibility": "active"
+    },
+    "upskill-mappings": {
+      "meaning": "Knowledge-owned mappings from a project Requisite to a Mastery Capability.",
+      "result_shape": "knowledge.project.snapshot/v1",
+      "visibility": "Preserve the canonical visibility of project, rationale, and evidence.",
+      "intended_use": "Capability-scoped upskill reconciliation through stable mapping identities.",
+      "traversal": ["canonical-owner", "project-owner", "direct-evidence"],
+      "provenance": ["owner", "source", "observed_at", "revision"],
+      "stopping_conditions": ["objective-satisfied", "owner-exhausted", "identity-ambiguous", "evidence-insufficient", "access-blocked", "revision-drift"],
       "compatibility": "active"
     },
     "public-safe-claim-source": {

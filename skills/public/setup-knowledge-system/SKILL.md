@@ -104,6 +104,7 @@ Validate the bundled v1 package before comparing it:
 - every request and capture role exists and is active in the Endpoint Registry;
 - the registry revision is nonblank;
 - the Snapshot Token validation operation executes its self-check;
+- the Knowledge Project Snapshot producer executes its self-check;
 - the package contains no `SKILL.md`.
 
 Compare the complete bundled and installed trees by relative path, file type, and
@@ -115,6 +116,9 @@ comparison when filesystem access is available. Report
 `snapshot-token-validation` as a distinct capability: `ready` only when the
 installed executable passes a fresh self-check, otherwise `blocked` with the
 observed reason. Package drift and capability readiness remain separate facts.
+Report `knowledge-project-snapshot` the same way from a fresh installed
+`produce-project-snapshot.py --self-check`. This read-only capability has no KB
+capture or write authority.
 
 ### 4. KB Reconcile
 
