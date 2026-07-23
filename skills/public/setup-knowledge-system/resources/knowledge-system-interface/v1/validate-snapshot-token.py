@@ -36,6 +36,10 @@ def valid_token(value):
     )
 
 
+def tokens_equal(left, right):
+    return hmac.compare_digest(left.encode("utf-8"), right.encode("utf-8"))
+
+
 def validate_request(request):
     if not isinstance(request, dict):
         return "request_not_object"
@@ -108,14 +112,12 @@ def validate(operation):
         return {**identity, "status": "unresolved", "reason": unresolved["reason"]}
 
     current_tokens = [item["snapshot_token"] for item in observations]
-    if len(current_tokens) == 2 and not hmac.compare_digest(
-        current_tokens[0], current_tokens[1]
-    ):
+    if len(current_tokens) == 2 and not tokens_equal(current_tokens[0], current_tokens[1]):
         return {**identity, "status": "unresolved", "reason": "persistent_drift"}
 
     status = (
         "unchanged"
-        if hmac.compare_digest(request["snapshot_token"], current_tokens[-1])
+        if tokens_equal(request["snapshot_token"], current_tokens[-1])
         else "changed"
     )
     return {**identity, "status": status}

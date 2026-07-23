@@ -218,6 +218,12 @@ require(unchanged["status"] == "unchanged", "matching Snapshot Token was not unc
 require(unchanged_output == identical_output, "identical validation rerun was not deterministic")
 require(unchanged == identical, "identical validation rerun changed its result")
 
+unicode_operation = deepcopy(token_operation)
+unicode_operation["request"]["snapshot_token"] = "opaque-token-åäö-1234"
+unicode_operation["observations"][0]["snapshot_token"] = "opaque-token-åäö-1234"
+_, unicode_result = run_token_validation(unicode_operation)
+require(unicode_result["status"] == "unchanged", "non-ASCII opaque token could not be validated")
+
 changed_operation = deepcopy(token_operation)
 changed_operation["observations"][0]["snapshot_token"] = "opaque-changed-token-1234"
 _, changed = run_token_validation(changed_operation)
