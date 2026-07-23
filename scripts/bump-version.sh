@@ -9,8 +9,19 @@ if [[ "${1:-}" == "--dry-run" ]]; then
   DRY_RUN=true
 fi
 
+# Resume release creation when a prior run already pushed the tag for HEAD.
+TAG_PATTERN='v[0-9]*.[0-9]*.[0-9]*'
+HEAD_TAG=$(git tag --points-at HEAD --list "$TAG_PATTERN" --sort=-v:refname | head -n1)
+if [[ -n "$HEAD_TAG" ]]; then
+  echo "Release tag already points at HEAD: $HEAD_TAG"
+  if [[ -n "${GITHUB_OUTPUT:-}" ]]; then
+    echo "tag=$HEAD_TAG" >> "$GITHUB_OUTPUT"
+  fi
+  exit 0
+fi
+
 # Get latest semver tag, default to v0.0.0
-LATEST_TAG=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n1)
+LATEST_TAG=$(git tag --list "$TAG_PATTERN" --sort=-v:refname | head -n1)
 if [[ -z "$LATEST_TAG" ]]; then
   LATEST_TAG="v0.0.0"
   RANGE="HEAD"

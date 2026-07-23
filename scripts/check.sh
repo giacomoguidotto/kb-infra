@@ -319,6 +319,8 @@ fi
 
 grep -Fq -- '--verify-tag' .github/workflows/ci.yml || \
   err 'release workflow can publish without a verified source tag'
+grep -Fq 'gh release view' .github/workflows/ci.yml || \
+  err 'release workflow cannot resume after a partial publication'
 
 if [ "$fail" -ne 0 ]; then
   echo "spec check: FAILED"
