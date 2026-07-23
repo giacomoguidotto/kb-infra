@@ -70,6 +70,35 @@ once. If drift persists, return the affected role as `unresolved` with reason
 `persistent_drift`. Block only `request.capability`; unrelated capabilities and
 independent requests remain usable.
 
+## Snapshot Token Validation
+
+Before a dependent write, a consumer returns its opaque token in a document matching
+[`snapshot-token-validation-request.schema.json`](snapshot-token-validation-request.schema.json).
+The request names only the interface, caller, dependent capability, and token. It
+contains no provider coordinates, and the consumer never compares or interprets the
+token.
+
+Knowledge System resolves the same covered owners, relations, evidence revisions,
+and registry revision. It supplies one provider-neutral live observation to
+[`validate-snapshot-token.py`](validate-snapshot-token.py), or supplies a second
+observation after one complete rebuild when the validation traversal itself drifts.
+The executable reads a validation operation matching
+[`snapshot-token-validation-operation.schema.json`](snapshot-token-validation-operation.schema.json)
+from standard input and writes one result matching
+[`snapshot-token-validation-result.schema.json`](snapshot-token-validation-result.schema.json)
+to standard output:
+
+- `unchanged`: the returned token still covers the live state;
+- `changed`: the live state is stable but no longer matches;
+- `malformed`: the operation or token cannot be validated;
+- `unsupported`: the requested interface is not this major;
+- `unresolved`: live state cannot be established safely.
+
+Two different resolved observations mean `unresolved` with reason
+`persistent_drift`. Results never echo either token. The operation has no capture
+or write authority and never writes Knowledge Bank content. Identical input
+produces byte-identical output.
+
 ## Semantic Capture
 
 An automation proposes durable meaning with a document matching

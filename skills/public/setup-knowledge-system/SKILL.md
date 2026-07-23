@@ -39,8 +39,9 @@ must not require a repository checkout or fetch a hidden latest release.
 - The canonical KB Reconcile definition is
   `resources/automations/kb-reconcile/definition.md`.
 - The installed interface target is
-  `<harness-skill-root>/knowledge-system-interface/v1/`. It is a data-only package
-  and must not contain `SKILL.md`.
+  `<harness-skill-root>/knowledge-system-interface/v1/`. It is a non-skill package
+  with a provider-blind validation executable and must not contain `SKILL.md` or
+  become user-invocable.
 - The canonical public skill names are `lookup`, `capture`, and
   `setup-knowledge-system`. They are distributed from `skills/public/` by their
   owning Knowledge System release.
@@ -102,14 +103,18 @@ Validate the bundled v1 package before comparing it:
 - every schema validates its bundled example;
 - every request and capture role exists and is active in the Endpoint Registry;
 - the registry revision is nonblank;
+- the Snapshot Token validation operation executes its self-check;
 - the package contains no `SKILL.md`.
 
 Compare the complete bundled and installed trees by relative path, file type, and
 content. Extra installed files are drift because the installed package must be an
-exact data-only materialization. Do not use timestamps as evidence.
+exact non-skill materialization. Do not use timestamps as evidence.
 
 Use `scripts/reconcile-interface.sh check <harness-skill-root>` for this exact tree
-comparison when filesystem access is available.
+comparison when filesystem access is available. Report
+`snapshot-token-validation` as a distinct capability: `ready` only when the
+installed executable passes a fresh self-check, otherwise `blocked` with the
+observed reason. Package drift and capability readiness remain separate facts.
 
 ### 4. KB Reconcile
 
